@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Gear3sProjectApplication {
 
 	public static void main(String[] args) {
-		System.out.println("Hello");
 		SpringApplication.run(Gear3sProjectApplication.class, args);
 	}
 
