@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserService {
     boolean createUserByUser(UserDTO userDTO);
     boolean createUserByAdmin(UserDTO userDTO);
-    List<UserDTO> readUser(boolean getAllUser, String email);
+    List<UserDTO> readUser(boolean getAllUser, int id);
     boolean updateUser(UserDTO userDTO);
-    boolean deleteUser(String email);
+    boolean deleteUser(int id);
 }

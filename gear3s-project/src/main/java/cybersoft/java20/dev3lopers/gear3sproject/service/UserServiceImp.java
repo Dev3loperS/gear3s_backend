@@ -10,6 +10,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.model.RoleListModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +23,11 @@ public class UserServiceImp implements UserService {
 
     @Override
     public boolean createUserByAdmin(UserDTO userDTO) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
         Users user = new Users();
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setFullname(userDTO.getFullname());
         user.setBirthday(userDTO.getBirthday());
         user.setPhone(userDTO.getPhone());
@@ -49,11 +52,14 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    // Sử dụng cho chức năng Register
     @Override
     public boolean createUserByUser(UserDTO userDTO) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
         Users user = new Users();
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setLastPayment(0);
 
         Roles roles = new Roles();
@@ -70,13 +76,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<UserDTO> readUser(boolean getAllUser,String email) {
+    public List<UserDTO> readUser(boolean getAllUser,int id) {
         List<UserDTO> userDtoList = new ArrayList<>();
         List<Users> usersList = new ArrayList<>();
         if(getAllUser){
             usersList = userRepository.findAll();
         } else {
-            Users users = userRepository.findByEmail(email);
+            Users users = userRepository.findById(id);
             usersList.add(users);
         }
 
@@ -111,10 +117,11 @@ public class UserServiceImp implements UserService {
 
     @Override
     public boolean updateUser(UserDTO userDTO) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         Users user = userRepository.findById(userDTO.getId());
 
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setFullname(userDTO.getFullname());
         user.setBirthday(userDTO.getBirthday());
         user.setPhone(userDTO.getPhone());
@@ -140,7 +147,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean deleteUser(String email) {
-        return false;
+    public boolean deleteUser(int id) {
+        try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e){
+            System.out.println("Error has occurred when delete User | "+e.getMessage());
+            return false;
+        }
     }
 }

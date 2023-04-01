@@ -1,7 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
-import cybersoft.java20.dev3lopers.gear3sproject.model.RoleListModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.BasicResponse;
+import cybersoft.java20.dev3lopers.gear3sproject.security.AuthorConfirmation;
 import cybersoft.java20.dev3lopers.gear3sproject.service.LoginServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,9 @@ public class LoginAdController {
     @Autowired
     LoginServiceImp loginServiceImp;
 
+    @Autowired
+    AuthorConfirmation confirmation;
+
     @GetMapping("/signin")
     public ResponseEntity<?> doGetSignIn(){
 
@@ -46,15 +49,11 @@ public class LoginAdController {
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authentication);
 
-                String userName = authentication.getName();
-                // Kiểm tra quyền admin của user đang đăng nhập
-                if(RoleListModel.ADMIN.getValue() != loginServiceImp.getRoleIdByEmail(userName)){
-                    basicResponse.setStatusCode(HttpStatus.FORBIDDEN.value());
-                    basicResponse.setDesc("Không có quyền admin");
-                    basicResponse.setData(null);
-
-                    return new ResponseEntity<>(basicResponse,HttpStatus.OK);
+                BasicResponse response = confirmation.checkRole(req);
+                if(response != null){
+                    return new ResponseEntity<>(response,HttpStatus.OK);
                 }
+                String userName = authentication.getName();
                 basicResponse.setStatusCode(HttpStatus.OK.value());
                 basicResponse.setDesc("Đăng nhập thành công");
                 basicResponse.setData(jwtUtils.generateToken(userName));
