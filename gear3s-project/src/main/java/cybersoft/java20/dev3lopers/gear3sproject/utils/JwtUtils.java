@@ -50,4 +50,23 @@ public class JwtUtils {
             return false;
         }
     }
+
+    public String getSubjectFromToken(String token){
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(privateKey.getBytes());
+            String subject = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+
+            return subject;
+        } catch (Exception e){
+            System.out.println("Error has occurred when get subject from token | "+e.getMessage());
+            return "";
+        }
+    }
+
+
 }

@@ -15,7 +15,6 @@ public class CustomAuthentication implements AuthenticationProvider {
     @Autowired
     LoginServiceImp loginServiceImp;
 
-
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
@@ -32,4 +31,5 @@ public class CustomAuthentication implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
+
 }

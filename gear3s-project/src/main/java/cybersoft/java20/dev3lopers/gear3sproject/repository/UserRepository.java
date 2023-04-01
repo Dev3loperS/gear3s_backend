@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users,Integer> {
-    Integer countByEmailAndPassword(String email, String password);
+    @Query(value = "select u.password from users as u where u.email = ?1",nativeQuery = false)
+    String getPassByEmail(String email);
 
     @Query(value = "select u.roles.id from users as u where u.email = ?1",nativeQuery = false)
     Integer getRoleByEmail(String email);
@@ -21,6 +22,5 @@ public interface UserRepository extends JpaRepository<Users,Integer> {
     List<Users> getAllUser();*/
 
     List<Users> findAll();
-    Users findByEmail(String email);
     Users findById(int id);
 }
