@@ -6,7 +6,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RoleListModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
+import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import java.util.List;
 public class UserServiceImp implements UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public boolean createUserByAdmin(UserDTO userDTO) {
@@ -62,8 +66,7 @@ public class UserServiceImp implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setLastPayment(0);
 
-        Roles roles = new Roles();
-        roles.setId(RoleListModel.USER.getValue());
+        Roles roles = roleRepository.findByName(RoleModel.USER.getValue());
         user.setRoles(roles);
 
         try {
