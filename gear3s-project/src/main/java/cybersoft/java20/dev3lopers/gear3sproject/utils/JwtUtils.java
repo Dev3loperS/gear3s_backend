@@ -1,14 +1,14 @@
 package cybersoft.java20.dev3lopers.gear3sproject.utils;
 
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+
 
 @Component
 public class JwtUtils {
@@ -20,15 +20,16 @@ public class JwtUtils {
     private String privateKey;
 
     public String generateToken(String userName){
-        Calendar date = new GregorianCalendar();
-        long currentDateMs = date.getTimeInMillis() + expiryTime;
-        Date expiryDate = new Date(currentDateMs);
+        Date date = new Date();
+        long currentDate = date.getTime() + expiryTime;
+        Date expiryDate = new Date(currentDate);
 
         SecretKey key = Keys.hmacShaKeyFor(privateKey.getBytes());
         String jwt = Jwts.builder()
                     .setSubject(userName)
-                    .signWith(key)
+                    .setIssuedAt(date)
                     .setExpiration(expiryDate)
+                    .signWith(key)
                     .compact();
 
         return jwt;
@@ -37,34 +38,35 @@ public class JwtUtils {
     public boolean verifyToken(String token){
         try {
             SecretKey key = Keys.hmacShaKeyFor(privateKey.getBytes());
-            String userName = Jwts.parserBuilder()
-                                .setSigningKey(key)
-                                .build()
-                                .parseClaimsJws(token)
-                                .getBody()
-                                .getSubject();
-
-            return (!"".equals(userName) && userName != null);
-        } catch (Exception e){
-            System.out.println("Error has occurred when verify token | "+e.getMessage());
-            return false;
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (MalformedJwtException e) {
+            System.out.println("Invalid JWT token: "+ e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT token is expired: "+ e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.out.println("JWT token is unsupported: "+ e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT claims string is empty: "+ e.getMessage());
+        } catch (SignatureException e) {
+            System.out.println("Invalid JWT signature: "+ e.getMessage());
         }
+
+        return false;
     }
 
     public String getSubjectFromToken(String token){
         try {
             SecretKey key = Keys.hmacShaKeyFor(privateKey.getBytes());
-            String subject = Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
-
-            return subject;
         } catch (Exception e){
             System.out.println("Error has occurred when get subject from token | "+e.getMessage());
-            return "";
+            return null;
         }
     }
 
