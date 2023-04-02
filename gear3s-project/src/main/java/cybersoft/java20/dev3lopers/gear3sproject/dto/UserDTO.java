@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
 
@@ -8,6 +9,7 @@ import java.sql.Date;
 public class UserDTO {
     private int id;
     private String email;
+    @JsonIgnore
     private String password;
     private String fullname;
     private Date birthday;

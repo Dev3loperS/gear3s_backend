@@ -21,8 +21,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -33,12 +31,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     AccountDetailServiceImp accountDetailServiceImp;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(ignoreURL(request)){
-            filterChain.doFilter(request, response);
-            return;
-        }
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        //System.out.println(request.getServletPath());
         try {
             String jwt = parseJwt(request);
             if(jwt != null && jwtUtils.verifyToken(jwt)){
@@ -78,20 +73,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         return null;
-    }
-
-    private boolean ignoreURL(HttpServletRequest request){
-        String path = request.getRequestURI();
-        switch (path){
-            case "/admin/login/signin":
-            case "/login/register":
-            case "/login/signin":
-                break;
-            default:
-                return false;
-        }
-
-        return true;
     }
 
 }

@@ -1,4 +1,4 @@
-package cybersoft.java20.dev3lopers.gear3sproject.controller;
+package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/user")
-public class UserController {
+public class UserAdController {
     @Autowired
     UserServiceImp userServiceImp;
 
@@ -28,13 +28,6 @@ public class UserController {
             return new ResponseEntity<>(
                     new BasicResponse("Lấy danh sách Users thất bại",null),HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping("/table")
-    public ResponseEntity<?> postUserTable(){
-
-        return new ResponseEntity<>(
-                new BasicResponse("Load trang Users table thành công",null),HttpStatus.OK);
     }
 
     @DeleteMapping("/table")

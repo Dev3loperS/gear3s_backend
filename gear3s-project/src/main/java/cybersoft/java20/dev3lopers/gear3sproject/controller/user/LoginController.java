@@ -1,4 +1,4 @@
-package cybersoft.java20.dev3lopers.gear3sproject.controller;
+package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping({"/admin/login","/login"})
+@RequestMapping("/login")
 public class LoginController {
     @Value("${jwt.privateKey}")
     private String privateKey;
@@ -45,7 +45,7 @@ public class LoginController {
     UserServiceImp userServiceImp;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> doPostSignIn(HttpServletRequest req,@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> doPostSignIn(@Valid @RequestBody LoginRequest loginRequest){
         try {
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
@@ -57,18 +57,11 @@ public class LoginController {
                 AccountDetailsImp userDetails =
                         (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-                if("/admin/login/signin".equals(req.getRequestURI())){
-                    if(!userDetails.getRole().equals(RoleModel.ADMIN.getValue())){
-                        return new ResponseEntity<>(
-                                new BasicResponse("Không có quyền Admin",null),HttpStatus.FORBIDDEN);
-                    }
-                }
-
                 return new ResponseEntity<>(
                         new BasicResponse("Đăng nhập thành công",jwtResponse(userDetails,jwt)),HttpStatus.OK);
             }
         } catch (Exception e){
-            System.out.println("Error has occurred when sign in | "+e.getMessage());
+            System.out.println("Error has occurred when sign in for user | "+e.getMessage());
         }
 
         return new ResponseEntity<>(
@@ -76,12 +69,7 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> doPostRegister(HttpServletRequest req, @RequestBody RegisterRequest register){
-        if("/admin/login/register".equals(req.getRequestURI())){
-            return new ResponseEntity<>(
-                    new BasicResponse("Không tồn tại trang này",null),HttpStatus.NOT_FOUND);
-        }
-
+    public ResponseEntity<?> doPostRegister(@Valid @RequestBody RegisterRequest register){
         if(!register.getConfirmpass().equals(register.getPassword())){
             return new ResponseEntity<>(
                     new BasicResponse("Xác nhận mật khẩu không khớp",null),HttpStatus.BAD_REQUEST);

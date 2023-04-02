@@ -1,6 +1,7 @@
-package cybersoft.java20.dev3lopers.gear3sproject.security;
+package cybersoft.java20.dev3lopers.gear3sproject.config;
 
 import cybersoft.java20.dev3lopers.gear3sproject.filter.AuthTokenFilter;
+import cybersoft.java20.dev3lopers.gear3sproject.security.CustomAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +50,12 @@ public class CustomConfigSecurity {
                 .authorizeRequests()
                     .antMatchers("/admin/login/**","/login/**")
                     .permitAll()
+                    .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
+                                    "/swagger-resources","/configuration/security", "/swagger-ui.html",
+                                    "/webjars/**","/csrf","/**/*.css.map", "/**/*.css", "/**/*.js","/**/*.js.map",
+                                    "/","/**/*.png","/**/*.jpg", "/**/*.woff2")
+                    .permitAll()
+                    //.antMatchers("/**").permitAll()
                     .anyRequest()
                     .authenticated();
 
