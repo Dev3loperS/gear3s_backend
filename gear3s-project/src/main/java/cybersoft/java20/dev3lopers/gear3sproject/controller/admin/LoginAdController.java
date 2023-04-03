@@ -46,7 +46,7 @@ public class LoginAdController {
     UserServiceImp userServiceImp;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> doPostSignIn(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest){
         try {
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());

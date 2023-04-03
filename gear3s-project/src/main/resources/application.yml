@@ -1,3 +1,5 @@
+server:
+  port: 8088
 spring:
   datasource:
     url: jdbc:mysql://103.160.2.183:3306/gear3s_db
