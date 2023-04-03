@@ -45,7 +45,7 @@ public class LoginController {
     UserServiceImp userServiceImp;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> doPostSignIn(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest){
         try {
             UsernamePasswordAuthenticationToken authenticationToken
                     = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
@@ -69,7 +69,7 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> doPostRegister(@Valid @RequestBody RegisterRequest register){
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest register){
         if(!register.getConfirmpass().equals(register.getPassword())){
             return new ResponseEntity<>(
                     new BasicResponse("Xác nhận mật khẩu không khớp",null),HttpStatus.BAD_REQUEST);
