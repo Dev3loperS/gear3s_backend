@@ -14,7 +14,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-    static-path-pattern: /static/**
+    #static-path-pattern: /static/**
 
 jwt:
   privateKey: mB4Mn+ISn7uhxTHyewNaaCi+ZxDw8Hxci6JaTLR4gcU=
