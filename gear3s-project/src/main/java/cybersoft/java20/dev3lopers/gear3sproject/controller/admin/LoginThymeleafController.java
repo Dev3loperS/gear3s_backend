@@ -11,6 +11,6 @@ public class LoginThymeleafController {
     @GetMapping("/")
     public String login(Model model) {
         model.addAttribute("message", "Dat");
-        return "admin-login";
+        return "login/admin-login";
     }
 }
