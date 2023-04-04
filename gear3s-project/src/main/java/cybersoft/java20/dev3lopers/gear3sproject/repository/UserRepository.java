@@ -13,9 +13,6 @@ public interface UserRepository extends JpaRepository<Users,Integer> {
     @Query(value = "select u.password from users as u where u.email = ?1",nativeQuery = false)
     String getPassByEmail(String email);
 
-    @Query(value = "select u.roles.id from users as u where u.email = ?1",nativeQuery = false)
-    Integer getRoleByEmail(String email);
-
     /*@Query(value = "select u.id,u.email,u.password,u.fullname,u.birthday,u.phone,u.address,u.avatar,u.lastPayment," +
                     "s.name as sex,r.name as role from users u" +
                     " left join u.sex s left join u.roles r",nativeQuery = false)
@@ -24,4 +21,5 @@ public interface UserRepository extends JpaRepository<Users,Integer> {
     List<Users> findAll();
     Users findById(int id);
     Users findByEmail(String email);
+    Integer countByEmail(String email);
 }

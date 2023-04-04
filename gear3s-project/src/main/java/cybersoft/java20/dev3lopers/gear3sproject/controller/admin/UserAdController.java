@@ -1,20 +1,31 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.RoleDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.SexDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
+import cybersoft.java20.dev3lopers.gear3sproject.service.RoleServiceImp;
+import cybersoft.java20.dev3lopers.gear3sproject.service.SexServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping("/api/admin/user")
 public class UserAdController {
     @Autowired
     UserServiceImp userServiceImp;
+
+    @Autowired
+    RoleServiceImp roleServiceImp;
+
+    @Autowired
+    SexServiceImp sexServiceImp;
 
     @GetMapping("/table")
     public ResponseEntity<?> getUserTable(){
@@ -61,7 +72,7 @@ public class UserAdController {
     public ResponseEntity<?> getAddUser(){
 
         return new ResponseEntity<>(
-                new BasicResponse("Load trang tạo User thành công",null),HttpStatus.OK);
+                new BasicResponse("Load trang tạo User",getRoleAndSexList()),HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -81,7 +92,7 @@ public class UserAdController {
     public ResponseEntity<?> getEditUser(){
 
         return new ResponseEntity<>(
-                new BasicResponse("Load trang cập nhập thông tin User thành công",null),HttpStatus.OK);
+                new BasicResponse("Load trang cập nhập thông tin User",getRoleAndSexList()),HttpStatus.OK);
     }
 
     @PutMapping("/edit")
@@ -95,6 +106,34 @@ public class UserAdController {
             return new ResponseEntity<>(
                     new BasicResponse("Cập nhập thông tin User thất bại",false),HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private List<BasicResponse> getRoleAndSexList(){
+        List<BasicResponse> responseList = new ArrayList<>();
+
+        List<RoleDTO> roleList = roleServiceImp.getAllRole();
+        BasicResponse roleResp = new BasicResponse();
+        if (roleList != null){
+            roleResp.setMessage("Lấy danh sách Role thành công");
+            roleResp.setData(roleList);
+        } else {
+            roleResp.setMessage("Lấy danh sách Role thất bại");
+            roleResp.setData(null);
+        }
+        responseList.add(roleResp);
+
+        List<SexDTO> sexList = sexServiceImp.getAllSex();
+        BasicResponse sexResp = new BasicResponse();
+        if(sexList != null){
+            sexResp.setMessage("Lấy danh sách Sex thành công");
+            sexResp.setData(sexList);
+        } else {
+            sexResp.setMessage("Lấy danh sách Sex thất bại");
+            sexResp.setData(null);
+        }
+        responseList.add(sexResp);
+
+        return responseList;
     }
 
 
