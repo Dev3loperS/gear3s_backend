@@ -57,7 +57,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         return;
                     }
                 }
-                System.out.println("Your token: "+jwt);
+                //System.out.println("Your token: "+jwt);
             }
         } catch (Exception e){
             System.out.println("Error has occurred when check token | "+e.getMessage());

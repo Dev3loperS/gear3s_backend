@@ -5,7 +5,6 @@ import cybersoft.java20.dev3lopers.gear3sproject.payload.request.LoginRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.JwtResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.AccountDetailsImp;
-import cybersoft.java20.dev3lopers.gear3sproject.service.LoginServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.utils.JwtUtils;
 import io.jsonwebtoken.Jwts;
@@ -24,11 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/admin/login")
+@RequestMapping("/api/admin/login")
 public class LoginAdController {
     @Value("${jwt.privateKey}")
     private String privateKey;
@@ -38,9 +36,6 @@ public class LoginAdController {
 
     @Autowired
     JwtUtils jwtUtils;
-
-    @Autowired
-    LoginServiceImp loginServiceImp;
 
     @Autowired
     UserServiceImp userServiceImp;

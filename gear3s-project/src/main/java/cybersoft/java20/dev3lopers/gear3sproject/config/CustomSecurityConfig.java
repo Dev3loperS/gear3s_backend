@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class CustomConfigSecurity {
+public class CustomSecurityConfig {
     @Autowired
     CustomAuthentication authentication;
 
@@ -48,7 +48,7 @@ public class CustomConfigSecurity {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/admin/login/**","/login/**")
+                    .antMatchers("/api/admin/login/**","/api/login/**")
                     .permitAll()
                     .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
                                     "/swagger-resources","/configuration/security", "/swagger-ui.html",

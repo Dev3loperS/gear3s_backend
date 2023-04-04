@@ -26,6 +26,19 @@ public class UserServiceImp implements UserService {
     RoleRepository roleRepository;
 
     @Override
+    public boolean checkLogin(String email, String passwordRaw) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String databasePass = userRepository.getPassByEmail(email);
+
+        return bCryptPasswordEncoder.matches(passwordRaw,databasePass);
+    }
+
+    @Override
+    public boolean checkEmailExistence(String email) {
+        return userRepository.countByEmail(email) > 0;
+    }
+
+    @Override
     public boolean createUserByAdmin(UserDTO userDTO) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 

@@ -1,13 +1,11 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.LoginRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.RegisterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.JwtResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.AccountDetailsImp;
-import cybersoft.java20.dev3lopers.gear3sproject.service.LoginServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.utils.JwtUtils;
 import io.jsonwebtoken.Jwts;
@@ -23,11 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class LoginController {
     @Value("${jwt.privateKey}")
     private String privateKey;
@@ -37,9 +34,6 @@ public class LoginController {
 
     @Autowired
     JwtUtils jwtUtils;
-
-    @Autowired
-    LoginServiceImp loginServiceImp;
 
     @Autowired
     UserServiceImp userServiceImp;
@@ -73,6 +67,9 @@ public class LoginController {
         if(!register.getConfirmpass().equals(register.getPassword())){
             return new ResponseEntity<>(
                     new BasicResponse("Xác nhận mật khẩu không khớp",null),HttpStatus.BAD_REQUEST);
+        } else if(userServiceImp.checkEmailExistence(register.getEmail())){
+            return new ResponseEntity<>(
+                    new BasicResponse("Email đã tồn tại",null),HttpStatus.BAD_REQUEST);
         } else {
             UserDTO userDTO = new UserDTO();
             userDTO.setEmail(register.getEmail());
