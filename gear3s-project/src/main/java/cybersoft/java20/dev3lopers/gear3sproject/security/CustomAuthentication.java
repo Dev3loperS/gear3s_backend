@@ -11,6 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class CustomAuthentication implements AuthenticationProvider {
     @Autowired
@@ -32,7 +34,7 @@ public class CustomAuthentication implements AuthenticationProvider {
 
             return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
         } else {
-            return null;
+            return new UsernamePasswordAuthenticationToken("","",new ArrayList<>());
         }
     }
 

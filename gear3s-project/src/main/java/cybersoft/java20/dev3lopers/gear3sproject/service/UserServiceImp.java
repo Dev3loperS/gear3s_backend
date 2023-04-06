@@ -10,6 +10,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,18 @@ public class UserServiceImp implements UserService {
     @Autowired
     RoleRepository roleRepository;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
+
     @Override
     public boolean checkLogin(String email, String passwordRaw) {
+        LOGGER.debug("A DEBUG Message");
+        LOGGER.info("A INFO Message");
+        LOGGER.warn("A WARN Message");
+        LOGGER.error("A ERROR Message");
+
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String databasePass = userRepository.getPassByEmail(email);
-
+        System.out.println("123");
         return bCryptPasswordEncoder.matches(passwordRaw,databasePass);
     }
 
