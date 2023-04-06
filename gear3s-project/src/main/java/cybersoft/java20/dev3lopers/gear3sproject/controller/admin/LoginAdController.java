@@ -47,7 +47,7 @@ public class LoginAdController {
                     = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-            if(authentication != null){
+            if(!"".equals(authentication.getName())){
                 String jwt = jwtUtils.generateToken(loginRequest.getEmail());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 AccountDetailsImp userDetails =
