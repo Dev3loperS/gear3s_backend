@@ -56,6 +56,8 @@ public class CustomSecurityConfig {
                                     "/","/**/*.png","/**/*.jpg", "/**/*.woff2")
                     .permitAll()
                     //.antMatchers("/**").permitAll()
+                .antMatchers("/image/files/**")
+                .permitAll()
                     .anyRequest()
                     .authenticated();
 
