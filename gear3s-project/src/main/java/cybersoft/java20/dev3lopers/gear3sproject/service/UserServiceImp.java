@@ -35,7 +35,7 @@ public class UserServiceImp implements UserService {
         String databasePass = userRepository.getPassByEmail(email);
 
         if(!bCryptPasswordEncoder.matches(passwordRaw,databasePass)){
-            LOGGER.warn("Login failed with account: {}",email);
+            LOGGER.error("Login failed with account: {}",email);
             return false;
         }
 
@@ -45,7 +45,7 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean checkEmailExistence(String email) {
         if(userRepository.countByEmail(email) < 1){
-            LOGGER.warn("Account '{}' does not exist",email);
+            LOGGER.error("Account '{}' does not exist",email);
             return false;
         }
         return true;
@@ -69,10 +69,10 @@ public class UserServiceImp implements UserService {
 
         try {
             userRepository.save(user);
-            LOGGER.info("Account '{}' was created successfully",user.getEmail());
+            LOGGER.info("Account '{}' has been created successfully by Admin",user.getEmail());
             return true;
         } catch (Exception e){
-            LOGGER.warn("Failed to create account '{}' by Admin: {}",user.getEmail(),e.getMessage());
+            LOGGER.error("Failed to create account '{}' by Admin: {}",user.getEmail(),e.getMessage());
             return false;
         }
     }
@@ -90,10 +90,10 @@ public class UserServiceImp implements UserService {
 
         try {
             userRepository.save(user);
-            LOGGER.info("Account '{}' was created successfully",user.getEmail());
+            LOGGER.info("Account '{}' has been created successfully by User",user.getEmail());
             return true;
         } catch (Exception e){
-            LOGGER.warn("Failed to create account '{}' by User: {}",user.getEmail(),e.getMessage());
+            LOGGER.error("Failed to create account '{}' by User: {}",user.getEmail(),e.getMessage());
             return false;
         }
     }
@@ -114,7 +114,7 @@ public class UserServiceImp implements UserService {
 
             userDTO.setId(user.getId());
             userDTO.setEmail(user.getEmail());
-            userDTO.setPassword(user.getPassword());
+            userDTO.setPassword(null);
             userDTO.setFullname(user.getFullname());
             userDTO.setBirthday(user.getBirthday());
             userDTO.setPhone(user.getPhone());
@@ -152,9 +152,10 @@ public class UserServiceImp implements UserService {
 
         try {
             userRepository.save(user);
+            LOGGER.info("Account '{}' has been updated successfully by Admin",user.getEmail());
             return true;
         } catch (Exception e){
-            System.out.println("Error has occurred when update user by admin | "+e.getMessage());
+            LOGGER.error("Failed to update account '{}' by Admin: {}",user.getEmail(),e.getMessage());
             return false;
         }
     }
@@ -163,9 +164,10 @@ public class UserServiceImp implements UserService {
     public boolean deleteUser(int id) {
         try {
             userRepository.deleteById(id);
+            LOGGER.info("Account with Id '{}' has been deleted successfully by Admin",id);
             return true;
         } catch (Exception e){
-            System.out.println("Error has occurred when delete User | "+e.getMessage());
+            LOGGER.error("Failed to delete account with Id '{}' by Admin: {}",id,e.getMessage());
             return false;
         }
     }

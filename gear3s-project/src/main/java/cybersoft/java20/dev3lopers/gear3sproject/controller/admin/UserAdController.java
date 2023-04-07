@@ -28,10 +28,30 @@ public class UserAdController {
     @Autowired
     SexServiceImp sexServiceImp;
 
+    @GetMapping("/add")
+    public ResponseEntity<?> getAddUser(){
+
+        return new ResponseEntity<>(
+                new BasicResponse("Return roles & sex list",getRoleAndSexList()),HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userDTO) {
+        if (userServiceImp.createUserByAdmin(userDTO)) {
+
+            return new ResponseEntity<>(
+                    new BasicResponse("Added new user successfully", true), HttpStatus.CREATED);
+        } else {
+
+            return new ResponseEntity<>(
+                    new BasicResponse("Failed to add new user", false), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/table")
     public ResponseEntity<?> getUserTable(){
 
-        return new ResponseEntity<>(new BasicResponse("Trả danh sách Users",
+        return new ResponseEntity<>(new BasicResponse("Return users list",
                                         userServiceImp.readUser(true,0)),HttpStatus.OK);
     }
 
@@ -40,47 +60,26 @@ public class UserAdController {
         if(userServiceImp.deleteUser(id)){
 
             return new ResponseEntity<>(
-                    new BasicResponse("Xóa User thành công",true),HttpStatus.OK);
+                    new BasicResponse("Deleted user successfully",true),HttpStatus.OK);
         } else {
 
             return new ResponseEntity<>(
-                    new BasicResponse("Xóa User thất bại",false),HttpStatus.BAD_REQUEST);
+                    new BasicResponse("Failed to delete user",false),HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/detail")
     public ResponseEntity<?> getUserDetail(@RequestParam int id){
 
-        return new ResponseEntity<>(new BasicResponse("Trả thông tin User",
+        return new ResponseEntity<>(new BasicResponse("Return user info",
                                         userServiceImp.readUser(false,id)),HttpStatus.OK);
-
-    }
-
-    @GetMapping("/add")
-    public ResponseEntity<?> getAddUser(){
-
-        return new ResponseEntity<>(
-                new BasicResponse("Load trang tạo User",getRoleAndSexList()),HttpStatus.OK);
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userDTO){
-        if(userServiceImp.createUserByAdmin(userDTO)){
-
-            return new ResponseEntity<>(
-                    new BasicResponse("Tạo User mới thành công",true),HttpStatus.CREATED);
-        }else {
-
-            return new ResponseEntity<>(
-                    new BasicResponse("Tạo User mới thất bại",false),HttpStatus.BAD_REQUEST);
-        }
     }
 
     @GetMapping("/edit")
     public ResponseEntity<?> getEditUser(){
 
         return new ResponseEntity<>(
-                new BasicResponse("Load trang cập nhập thông tin User",getRoleAndSexList()),HttpStatus.OK);
+                new BasicResponse("Return roles & sex list",getRoleAndSexList()),HttpStatus.OK);
     }
 
     @PutMapping("/edit")
@@ -88,38 +87,19 @@ public class UserAdController {
         if(userServiceImp.updateUser(userDTO)){
 
             return new ResponseEntity<>(
-                    new BasicResponse("Cập nhập thông tin User thành công",true),HttpStatus.CREATED);
+                    new BasicResponse("Updated user successfully",true),HttpStatus.CREATED);
         }else {
 
             return new ResponseEntity<>(
-                    new BasicResponse("Cập nhập thông tin User thất bại",false),HttpStatus.BAD_REQUEST);
+                    new BasicResponse("Failed to update user",false),HttpStatus.BAD_REQUEST);
         }
     }
 
     private List<BasicResponse> getRoleAndSexList(){
         List<BasicResponse> responseList = new ArrayList<>();
 
-        List<RoleDTO> roleList = roleServiceImp.getAllRole();
-        BasicResponse roleResp = new BasicResponse();
-        if (roleList != null){
-            roleResp.setMessage("Lấy danh sách Role thành công");
-            roleResp.setData(roleList);
-        } else {
-            roleResp.setMessage("Lấy danh sách Role thất bại");
-            roleResp.setData(null);
-        }
-        responseList.add(roleResp);
-
-        List<SexDTO> sexList = sexServiceImp.getAllSex();
-        BasicResponse sexResp = new BasicResponse();
-        if(sexList != null){
-            sexResp.setMessage("Lấy danh sách Sex thành công");
-            sexResp.setData(sexList);
-        } else {
-            sexResp.setMessage("Lấy danh sách Sex thất bại");
-            sexResp.setData(null);
-        }
-        responseList.add(sexResp);
+        responseList.add(new BasicResponse("Return roles list",roleServiceImp.getAllRole()));
+        responseList.add(new BasicResponse("Return sex list",sexServiceImp.getAllSex()));
 
         return responseList;
     }

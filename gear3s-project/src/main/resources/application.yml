@@ -23,15 +23,17 @@ logging:
   level:
     root: info
   file:
-    name: C:/Gear3s/logs/gear3s-log.log
+    name: ../../logs/gear3s-log.log
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %clr(${LOG_LEVEL_PATTERN:-%5p}) %cyan(%logger{37}.%M) - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{37}.%M - %msg%n"
   logback:
     rollingpolicy:
-      file-name-pattern: C:/Gear3s/logs/archived/gear3s-log.%d{yyyy-MM-dd}.%i.log
+      file-name-pattern: ../../logs/archived/gear3s-log.%d{yyyy-MM-dd}.%i.log
       max-file-size: 50MB
 
+uploads:
+  path: ../../uploads
 
 
 
