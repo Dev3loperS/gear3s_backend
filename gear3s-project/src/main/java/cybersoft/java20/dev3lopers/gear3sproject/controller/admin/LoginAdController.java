@@ -55,18 +55,20 @@ public class LoginAdController {
 
                 if(!userDetails.getRole().equals(RoleModel.ADMIN.getValue())){
                     return new ResponseEntity<>(
-                            new BasicResponse("Không có quyền Admin",null),HttpStatus.FORBIDDEN);
+                            new BasicResponse("You're not Admin. Get out of here!",null),HttpStatus.FORBIDDEN);
                 }
 
                 return new ResponseEntity<>(
-                        new BasicResponse("Đăng nhập thành công",jwtResponse(userDetails,jwt)),HttpStatus.OK);
+                        new BasicResponse("Signed in as Admin successful",jwtResponse(userDetails,jwt)),HttpStatus.OK);
             }
         } catch (Exception e){
+
+
             System.out.println("Error has occurred when sign in for admin | "+e.getMessage());
         }
 
         return new ResponseEntity<>(
-                new BasicResponse("Đăng nhập thất bại",null),HttpStatus.UNAUTHORIZED);
+                new BasicResponse("Failed to sign in as Admin",null),HttpStatus.UNAUTHORIZED);
     }
 
     private JwtResponse jwtResponse(AccountDetailsImp account,String jwt){

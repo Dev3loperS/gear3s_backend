@@ -51,25 +51,25 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 //authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                // Kiểm tra phân quyền
+                // Kiểm tra phân quyền (có phải admin hay không) khi vào các trang có /api/admin/**
                 AccountDetailsImp account =
                         (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 if("/api/admin".equals(request.getRequestURI().substring(0,10))){
                     if(!account.getRole().equals(RoleModel.ADMIN.getValue())){
                         // Đưa về trang 403.html
+                        System.out.println("123");
                         return;
                     }
                 }
-            } else {
+            }
+            /*else {
                 LOGGER.error("Token not found");
-
                 response.setHeader("Content-Type", "application/json");
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 String responseToSend = new ObjectMapper().writeValueAsString(new BasicResponse("Jwt token not found",null));
                 response.getOutputStream().write(responseToSend.getBytes());
-
                 return;
-            }
+            }*/
         } catch (Exception e){
             LOGGER.error("Error has occurred in 'doFilterInternal' : {}",e.getMessage());
         }
