@@ -1,16 +1,19 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
-import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 
 public class UserDTO {
     private int id;
+
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
     private String email;
-    @JsonIgnore
+
+    @NotBlank(message = "Password cannot be blank")
     private String password;
+
     private String fullname;
     private Date birthday;
     private String phone;

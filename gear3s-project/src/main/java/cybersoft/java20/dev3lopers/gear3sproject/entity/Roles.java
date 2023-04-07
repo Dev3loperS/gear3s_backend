@@ -18,6 +18,17 @@ public class Roles {
     @OneToMany(mappedBy = "roles")
     private Set<Users> listUser;
 
+    public Roles() {
+    }
+
+    public Roles(int id) {
+        this.id = id;
+    }
+
+    public Roles(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

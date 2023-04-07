@@ -31,20 +31,24 @@ public class UserServiceImp implements UserService {
 
     @Override
     public boolean checkLogin(String email, String passwordRaw) {
-        LOGGER.debug("A DEBUG Message");
-        LOGGER.info("A INFO Message");
-        LOGGER.warn("A WARN Message");
-        LOGGER.error("A ERROR Message");
-
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String databasePass = userRepository.getPassByEmail(email);
-        System.out.println("123");
-        return bCryptPasswordEncoder.matches(passwordRaw,databasePass);
+
+        if(!bCryptPasswordEncoder.matches(passwordRaw,databasePass)){
+            LOGGER.warn("Login failed with account: {}",email);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public boolean checkEmailExistence(String email) {
-        return userRepository.countByEmail(email) > 0;
+        if(userRepository.countByEmail(email) < 1){
+            LOGGER.warn("Account '{}' does not exist",email);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -60,25 +64,20 @@ public class UserServiceImp implements UserService {
         user.setAddress(userDTO.getAddress());
         user.setAvatar(userDTO.getAvatar());
         user.setLastPayment(0);
-
-        Roles roles = new Roles();
-        roles.setId(userDTO.getRole().getId());
-        user.setRoles(roles);
-
-        Sex sex = new Sex();
-        sex.setId(userDTO.getSex().getId());
-        user.setSex(sex);
+        user.setRoles(new Roles(userDTO.getRole().getId()));
+        user.setSex(new Sex(userDTO.getSex().getId()));
 
         try {
             userRepository.save(user);
+            LOGGER.info("Account '{}' was created successfully",user.getEmail());
             return true;
         } catch (Exception e){
-            System.out.println("Error has occurred when create user by admin | "+e.getMessage());
+            LOGGER.warn("Failed to create account '{}' by Admin: {}",user.getEmail(),e.getMessage());
             return false;
         }
     }
 
-    // Sử dụng cho chức năng Register
+    // Sử dụng cho chức năng Register từ trang người dùng
     @Override
     public boolean createUserByUser(UserDTO userDTO) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -87,15 +86,14 @@ public class UserServiceImp implements UserService {
         user.setEmail(userDTO.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setLastPayment(0);
-
-        Roles roles = roleRepository.findByName(RoleModel.USER.getValue());
-        user.setRoles(roles);
+        user.setRoles(roleRepository.findByName(RoleModel.USER.getValue()));
 
         try {
             userRepository.save(user);
+            LOGGER.info("Account '{}' was created successfully",user.getEmail());
             return true;
         } catch (Exception e){
-            System.out.println("Error has occurred when create user by user | "+e.getMessage());
+            LOGGER.warn("Failed to create account '{}' by User: {}",user.getEmail(),e.getMessage());
             return false;
         }
     }
@@ -125,14 +123,10 @@ public class UserServiceImp implements UserService {
             userDTO.setLastPay(user.getLastPayment());
 
             if(user.getRoles() != null){
-                RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setName(user.getRoles().getName());
-                userDTO.setRole(roleDTO);
+                userDTO.setRole(new RoleDTO(user.getRoles().getName()));
             }
             if(user.getSex() != null){
-                SexDTO sexDTO = new SexDTO();
-                sexDTO.setName(user.getSex().getName());
-                userDTO.setSex(sexDTO);
+                userDTO.setSex(new SexDTO(user.getSex().getName()));
             }
 
             userDtoList.add(userDTO);
@@ -153,14 +147,8 @@ public class UserServiceImp implements UserService {
         user.setAddress(userDTO.getAddress());
         user.setAvatar(userDTO.getAvatar());
         user.setLastPayment(userDTO.getLastPay());
-
-        Roles roles = new Roles();
-        roles.setId(userDTO.getRole().getId());
-        user.setRoles(roles);
-
-        Sex sex = new Sex();
-        sex.setId(userDTO.getSex().getId());
-        user.setSex(sex);
+        user.setRoles(new Roles(userDTO.getRole().getId()));
+        user.setSex(new Sex(userDTO.getSex().getId()));
 
         try {
             userRepository.save(user);

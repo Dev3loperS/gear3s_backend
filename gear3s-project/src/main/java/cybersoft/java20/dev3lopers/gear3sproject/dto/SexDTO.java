@@ -7,6 +7,14 @@ public class SexDTO {
     public SexDTO() {
     }
 
+    public SexDTO(int id) {
+        this.id = id;
+    }
+
+    public SexDTO(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
