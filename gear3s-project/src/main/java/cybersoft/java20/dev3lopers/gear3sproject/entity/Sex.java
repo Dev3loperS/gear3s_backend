@@ -15,6 +15,17 @@ public class Sex {
     @OneToMany(mappedBy = "sex")
     private Set<Users> listUser;
 
+    public Sex() {
+    }
+
+    public Sex(int id) {
+        this.id = id;
+    }
+
+    public Sex(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

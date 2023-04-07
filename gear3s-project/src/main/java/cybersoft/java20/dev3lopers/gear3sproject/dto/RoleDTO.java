@@ -8,6 +8,14 @@ public class RoleDTO {
     public RoleDTO() {
     }
 
+    public RoleDTO(int id) {
+        this.id = id;
+    }
+
+    public RoleDTO(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

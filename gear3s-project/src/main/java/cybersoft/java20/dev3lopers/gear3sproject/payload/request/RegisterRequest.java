@@ -4,14 +4,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class RegisterRequest {
-    @NotBlank(message = "Chưa nhập email")
-    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Chưa nhập password")
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    @NotBlank(message = "Chưa nhập password")
+    @NotBlank(message = "Confirmation password cannot be blank")
     private String confirmpass;
 
     public RegisterRequest() {

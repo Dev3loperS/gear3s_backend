@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +30,9 @@ public class UserAdController {
 
     @GetMapping("/table")
     public ResponseEntity<?> getUserTable(){
-        List<UserDTO> userList = userServiceImp.readUser(true,0);
-        if(userList != null){
 
-            return new ResponseEntity<>(
-                    new BasicResponse("Lấy danh sách Users thành công",userList),HttpStatus.OK);
-        } else {
-
-            return new ResponseEntity<>(
-                    new BasicResponse("Lấy danh sách Users thất bại",null),HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(new BasicResponse("Trả danh sách Users",
+                                        userServiceImp.readUser(true,0)),HttpStatus.OK);
     }
 
     @DeleteMapping("/table")
@@ -56,16 +50,10 @@ public class UserAdController {
 
     @GetMapping("/detail")
     public ResponseEntity<?> getUserDetail(@RequestParam int id){
-        List<UserDTO> userList = userServiceImp.readUser(false,id);
-        if(userList != null){
 
-            return new ResponseEntity<>(
-                    new BasicResponse("Lấy thông tin User thành công",userList),HttpStatus.OK);
-        } else {
+        return new ResponseEntity<>(new BasicResponse("Trả thông tin User",
+                                        userServiceImp.readUser(false,id)),HttpStatus.OK);
 
-            return new ResponseEntity<>(
-                    new BasicResponse("Lấy thông tin User thất bại",null),HttpStatus.NOT_FOUND);
-        }
     }
 
     @GetMapping("/add")
@@ -76,7 +64,7 @@ public class UserAdController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userDTO){
         if(userServiceImp.createUserByAdmin(userDTO)){
 
             return new ResponseEntity<>(
