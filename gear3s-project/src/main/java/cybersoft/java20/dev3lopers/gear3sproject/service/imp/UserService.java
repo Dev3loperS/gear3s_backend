@@ -9,7 +9,8 @@ public interface UserService {
     boolean checkEmailExistence(String email);
     boolean createUserByUser(UserDTO userDTO);
     boolean createUserByAdmin(UserDTO userDTO);
-    List<UserDTO> readUser(boolean getAllUser, int id);
+    List<UserDTO> readAllUser();
+    UserDTO readUserById(int id);
     boolean updateUser(UserDTO userDTO);
     boolean deleteUser(int id);
 }

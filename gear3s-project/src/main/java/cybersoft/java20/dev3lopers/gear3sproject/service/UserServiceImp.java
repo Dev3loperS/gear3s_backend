@@ -35,19 +35,20 @@ public class UserServiceImp implements UserService {
         String databasePass = userRepository.getPassByEmail(email);
 
         if(!bCryptPasswordEncoder.matches(passwordRaw,databasePass)){
-            LOGGER.error("Login failed with account: {}",email);
+            LOGGER.error("Login failed with email: {}",email);
             return false;
         }
-
+        LOGGER.info("Login successful with email: {}",email);
         return true;
     }
 
     @Override
     public boolean checkEmailExistence(String email) {
         if(userRepository.countByEmail(email) < 1){
-            LOGGER.error("Account '{}' does not exist",email);
+            LOGGER.error("Email '{}' does not exist",email);
             return false;
         }
+        LOGGER.info("Email '{}' exists",email);
         return true;
     }
 
@@ -99,17 +100,15 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<UserDTO> readUser(boolean getAllUser,int id) {
+    public List<UserDTO> readAllUser() {
         List<UserDTO> userDtoList = new ArrayList<>();
-        List<Users> usersList = new ArrayList<>();
-        if(getAllUser){
-            usersList = userRepository.findAll();
-        } else {
-            Users users = userRepository.findById(id);
-            usersList.add(users);
-        }
+        List<Users> usersList = userRepository.findAll();
 
         for (Users user: usersList) {
+            if(user == null) {
+                LOGGER.error("User list is empty");
+                return null;
+            }
             UserDTO userDTO = new UserDTO();
 
             userDTO.setId(user.getId());
@@ -131,7 +130,31 @@ public class UserServiceImp implements UserService {
 
             userDtoList.add(userDTO);
         }
+
         return userDtoList;
+    }
+
+    @Override
+    public UserDTO readUserById(int id) {
+        Users user = userRepository.findById(id);
+        if(user == null) {
+            LOGGER.error("User with Id '{}' does not exist",id);
+            return null;
+        }
+
+        UserDTO userDto = new UserDTO();
+
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(null);
+        userDto.setFullname(user.getFullname());
+        userDto.setBirthday(user.getBirthday());
+        userDto.setPhone(user.getPhone());
+        userDto.setAddress(user.getAddress());
+        userDto.setAvatar(user.getAvatar());
+        userDto.setLastPay(user.getLastPayment());
+
+        return userDto;
     }
 
     @Override

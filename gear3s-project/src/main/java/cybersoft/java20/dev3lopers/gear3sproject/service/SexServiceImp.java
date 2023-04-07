@@ -16,7 +16,7 @@ public class SexServiceImp implements SexService {
     SexRepository sexRepository;
 
     @Override
-    public List<SexDTO> getAllSex() {
+    public List<SexDTO> readAllSex() {
         List<SexDTO> sexDTOList = new ArrayList<>();
         List<Sex> sexList = sexRepository.findAll();
 

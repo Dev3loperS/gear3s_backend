@@ -1,6 +1,8 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.FileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -19,6 +21,8 @@ public class FileStorageServiceImp implements FileStorageService {
     private String path;
 
     private Path root ;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
 
     public void init ()
     {

@@ -22,8 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Component
@@ -56,20 +54,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 if("/api/admin".equals(request.getRequestURI().substring(0,10))){
                     if(!account.getRole().equals(RoleModel.ADMIN.getValue())){
-                        // Đưa về trang 403.html
-                        System.out.println("123");
+                        LOGGER.error("Account '{}' does not have Admin permission",account.getEmail());
+                        response.setHeader("Content-Type", "application/json");
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                        String responseToSend = new ObjectMapper().writeValueAsString(
+                                new BasicResponse("You're not Admin. Get out of here!",null));
+                        response.getOutputStream().write(responseToSend.getBytes());
                         return;
                     }
                 }
             }
-            /*else {
-                LOGGER.error("Token not found");
-                response.setHeader("Content-Type", "application/json");
-                response.setStatus(HttpStatus.FORBIDDEN.value());
-                String responseToSend = new ObjectMapper().writeValueAsString(new BasicResponse("Jwt token not found",null));
-                response.getOutputStream().write(responseToSend.getBytes());
-                return;
-            }*/
         } catch (Exception e){
             LOGGER.error("Error has occurred in 'doFilterInternal' : {}",e.getMessage());
         }

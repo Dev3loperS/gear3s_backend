@@ -10,6 +10,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.utils.JwtUtils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -38,38 +40,36 @@ public class LoginController {
     @Autowired
     UserServiceImp userServiceImp;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
+
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest){
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-            if(authentication != null){
-                String jwt = jwtUtils.generateToken(loginRequest.getEmail());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                AccountDetailsImp userDetails =
-                        (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!"".equals(authentication.getName())){
+            String jwt = jwtUtils.generateToken(loginRequest.getEmail());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            AccountDetailsImp userDetails =
+                    (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-                return new ResponseEntity<>(
-                        new BasicResponse("Đăng nhập thành công",jwtResponse(userDetails,jwt)),HttpStatus.OK);
-            }
-        } catch (Exception e){
-            System.out.println("Error has occurred when sign in for user | "+e.getMessage());
+            return new ResponseEntity<>(
+                    new BasicResponse("Signed in as User successful",jwtResponse(userDetails,jwt)),HttpStatus.OK);
         }
 
         return new ResponseEntity<>(
-                new BasicResponse("Đăng nhập thất bại",null),HttpStatus.UNAUTHORIZED);
+                new BasicResponse("Failed to sign in as User",null),HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest register){
         if(!register.getConfirmpass().equals(register.getPassword())){
             return new ResponseEntity<>(
-                    new BasicResponse("Xác nhận mật khẩu không khớp",null),HttpStatus.BAD_REQUEST);
+                    new BasicResponse("Password are not matching",null),HttpStatus.BAD_REQUEST);
         } else if(userServiceImp.checkEmailExistence(register.getEmail())){
             return new ResponseEntity<>(
-                    new BasicResponse("Email đã tồn tại",null),HttpStatus.BAD_REQUEST);
+                    new BasicResponse("This email already exists",null),HttpStatus.BAD_REQUEST);
         } else {
             UserDTO userDTO = new UserDTO();
             userDTO.setEmail(register.getEmail());
@@ -86,10 +86,10 @@ public class LoginController {
                         (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
                 return new ResponseEntity<>(
-                        new BasicResponse("Tạo User mới thành công",jwtResponse(userDetails,jwt)),HttpStatus.OK);
+                        new BasicResponse("Successful account registration",jwtResponse(userDetails,jwt)),HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(
-                        new BasicResponse("Tạo User mới thất bại",null),HttpStatus.BAD_REQUEST);
+                        new BasicResponse("Failed to register account",null),HttpStatus.BAD_REQUEST);
             }
         }
     }
