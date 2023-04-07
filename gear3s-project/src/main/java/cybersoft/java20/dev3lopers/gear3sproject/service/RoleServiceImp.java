@@ -16,7 +16,7 @@ public class RoleServiceImp implements RoleService {
     RoleRepository roleRepository;
 
     @Override
-    public List<RoleDTO> getAllRole() {
+    public List<RoleDTO> readAllRole() {
         List<RoleDTO> roleDTOList = new ArrayList<>();
         List<Roles> roleList = roleRepository.findAll();
 

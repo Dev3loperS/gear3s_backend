@@ -9,6 +9,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.utils.JwtUtils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -40,31 +42,27 @@ public class LoginAdController {
     @Autowired
     UserServiceImp userServiceImp;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
+
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest){
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-            if(!"".equals(authentication.getName())){
-                String jwt = jwtUtils.generateToken(loginRequest.getEmail());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                AccountDetailsImp userDetails =
-                        (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!"".equals(authentication.getName())){
+            String jwt = jwtUtils.generateToken(loginRequest.getEmail());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            AccountDetailsImp userDetails =
+                    (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-                if(!userDetails.getRole().equals(RoleModel.ADMIN.getValue())){
-                    return new ResponseEntity<>(
-                            new BasicResponse("You're not Admin. Get out of here!",null),HttpStatus.FORBIDDEN);
-                }
-
+            if(!userDetails.getRole().equals(RoleModel.ADMIN.getValue())){
                 return new ResponseEntity<>(
-                        new BasicResponse("Signed in as Admin successful",jwtResponse(userDetails,jwt)),HttpStatus.OK);
+                        new BasicResponse("You're not Admin. Get out of here!",null),HttpStatus.FORBIDDEN);
             }
-        } catch (Exception e){
 
-
-            System.out.println("Error has occurred when sign in for admin | "+e.getMessage());
+            return new ResponseEntity<>(
+                    new BasicResponse("Signed in as Admin successful",jwtResponse(userDetails,jwt)),HttpStatus.OK);
         }
 
         return new ResponseEntity<>(
