@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
+import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,10 @@ public class FileStorageServiceImp implements FileStorageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
 
-    public void init ()
+    public void init (String folderPath)
     {
         try {
-            root = Paths.get(path);
+            root = Paths.get(path+folderPath);
             if (!Files.exists(root))
             {
                 Files.createDirectories(root);
@@ -39,8 +40,8 @@ public class FileStorageServiceImp implements FileStorageService {
     }
 
     @Override
-    public boolean saveFile(MultipartFile file) {
-        init();
+    public boolean saveFile(MultipartFile file,String folder) {
+        init(folder);
         try
         {
             Files.copy(file.getInputStream(),root.resolve(file.getOriginalFilename())
@@ -56,7 +57,7 @@ public class FileStorageServiceImp implements FileStorageService {
 
     @Override
     public Resource load(String filename) {
-        init();
+        init("");
         System.out.println("File name is : "+filename);
         try {
             System.out.println(root);
@@ -74,6 +75,17 @@ public class FileStorageServiceImp implements FileStorageService {
         }
     }
 
+    @Override
+    public boolean deleteFile(String avatarPath){
+        try {
+            Files.deleteIfExists(Paths.get(avatarPath));
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to delete this image '{}' : ",e.getMessage());
+            return false;
+        }
+
+    }
 
 
 }

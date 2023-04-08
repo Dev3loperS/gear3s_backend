@@ -1,6 +1,8 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.LoginRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.RegisterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
@@ -30,6 +32,9 @@ import javax.validation.Valid;
 public class LoginController {
     @Value("${jwt.privateKey}")
     private String privateKey;
+
+    @Value("${uploads.path}")
+    private String imagePath;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -71,11 +76,11 @@ public class LoginController {
             return new ResponseEntity<>(
                     new BasicResponse("This email already exists",null),HttpStatus.BAD_REQUEST);
         } else {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setEmail(register.getEmail());
-            userDTO.setPassword(register.getPassword());
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setEmail(register.getEmail());
+            accountDTO.setPassword(register.getPassword());
 
-            if(userServiceImp.createUserByUser(userDTO)){
+            if(userServiceImp.createUser(accountDTO,false)){
                 UsernamePasswordAuthenticationToken authenticationToken
                         = new UsernamePasswordAuthenticationToken(register.getEmail(),register.getPassword());
                 Authentication authentication = authenticationManager.authenticate(authenticationToken);
@@ -101,7 +106,7 @@ public class LoginController {
                 account.getId(),
                 account.getEmail(),
                 account.getFullname(),
-                account.getAvatar(),
+                imagePath+ ImagesModel.AVATAR.getValue()+account.getAvatar(),
                 account.getRole(),
                 jwt,
                 Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody()

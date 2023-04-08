@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.RoleServiceImp;
@@ -26,8 +27,8 @@ public class UserAdController {
     SexServiceImp sexServiceImp;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userDTO) {
-        if (userServiceImp.createUserByAdmin(userDTO)) {
+    public ResponseEntity<?> addUser(@Valid @RequestBody AccountDTO accountDTO) {
+        if (userServiceImp.createUser(accountDTO,true)) {
             return new ResponseEntity<>(
                     new BasicResponse("Added new user successfully", true), HttpStatus.CREATED);
         } else {
@@ -57,13 +58,13 @@ public class UserAdController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<?> editUser(@RequestBody UserDTO userDTO){
-        if(userServiceImp.updateUser(userDTO)){
+    public ResponseEntity<?> editUserRole(@RequestParam int userId, @RequestParam int roleId){
+        if(userServiceImp.updateUserByAdmin(userId,roleId)){
             return new ResponseEntity<>(
-                    new BasicResponse("Updated user successfully",true),HttpStatus.CREATED);
+                    new BasicResponse("Updated role of user successfully",true),HttpStatus.CREATED);
         }else {
             return new ResponseEntity<>(
-                    new BasicResponse("Failed to update user",false),HttpStatus.BAD_REQUEST);
+                    new BasicResponse("Failed to update role of user",false),HttpStatus.BAD_REQUEST);
         }
     }
 
