@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
+import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.LoginRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
@@ -32,6 +33,9 @@ import javax.validation.Valid;
 public class LoginAdController {
     @Value("${jwt.privateKey}")
     private String privateKey;
+
+    @Value("${uploads.path}")
+    private String imagePath;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -76,7 +80,7 @@ public class LoginAdController {
                 account.getId(),
                 account.getEmail(),
                 account.getFullname(),
-                account.getAvatar(),
+                imagePath+ ImagesModel.AVATAR.getValue()+account.getAvatar(),
                 account.getRole(),
                 jwt,
                 Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody()

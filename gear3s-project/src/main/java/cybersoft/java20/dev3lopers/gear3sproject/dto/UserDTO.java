@@ -6,24 +6,35 @@ import java.sql.Date;
 
 public class UserDTO {
     private int id;
-
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Invalid email format")
     private String email;
-
     @NotBlank(message = "Password cannot be blank")
     private String password;
-
     private String fullname;
     private Date birthday;
     private String phone;
     private String address;
     private String avatar;
     private int lastPay;
-    private RoleDTO role;
-    private SexDTO sex;
+    private int roleId;
+    private int sexId;
 
     public UserDTO(){}
+
+    public UserDTO(int id, String email, String password, String fullname, Date birthday, String phone, String address, String avatar, int lastPay, int roleId, int sexId) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.fullname = fullname;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.address = address;
+        this.avatar = avatar;
+        this.lastPay = lastPay;
+        this.roleId = roleId;
+        this.sexId = sexId;
+    }
 
     public int getId() {
         return id;
@@ -97,19 +108,19 @@ public class UserDTO {
         this.lastPay = lastPay;
     }
 
-    public RoleDTO getRole() {
-        return role;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public void setRole(RoleDTO role) {
-        this.role = role;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
-    public SexDTO getSex() {
-        return sex;
+    public int getSexId() {
+        return sexId;
     }
 
-    public void setSex(SexDTO sex) {
-        this.sex = sex;
+    public void setSexId(int sexId) {
+        this.sexId = sexId;
     }
 }

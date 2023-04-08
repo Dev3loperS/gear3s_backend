@@ -1,11 +1,11 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
-import cybersoft.java20.dev3lopers.gear3sproject.dto.RoleDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.SexDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
+import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
@@ -13,19 +13,30 @@ import cybersoft.java20.dev3lopers.gear3sproject.service.imp.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
+    @Value("${uploads.personAvaName}")
+    private String avaName;
+
+    @Value("${uploads.path}")
+    private String imagePath;
+
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    FileStorageServiceImp fileStorageServiceImp;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
 
@@ -53,48 +64,25 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean createUserByAdmin(UserDTO userDTO) {
+    public boolean createUser(AccountDTO accountDTO, boolean byAdmin) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        Users user = new Users();
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-        user.setFullname(userDTO.getFullname());
-        user.setBirthday(userDTO.getBirthday());
-        user.setPhone(userDTO.getPhone());
-        user.setAddress(userDTO.getAddress());
-        user.setAvatar(userDTO.getAvatar());
-        user.setLastPayment(0);
-        user.setRoles(new Roles(userDTO.getRole().getId()));
-        user.setSex(new Sex(userDTO.getSex().getId()));
-
         try {
+            Users user = new Users();
+            user.setEmail(accountDTO.getEmail());
+            user.setPassword(bCryptPasswordEncoder.encode(accountDTO.getPassword()));
+            user.setAvatar(avaName);
+            user.setLastPayment(0);
+            if (byAdmin){
+                user.setRoles(new Roles(accountDTO.getRoleId()));
+            } else {
+                user.setRoles(roleRepository.findByName(RoleModel.USER.getValue()));
+            }
             userRepository.save(user);
-            LOGGER.info("Account '{}' has been created successfully by Admin",user.getEmail());
+            LOGGER.info("Account '{}' has been created successfully",accountDTO.getEmail());
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to create account '{}' by Admin: {}",user.getEmail(),e.getMessage());
-            return false;
-        }
-    }
-
-    // Sử dụng cho chức năng Register từ trang người dùng
-    @Override
-    public boolean createUserByUser(UserDTO userDTO) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
-        Users user = new Users();
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-        user.setLastPayment(0);
-        user.setRoles(roleRepository.findByName(RoleModel.USER.getValue()));
-
-        try {
-            userRepository.save(user);
-            LOGGER.info("Account '{}' has been created successfully by User",user.getEmail());
-            return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to create account '{}' by User: {}",user.getEmail(),e.getMessage());
+            LOGGER.error("Failed to create account '{}' : {}",accountDTO.getEmail(),e.getMessage());
             return false;
         }
     }
@@ -102,83 +90,110 @@ public class UserServiceImp implements UserService {
     @Override
     public List<UserDTO> readAllUser() {
         List<UserDTO> userDtoList = new ArrayList<>();
-        List<Users> usersList = userRepository.findAll();
 
-        for (Users user: usersList) {
-            if(user == null) {
-                LOGGER.error("User list is empty");
-                return null;
+        try {
+            List<Users> usersList = userRepository.findAll();
+
+            for (Users user: usersList) {
+                UserDTO userDTO = new UserDTO();
+
+                userDTO.setId(user.getId());
+                userDTO.setEmail(user.getEmail());
+                userDTO.setPassword(null);
+                userDTO.setFullname(user.getFullname());
+                userDTO.setBirthday(user.getBirthday());
+                userDTO.setPhone(user.getPhone());
+                userDTO.setAddress(user.getAddress());
+                userDTO.setAvatar(user.getAvatar());
+                userDTO.setLastPay(user.getLastPayment());
+
+                if(user.getRoles() != null){
+                    userDTO.setRoleId(user.getRoles().getId());
+                }
+                if(user.getSex() != null){
+                    userDTO.setSexId(user.getSex().getId());
+                }
+                userDtoList.add(userDTO);
             }
-            UserDTO userDTO = new UserDTO();
-
-            userDTO.setId(user.getId());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setPassword(null);
-            userDTO.setFullname(user.getFullname());
-            userDTO.setBirthday(user.getBirthday());
-            userDTO.setPhone(user.getPhone());
-            userDTO.setAddress(user.getAddress());
-            userDTO.setAvatar(user.getAvatar());
-            userDTO.setLastPay(user.getLastPayment());
-
-            if(user.getRoles() != null){
-                userDTO.setRole(new RoleDTO(user.getRoles().getName()));
-            }
-            if(user.getSex() != null){
-                userDTO.setSex(new SexDTO(user.getSex().getName()));
-            }
-
-            userDtoList.add(userDTO);
+            LOGGER.info("Read user list successfully");
+            return userDtoList;
+        } catch (Exception e){
+            LOGGER.error("Failed to read user list : {}",e.getMessage());
+            return null;
         }
-
-        return userDtoList;
     }
 
     @Override
     public UserDTO readUserById(int id) {
-        Users user = userRepository.findById(id);
-        if(user == null) {
-            LOGGER.error("User with Id '{}' does not exist",id);
-            return null;
-        }
-
         UserDTO userDto = new UserDTO();
 
-        userDto.setId(user.getId());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(null);
-        userDto.setFullname(user.getFullname());
-        userDto.setBirthday(user.getBirthday());
-        userDto.setPhone(user.getPhone());
-        userDto.setAddress(user.getAddress());
-        userDto.setAvatar(user.getAvatar());
-        userDto.setLastPay(user.getLastPayment());
+        try {
+            Users user = userRepository.findById(id);
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",id);
+                return null;
+            }
+            userDto.setId(user.getId());
+            userDto.setEmail(user.getEmail());
+            userDto.setPassword(null);
+            userDto.setFullname(user.getFullname());
+            userDto.setBirthday(user.getBirthday());
+            userDto.setPhone(user.getPhone());
+            userDto.setAddress(user.getAddress());
+            userDto.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
+            userDto.setLastPay(user.getLastPayment());
+            userDto.setRoleId(user.getRoles().getId());
+            userDto.setSexId(user.getSex().getId());
 
-        return userDto;
+            LOGGER.info("Read user info with Id '{}' successfully",id);
+            return userDto;
+        } catch (Exception e){
+            LOGGER.error("Failed to read user info with Id '{}' : {}",id,e.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public boolean updateUser(UserDTO userDTO) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        Users user = userRepository.findById(userDTO.getId());
-
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-        user.setFullname(userDTO.getFullname());
-        user.setBirthday(userDTO.getBirthday());
-        user.setPhone(userDTO.getPhone());
-        user.setAddress(userDTO.getAddress());
-        user.setAvatar(userDTO.getAvatar());
-        user.setLastPayment(userDTO.getLastPay());
-        user.setRoles(new Roles(userDTO.getRole().getId()));
-        user.setSex(new Sex(userDTO.getSex().getId()));
-
+    public boolean updateUserByUser(UserDTO userDTO) {
         try {
+            Users user = userRepository.findById(userDTO.getId());
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userDTO.getId());
+                return false;
+            }
+            if(!userDTO.getEmail().equals(user.getEmail())){
+                user.setEmail(userDTO.getEmail());
+            }
+            user.setFullname(userDTO.getFullname());
+            user.setBirthday(userDTO.getBirthday());
+            user.setPhone(userDTO.getPhone());
+            user.setAddress(userDTO.getAddress());
+            user.setSex(new Sex(userDTO.getSexId()));
+
             userRepository.save(user);
-            LOGGER.info("Account '{}' has been updated successfully by Admin",user.getEmail());
+            LOGGER.info("Account '{}' has been updated successfully",userDTO.getEmail());
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to update account '{}' by Admin: {}",user.getEmail(),e.getMessage());
+            LOGGER.error("Failed to update account '{}' : {}",userDTO.getEmail(),e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserByAdmin(int userId, int roleId) {
+        try {
+            Users user = userRepository.findById(userId);
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userId);
+                return false;
+            }
+            user.setRoles(new Roles(roleId));
+
+            userRepository.save(user);
+            LOGGER.info("Role of account with Id '{}' has been changed successfully",userId);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to change role of account with Id '{}' : {}",userId,e.getMessage());
             return false;
         }
     }
@@ -187,11 +202,40 @@ public class UserServiceImp implements UserService {
     public boolean deleteUser(int id) {
         try {
             userRepository.deleteById(id);
-            LOGGER.info("Account with Id '{}' has been deleted successfully by Admin",id);
+            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to delete account with Id '{}' by Admin: {}",id,e.getMessage());
+            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public boolean updateAvatar(int userId, MultipartFile avatarFile) {
+        try {
+            Users user = userRepository.findById(userId);
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userId);
+                return false;
+            }
+            if (avatarFile == null){
+                LOGGER.error("MultipartFile not found");
+                return false;
+            }
+            if(!avaName.equals(user.getAvatar())){
+                fileStorageServiceImp.deleteFile(imagePath+ ImagesModel.AVATAR.getValue()+user.getAvatar());
+            }
+            fileStorageServiceImp.saveFile(avatarFile,ImagesModel.AVATAR.getValue());
+            user.setAvatar(avatarFile.getOriginalFilename());
+            userRepository.save(user);
+
+            LOGGER.info("Avatar of user with Id '{}' has been updated successfully",userId);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to update avatar of user with Id '{}' : {}",userId,e.getMessage());
+            System.out.println(e.getMessage());
+        }
+
+        return true;
     }
 }

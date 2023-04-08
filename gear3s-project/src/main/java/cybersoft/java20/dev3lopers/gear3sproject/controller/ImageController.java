@@ -1,4 +1,4 @@
-package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
+package cybersoft.java20.dev3lopers.gear3sproject.controller;
 
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.FileStorageService;
@@ -21,7 +21,7 @@ public class ImageController {
     public ResponseEntity<?> uploadImage (MultipartFile file )
     {
         BasicResponse basicResponse= new BasicResponse();
-        basicResponse.setData(fileStorageService.saveFile(file));
+        basicResponse.setData(fileStorageService.saveFile(file,""));
 
         return new ResponseEntity<>(basicResponse, HttpStatus.OK) ;
     }
