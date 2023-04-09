@@ -44,11 +44,11 @@ public class CustomSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
-                .csrf().disable()
+                .csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/admin/","/api/admin/login/**","/api/login/**")
+                    .antMatchers("/admin/login","/api/admin/login/**","/api/login/**")
                     .permitAll()
                     .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
                                     "/swagger-resources","/configuration/security", "/swagger-ui.html",

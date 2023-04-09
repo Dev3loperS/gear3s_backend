@@ -36,6 +36,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         //System.out.println(request.getServletPath());
         try {
             String jwt = parseJwt(request);
+            System.out.println("AAA: " + jwt);
             if(jwt != null && jwtUtils.verifyToken(jwt)){
                 // Tạo chứng thực để có thể truy cập vào link
                 /*UsernamePasswordAuthenticationToken authenticationToken
