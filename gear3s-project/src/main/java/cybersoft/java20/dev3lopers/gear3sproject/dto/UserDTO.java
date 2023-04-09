@@ -12,7 +12,7 @@ public class UserDTO {
     @NotBlank(message = "Password cannot be blank")
     private String password;
     private String fullname;
-    private Date birthday;
+    private String birthday;
     private String phone;
     private String address;
     private String avatar;
@@ -22,7 +22,7 @@ public class UserDTO {
 
     public UserDTO(){}
 
-    public UserDTO(int id, String email, String password, String fullname, Date birthday, String phone, String address, String avatar, int lastPay, int roleId, int sexId) {
+    public UserDTO(int id, String email, String password, String fullname, String birthday, String phone, String address, String avatar, int lastPay, int roleId, int sexId) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -68,11 +68,11 @@ public class UserDTO {
         this.fullname = fullname;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

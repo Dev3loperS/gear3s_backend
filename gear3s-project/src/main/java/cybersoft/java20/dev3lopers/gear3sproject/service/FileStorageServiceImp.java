@@ -57,7 +57,7 @@ public class FileStorageServiceImp implements FileStorageService {
 
     @Override
     public Resource load(String filename) {
-        init("");
+        init(ImagesModel.AVATAR.getValue());
         System.out.println("File name is : "+filename);
         try {
             System.out.println(root);
@@ -76,12 +76,12 @@ public class FileStorageServiceImp implements FileStorageService {
     }
 
     @Override
-    public boolean deleteFile(String avatarPath){
+    public boolean deleteFile(String filePath){
         try {
-            Files.deleteIfExists(Paths.get(avatarPath));
+            Files.deleteIfExists(Paths.get(filePath));
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to delete this image '{}' : ",e.getMessage());
+            LOGGER.error("Failed to delete this file '{}' : ",e.getMessage());
             return false;
         }
 

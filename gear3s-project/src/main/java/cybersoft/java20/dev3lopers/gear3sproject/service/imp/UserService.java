@@ -13,8 +13,11 @@ public interface UserService {
     boolean createUser(AccountDTO accountDTO,boolean byAdmin);
     List<UserDTO> readAllUser();
     UserDTO readUserById(int id);
-    boolean updateUserByUser(UserDTO userDTO);
+    boolean updateUserByUser(UserDTO userDTO, MultipartFile avatarFile);
+    //boolean updateUserByUser(UserDTO userDTO);
+    //boolean updateAvatar(int userId, MultipartFile avatarFile);
     boolean updateUserByAdmin(int userId, int roleId);
     boolean deleteUser(int id);
-    boolean updateAvatar(int userId, MultipartFile avatarFile);
+
+
 }

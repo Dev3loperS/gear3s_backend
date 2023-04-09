@@ -1,7 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 @Entity(name = "discount")

@@ -18,13 +18,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
-    @Value("${uploads.personAvaName}")
-    private String avaName;
+    @Value("${uploads.defaultAvatar}")
+    private String defaultAva;
 
     @Value("${uploads.path}")
     private String imagePath;
@@ -71,7 +72,7 @@ public class UserServiceImp implements UserService {
             Users user = new Users();
             user.setEmail(accountDTO.getEmail());
             user.setPassword(bCryptPasswordEncoder.encode(accountDTO.getPassword()));
-            user.setAvatar(avaName);
+            user.setAvatar(defaultAva);
             user.setLastPayment(0);
             if (byAdmin){
                 user.setRoles(new Roles(accountDTO.getRoleId()));
@@ -101,12 +102,13 @@ public class UserServiceImp implements UserService {
                 userDTO.setEmail(user.getEmail());
                 userDTO.setPassword(null);
                 userDTO.setFullname(user.getFullname());
-                userDTO.setBirthday(user.getBirthday());
+                if(user.getBirthday() != null){
+                    userDTO.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday()));
+                }
                 userDTO.setPhone(user.getPhone());
                 userDTO.setAddress(user.getAddress());
-                userDTO.setAvatar(user.getAvatar());
+                userDTO.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
                 userDTO.setLastPay(user.getLastPayment());
-
                 if(user.getRoles() != null){
                     userDTO.setRoleId(user.getRoles().getId());
                 }
@@ -137,7 +139,7 @@ public class UserServiceImp implements UserService {
             userDto.setEmail(user.getEmail());
             userDto.setPassword(null);
             userDto.setFullname(user.getFullname());
-            userDto.setBirthday(user.getBirthday());
+            userDto.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday()));
             userDto.setPhone(user.getPhone());
             userDto.setAddress(user.getAddress());
             userDto.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
@@ -150,32 +152,6 @@ public class UserServiceImp implements UserService {
         } catch (Exception e){
             LOGGER.error("Failed to read user info with Id '{}' : {}",id,e.getMessage());
             return null;
-        }
-    }
-
-    @Override
-    public boolean updateUserByUser(UserDTO userDTO) {
-        try {
-            Users user = userRepository.findById(userDTO.getId());
-            if(user == null){
-                LOGGER.error("Account with Id '{}' does not exits",userDTO.getId());
-                return false;
-            }
-            if(!userDTO.getEmail().equals(user.getEmail())){
-                user.setEmail(userDTO.getEmail());
-            }
-            user.setFullname(userDTO.getFullname());
-            user.setBirthday(userDTO.getBirthday());
-            user.setPhone(userDTO.getPhone());
-            user.setAddress(userDTO.getAddress());
-            user.setSex(new Sex(userDTO.getSexId()));
-
-            userRepository.save(user);
-            LOGGER.info("Account '{}' has been updated successfully",userDTO.getEmail());
-            return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to update account '{}' : {}",userDTO.getEmail(),e.getMessage());
-            return false;
         }
     }
 
@@ -199,18 +175,67 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean deleteUser(int id) {
+    public boolean updateUserByUser(UserDTO userDTO, MultipartFile avatarFile) {
         try {
-            userRepository.deleteById(id);
-            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
+            Users user = userRepository.findById(userDTO.getId());
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userDTO.getId());
+                return false;
+            }
+            if(!userDTO.getEmail().equals(user.getEmail())){
+                user.setEmail(userDTO.getEmail());
+            }
+            user.setFullname(userDTO.getFullname());
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthday()));
+            user.setPhone(userDTO.getPhone());
+            user.setAddress(userDTO.getAddress());
+            user.setSex(new Sex(userDTO.getSexId()));
+
+            if (avatarFile != null && !"".equals(avatarFile.getOriginalFilename())){
+                if(!defaultAva.equals(user.getAvatar())){
+                    fileStorageServiceImp.deleteFile(imagePath+ ImagesModel.AVATAR.getValue()+user.getAvatar());
+                }
+                fileStorageServiceImp.saveFile(avatarFile,ImagesModel.AVATAR.getValue());
+                user.setAvatar(avatarFile.getOriginalFilename());
+                LOGGER.info("Avatar of account '{}' has been updated successfully",userDTO.getEmail());
+            }
+
+            userRepository.save(user);
+            LOGGER.info("Profile of account '{}' has been updated successfully",userDTO.getEmail());
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
+            LOGGER.error("Failed to update account '{}' : {}",userDTO.getEmail(),e.getMessage());
             return false;
         }
     }
 
-    @Override
+    /*@Override
+    public boolean updateUserByUser(UserDTO userDTO) {
+        try {
+            Users user = userRepository.findById(userDTO.getId());
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userDTO.getId());
+                return false;
+            }
+            if(!userDTO.getEmail().equals(user.getEmail())){
+                user.setEmail(userDTO.getEmail());
+            }
+            user.setFullname(userDTO.getFullname());
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthday()));
+            user.setPhone(userDTO.getPhone());
+            user.setAddress(userDTO.getAddress());
+            user.setSex(new Sex(userDTO.getSexId()));
+
+            userRepository.save(user);
+            LOGGER.info("Account '{}' has been updated successfully",userDTO.getEmail());
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to update account '{}' : {}",userDTO.getEmail(),e.getMessage());
+            return false;
+        }
+    }*/
+
+    /*@Override
     public boolean updateAvatar(int userId, MultipartFile avatarFile) {
         try {
             Users user = userRepository.findById(userId);
@@ -222,7 +247,7 @@ public class UserServiceImp implements UserService {
                 LOGGER.error("MultipartFile not found");
                 return false;
             }
-            if(!avaName.equals(user.getAvatar())){
+            if(!defaultAva.equals(user.getAvatar())){
                 fileStorageServiceImp.deleteFile(imagePath+ ImagesModel.AVATAR.getValue()+user.getAvatar());
             }
             fileStorageServiceImp.saveFile(avatarFile,ImagesModel.AVATAR.getValue());
@@ -237,5 +262,18 @@ public class UserServiceImp implements UserService {
         }
 
         return true;
+    }*/
+
+    @Override
+    public boolean deleteUser(int id) {
+        try {
+            userRepository.deleteById(id);
+            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
+            return false;
+        }
     }
+
 }

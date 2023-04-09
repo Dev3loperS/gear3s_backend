@@ -48,7 +48,7 @@ public class UserAdController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<?> getUserDetail(@RequestParam int id){
+    public ResponseEntity<?> getUserDetailById(@RequestParam int id){
         UserDTO user = userServiceImp.readUserById(id);
         if(user != null){
             return new ResponseEntity<>(new BasicResponse("Returned user info successful",user),HttpStatus.OK);
@@ -58,7 +58,7 @@ public class UserAdController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<?> editUserRole(@RequestParam int userId, @RequestParam int roleId){
+    public ResponseEntity<?> editUserRoleById(@RequestParam int userId, @RequestParam int roleId){
         if(userServiceImp.updateUserByAdmin(userId,roleId)){
             return new ResponseEntity<>(
                     new BasicResponse("Updated role of user successfully",true),HttpStatus.CREATED);
@@ -69,7 +69,7 @@ public class UserAdController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestParam int id){
+    public ResponseEntity<?> deleteUserById(@RequestParam int id){
         if(userServiceImp.deleteUser(id)){
             return new ResponseEntity<>(
                     new BasicResponse("Deleted user successfully",true),HttpStatus.OK);
