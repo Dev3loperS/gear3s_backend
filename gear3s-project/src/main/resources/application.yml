@@ -38,7 +38,7 @@ logging:
 
 uploads:
   path: ../../uploads/images
-  personAvaName: person-icon.png
+  defaultAvatar: person-icon.png
 
 
 
