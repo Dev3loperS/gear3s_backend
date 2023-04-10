@@ -59,7 +59,7 @@ public class UserAdController {
 
     @PutMapping("/edit")
     public ResponseEntity<?> editUserRoleById(@RequestParam int userId, @RequestParam int roleId){
-        if(userServiceImp.updateUserByAdmin(userId,roleId)){
+        if(userServiceImp.updateUserRoleByAdmin(userId,roleId)){
             return new ResponseEntity<>(
                     new BasicResponse("Updated role of user successfully",true),HttpStatus.CREATED);
         }else {

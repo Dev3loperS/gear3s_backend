@@ -1,6 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.PasswordDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
@@ -156,7 +157,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean updateUserByAdmin(int userId, int roleId) {
+    public boolean updateUserRoleByAdmin(int userId, int roleId) {
         try {
             Users user = userRepository.findById(userId);
             if(user == null){
@@ -275,5 +276,33 @@ public class UserServiceImp implements UserService {
             return false;
         }
     }
+
+    @Override
+    public boolean updateUserPassword(int userId, PasswordDTO passwordDTO) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        try {
+            Users user = userRepository.findById(userId);
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userId);
+                return false;
+            }
+            if(!bCryptPasswordEncoder.matches(passwordDTO.getCurrentPassword(),user.getPassword())){
+                LOGGER.error("The current password of account '{}' is incorrect",user.getEmail());
+                return false;
+            }
+            if(!passwordDTO.getConfirmPassword().equals(passwordDTO.getNewPassword())){
+                LOGGER.error("The confirmation password of account '{}' does not match",user.getEmail());
+                return false;
+            }
+            user.setPassword(bCryptPasswordEncoder.encode(passwordDTO.getNewPassword()));
+            userRepository.save(user);
+            LOGGER.info("Password of account '{}' has been changed successfully",user.getEmail());
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to change password of account with Id '{}' : {}",userId,e.getMessage());
+            return false;
+        }
+    }
+
 
 }
