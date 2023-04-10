@@ -18,9 +18,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -36,7 +39,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         //System.out.println(request.getServletPath());
         try {
             String jwt = parseJwt(request);
-            System.out.println("AAA: " + jwt);
+            if(jwt == null) {
+                Cookie[] cookies = request.getCookies();
+                for(int i = cookies.length - 1; i >= 0; i--) {
+                    if ("jwt".equals(cookies[i].getName()) && cookies[i].getValue() != null) {
+                        jwt = cookies[i].getValue();
+                        break;
+                    }
+                }
+            }
             if(jwt != null && jwtUtils.verifyToken(jwt)){
                 // Tạo chứng thực để có thể truy cập vào link
                 /*UsernamePasswordAuthenticationToken authenticationToken

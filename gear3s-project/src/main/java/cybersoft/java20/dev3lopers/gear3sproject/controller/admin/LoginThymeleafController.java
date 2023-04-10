@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class LoginThymeleafController {
-    @GetMapping("/login")
+    @GetMapping("")
     public String login(Model model) {
         model.addAttribute("message", "Dat");
         return "login/admin-login";

@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @CrossOrigin
 @Controller
 @RequestMapping("/admin")
-public class UsersThymeleafController {
+public class AdThymeleafController {
 
-    @GetMapping("/users")
+    @GetMapping("/home")
     public String users(Model model) {
         model.addAttribute("message", "Dat");
-        return "users/admin-users";
+        return "users/admin-home";
     }
 }

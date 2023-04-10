@@ -48,7 +48,7 @@ public class CustomSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/admin/login","/api/admin/login/**","/api/login/**")
+                    .antMatchers("/admin","/api/admin/login/**","/api/login/**")
                     .permitAll()
                     .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
                                     "/swagger-resources","/configuration/security", "/swagger-ui.html",
@@ -57,7 +57,13 @@ public class CustomSecurityConfig {
                     .permitAll()
                     //.antMatchers("/**").permitAll()
                     .anyRequest()
-                    .authenticated();
+                    .authenticated()
+                    .and()
+                    .formLogin()
+                    .loginPage("/admin")
+                    .permitAll();
+//                .and()
+//                .logout().logoutUrl("/admin/logout").invalidateHttpSession(true);
 
         httpSecurity.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -6,7 +6,7 @@
 
 $(function () {
     // VARIABLES =============================================================
-    var TOKEN_KEY = "jwt"
+    let TOKEN_KEY = "jwt"
 
     // FUNCTIONS =============================================================
 
@@ -44,10 +44,6 @@ $(function () {
         // localStorage.setItem(TOKEN_KEY, token);
     }
 
-    function removeJwtToken() {
-        localStorage.removeItem(TOKEN_KEY);
-    }
-
     function displayError(errorMessage) {
         let $errorModal = $('#loginErrorModal')
         if (errorMessage !== '') {
@@ -79,16 +75,17 @@ $(function () {
                 setJwtToken(data['data'].newToken);
                 console.log("TOKEN: " + getJwtToken())
                 // showTokenInformation();
-                // location.href = "/admin/users";
-                $.ajax({
-                    url: "/admin/users",
-                    type: "GET",
-                    dataType: "html",
-                    headers: createAuthorizationTokenHeader(),
-                    success: function (response) {
-                        $("html").html(response);
-                    }
-                })
+                location.href = "/admin/home";
+
+                // $.ajax({
+                //     url: "/admin/users",
+                //     type: "GET",
+                //     dataType: "html",
+                //     headers: createAuthorizationTokenHeader(),
+                //     success: function (response) {
+                //         $("html").html(response);
+                //     }
+                // })
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 let errorMessage = $.parseJSON(jqXHR.responseText).message
