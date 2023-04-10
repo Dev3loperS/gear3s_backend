@@ -1,5 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.PasswordDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -39,6 +43,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     FileStorageServiceImp fileStorageServiceImp;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
 
@@ -92,31 +99,40 @@ public class UserServiceImp implements UserService {
     @Override
     public List<UserDTO> readAllUser() {
         List<UserDTO> userDtoList = new ArrayList<>();
+        Gson gson = new Gson();
 
         try {
-            List<Users> usersList = userRepository.findAll();
+            String data = (String) redisTemplate.opsForValue().get("users");
+            //System.out.println(data);
+            if (data == null){
+                List<Users> usersList = userRepository.findAll();
 
-            for (Users user: usersList) {
-                UserDTO userDTO = new UserDTO();
+                for (Users user: usersList) {
+                    UserDTO userDTO = new UserDTO();
 
-                userDTO.setId(user.getId());
-                userDTO.setEmail(user.getEmail());
-                userDTO.setPassword(null);
-                userDTO.setFullname(user.getFullname());
-                if(user.getBirthday() != null){
-                    userDTO.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday()));
+                    userDTO.setId(user.getId());
+                    userDTO.setEmail(user.getEmail());
+                    userDTO.setPassword(null);
+                    userDTO.setFullname(user.getFullname());
+                    if(user.getBirthday() != null){
+                        userDTO.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday()));
+                    }
+                    userDTO.setPhone(user.getPhone());
+                    userDTO.setAddress(user.getAddress());
+                    userDTO.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
+                    userDTO.setLastPay(user.getLastPayment());
+                    if(user.getRoles() != null){
+                        userDTO.setRoleId(user.getRoles().getId());
+                    }
+                    if(user.getSex() != null){
+                        userDTO.setSexId(user.getSex().getId());
+                    }
+                    userDtoList.add(userDTO);
                 }
-                userDTO.setPhone(user.getPhone());
-                userDTO.setAddress(user.getAddress());
-                userDTO.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
-                userDTO.setLastPay(user.getLastPayment());
-                if(user.getRoles() != null){
-                    userDTO.setRoleId(user.getRoles().getId());
-                }
-                if(user.getSex() != null){
-                    userDTO.setSexId(user.getSex().getId());
-                }
-                userDtoList.add(userDTO);
+                redisTemplate.opsForValue().set("users",gson.toJson(userDtoList));
+                redisTemplate.expire("users",30, TimeUnit.MINUTES);
+            } else {
+                userDtoList = gson.fromJson(data,new TypeToken<List<UserDTO>>(){}.getType());
             }
             LOGGER.info("Read user list successfully");
             return userDtoList;
