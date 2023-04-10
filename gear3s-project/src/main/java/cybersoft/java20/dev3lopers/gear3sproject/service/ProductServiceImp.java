@@ -156,8 +156,8 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> findByPriceDiscount(int price) {
-        List<Product> products = productRepository.findByDiscountPrice(price);
+    public List<ProductDTO> findByPriceDiscount(int minPrice ,int maxPrice ) {
+        List<Product> products = productRepository.findByDiscountPrice(minPrice,maxPrice);
         List<ProductDTO > productDTOS = new ArrayList<>();
         if (products!=null)
         {
@@ -226,61 +226,68 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO findByName(String name) {
-        Product product= productRepository.findByName(name);
-        if (product!=null)
+    public List<ProductDTO> findByName(String name) {
+        List<Product> products = productRepository.findByName(name );
+        List<ProductDTO > productDTOS = new ArrayList<>();
+        if (products!=null)
         {
-            ProductDTO productDTO = new ProductDTO();
+            for (Product product : products
+            ) {
+                ProductDTO productDTO = new ProductDTO();
 
-            productDTO.setId(product.getId());
-            productDTO.setName(product.getName());
-            productDTO.setPrice_origin(product.getOriginPrice());
-            productDTO.setPrice_discount(product.getDiscountPrice());
-            productDTO.setInventory(product.getInventory());
-            productDTO.setSold_qty(product.getSoldQty());
-            productDTO.setDescription(product.getDescription());
+                productDTO.setId(product.getId());
+                productDTO.setName(product.getName());
+                productDTO.setPrice_origin(product.getOriginPrice());
+                productDTO.setPrice_discount(product.getDiscountPrice());
+                productDTO.setInventory(product.getInventory());
+                productDTO.setSold_qty(product.getSoldQty());
+                productDTO.setDescription(product.getDescription());
 
-            DiscountDTO discountDTO =new DiscountDTO();
-            Discount discount = product.getDiscount();
-            if (discount==null)
-            {
-                discountDTO.setId(-1);
+                DiscountDTO discountDTO =new DiscountDTO();
+                Discount discount = product.getDiscount();
+                if (discount==null)
+                {
+                    discountDTO.setId(-1);
+                }
+                else
+                {
+                    discountDTO.setId(discount.getId());
+                }
+
+                ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
+                Manufacturer manufacturer=product.getManufacturer();
+                if (manufacturer==null)
+                {
+                    manufacturerDTO.setId(-1);
+                    manufacturerDTO.setName("null");
+
+                }else
+                {
+                    manufacturerDTO.setId(manufacturer.getId());
+                    manufacturerDTO.setName(manufacturer.getName());
+                }
+
+
+                CategoryDTO categoryDTO = new CategoryDTO();
+                Category category = product.getCategory();
+                if (manufacturer==null)
+                {
+                    categoryDTO.setId(-1);
+                    categoryDTO.setName("null");
+                }else
+                {
+                    categoryDTO.setId(category.getId());
+                    categoryDTO.setName(category.getName());
+                }
+
+
+                productDTO.setCategoryDTO(categoryDTO);
+                productDTO.setDiscountDTO(discountDTO);
+                productDTO.setManufacturerDTO(manufacturerDTO);
+                productDTOS.add(productDTO);
             }
-            else
-            {
-                discountDTO.setId(discount.getId());
-            }
 
-            ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
-            Manufacturer manufacturer=product.getManufacturer();
-            if (manufacturer==null)
-            {
-                manufacturerDTO.setId(-1);
-                manufacturerDTO.setName("null");
-
-            }else
-            {
-                manufacturerDTO.setId(manufacturer.getId());
-                manufacturerDTO.setName(manufacturer.getName());
-            }
-
-
-            CategoryDTO categoryDTO = new CategoryDTO();
-            Category category = product.getCategory();
-            if (manufacturer==null)
-            {
-                categoryDTO.setId(-1);
-                categoryDTO.setName("null");
-            }else
-            {
-                categoryDTO.setId(category.getId());
-                categoryDTO.setName(category.getName());
-            }
-
-            productDTO.setCategoryDTO(categoryDTO);
-            productDTO.setDiscountDTO(discountDTO);
-            productDTO.setManufacturerDTO(manufacturerDTO);
-            return productDTO;
+            return productDTOS;
         }else
         {
             return null;
@@ -288,8 +295,8 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public  List<ProductDTO> findByPriceOrigin(int price) {
-        List<Product> products = productRepository.findByOriginPrice(price);
+    public  List<ProductDTO> findByPriceOrigin(int min,int max ) {
+        List<Product> products = productRepository.findByOriginPrice(min ,max );
         List<ProductDTO > productDTOS = new ArrayList<>();
         if (products!=null)
         {

@@ -9,6 +9,7 @@ public enum ImagesModel {
     SPEAKER("/speaker/"),
     MONITOR("/monitor/");
 
+
     private String value;
     ImagesModel(String value){
         this.value = value;

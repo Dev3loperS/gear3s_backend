@@ -9,9 +9,9 @@ import java.util.List;
 public interface ProductService {
     List<ProductDTO> getAllProducts();
     ProductDTO findById (int id ) ;
-    List<ProductDTO> findByPriceDiscount (int price  ) ;
-    ProductDTO findByName(String name ) ;
-    List<ProductDTO> findByPriceOrigin (int price ) ;
+    List<ProductDTO> findByPriceDiscount (int minPrice ,int maxPrice  ) ;
+    List<ProductDTO> findByName(String name ) ;
+    List<ProductDTO> findByPriceOrigin (int min,int max  ) ;
 
     boolean deleteProductById(int id ) ;
     boolean updateProductById(int id ,ProductDTO productDTO);
