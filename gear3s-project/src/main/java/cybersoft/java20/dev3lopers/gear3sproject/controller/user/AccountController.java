@@ -1,6 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
 import com.google.gson.Gson;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.PasswordDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.SexServiceImp;
@@ -14,24 +15,36 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
+@RequestMapping("/api/account")
+public class AccountController {
     @Autowired
     UserServiceImp userServiceImp;
 
     @Autowired
     SexServiceImp sexServiceImp;
 
-    @PutMapping(value = "/profile")
-    public ResponseEntity<?> editUserProfile(@Valid @RequestPart("user") String userDTO,
+    @PutMapping( "/profile")
+    public ResponseEntity<?> editAccountProfile(@Valid @RequestPart("user") String userDTO,
                                                     @RequestPart(name = "file",required = false) MultipartFile avatarFile){
         Gson gson = new Gson();
         if(userServiceImp.updateUserByUser(gson.fromJson(userDTO,UserDTO.class),avatarFile)){
             return new ResponseEntity<>(
-                    new BasicResponse("Updated profile of user successfully",true), HttpStatus.CREATED);
+                    new BasicResponse("Updated profile of account successfully",true), HttpStatus.CREATED);
         }else {
             return new ResponseEntity<>(
-                    new BasicResponse("Failed to update profile of user",false),HttpStatus.BAD_REQUEST);
+                    new BasicResponse("Failed to update profile of account",false),HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<?> editAccountPassword(@RequestParam int userId, @Valid @RequestBody PasswordDTO passwordDTO){
+        if(userServiceImp.updateUserPassword(userId,passwordDTO)){
+            return new ResponseEntity<>(
+                    new BasicResponse("Changed password of account successfully",true), HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(
+                    new BasicResponse("Failed to change password of account",false),HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
