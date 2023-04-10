@@ -17,8 +17,12 @@ spring:
     static-path-pattern: /static/**
   servlet:
     multipart:
-      max-file-size: 1MB
-      max-request-size: 1MB
+      max-file-size: 3MB
+      max-request-size: 3MB
+  redis:
+    host: 103.160.2.183
+    port: 6377
+
 #    static-path-pattern: /resources/**, /css/**, /js/**, /vendor/**
 
 jwt:
