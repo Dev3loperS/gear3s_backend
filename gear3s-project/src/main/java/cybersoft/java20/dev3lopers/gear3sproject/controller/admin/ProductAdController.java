@@ -53,7 +53,7 @@ public class ProductAdController {
 
     @PostMapping("/findByName")
     public ResponseEntity<?> findByName(@RequestParam String name) {
-        ProductDTO productDTO = productService.findByName(name);
+        List<ProductDTO> productDTO = productService.findByName(name);
         BasicResponse basicResponse = new BasicResponse();
         if (productDTO != null) {
             basicResponse.setData(productDTO);
@@ -68,9 +68,9 @@ public class ProductAdController {
     }
 
     @PostMapping("/findByOriginPrice")
-    public ResponseEntity<?> findByOriginPrice(@RequestParam int price) {
+    public ResponseEntity<?> findByOriginPrice(@RequestParam int minPrice ,@RequestParam int maxPrice ) {
 
-        List<ProductDTO> productDTOS = productService.findByPriceOrigin(price);
+        List<ProductDTO> productDTOS = productService.findByPriceOrigin(minPrice,maxPrice);
         BasicResponse basicResponse = new BasicResponse();
         if (!productDTOS.isEmpty())
         {
@@ -84,12 +84,13 @@ public class ProductAdController {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
+
     @PostMapping("/findByDiscountPrice")
-    public ResponseEntity<?> findByDiscountPrice(@RequestParam int price) {
+    public ResponseEntity<?> findByDiscountPrice(@RequestParam int minPrice ,@RequestParam int maxPrice ) {
 
         BasicResponse basicResponse = new BasicResponse();
 
-        List<ProductDTO> productDTOS = productService.findByPriceDiscount(price);
+        List<ProductDTO> productDTOS = productService.findByPriceDiscount(minPrice,maxPrice);
         if (!productDTOS.isEmpty())
         {
             basicResponse.setData(productDTOS);
