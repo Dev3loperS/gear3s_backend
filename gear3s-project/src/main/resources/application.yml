@@ -20,6 +20,7 @@ spring:
       max-file-size: 1MB
       max-request-size: 1MB
 #    static-path-pattern: /resources/**, /css/**, /js/**, /vendor/**
+
 jwt:
   privateKey: mB4Mn+ISn7uhxTHyewNaaCi+ZxDw8Hxci6JaTLR4gcU=
 

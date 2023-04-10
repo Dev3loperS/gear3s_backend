@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Login</title>
+  <title>Gear3S - Admin - Login</title>
 
 
   <!-- Custom fonts for this template-->
@@ -41,15 +41,18 @@
                 <div class="text-center">
                   <h1 class="h4 text-gray-900 mb-4">GEAR3S - ADMIN PAGE</h1>
                 </div>
-                <form class="user">
+                <div id="loginErrorModal" style="display: none">
+                  <div class="alert alert-danger">Invalid Email or Password !!!</div>
+                </div>
+                <form id="loginForm" class="user">
                   <div class="form-group">
                     <input type="email" class="form-control form-control-user"
-                           id="exampleInputEmail" aria-describedby="emailHelp"
+                           name="email" aria-describedby="emailHelp"
                            placeholder="Enter Email Address...">
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control form-control-user"
-                           id="exampleInputPassword" placeholder="Password">
+                           name="password" placeholder="Password">
                   </div>
                   <div class="form-group">
                     <div class="custom-control custom-checkbox small">
@@ -58,7 +61,7 @@
                         Me</label>
                     </div>
                   </div>
-                  <a href="#" class="btn btn-primary btn-user btn-block">
+                  <a id="btnLogin" href="javascript:$('#loginForm').submit();" class="btn btn-primary btn-user btn-block">
                     Login
                   </a>
                 </form>
@@ -89,6 +92,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="/static/js/sb-admin-2.min.js"></script>
-
+<script src="/static/js/admin-login.js"></script>
 </body>
 </html>
