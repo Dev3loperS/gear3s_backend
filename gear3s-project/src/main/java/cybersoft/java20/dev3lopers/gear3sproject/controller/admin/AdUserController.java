@@ -1,12 +1,15 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AdUserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.RoleServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.SexServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/user")
-public class UserAdController {
+public class AdUserController {
     @Autowired
     UserServiceImp userServiceImp;
 
@@ -39,7 +42,7 @@ public class UserAdController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getUserList(){
-        List<UserDTO> userList = userServiceImp.readAllUser();
+        List<AdUserDTO> userList = userServiceImp.readAllUser();
         if(userList != null){
             return new ResponseEntity<>(new BasicResponse("Returned user list successful", userList),HttpStatus.OK);
         } else {
@@ -47,17 +50,7 @@ public class UserAdController {
         }
     }
 
-    @GetMapping("/detail")
-    public ResponseEntity<?> getUserDetailById(@RequestParam int id){
-        UserDTO user = userServiceImp.readUserById(id);
-        if(user != null){
-            return new ResponseEntity<>(new BasicResponse("Returned user info successful",user),HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new BasicResponse("Invalid UserId",null),HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/edit")
+    @PutMapping("/role")
     public ResponseEntity<?> editUserRoleById(@RequestParam int userId, @RequestParam int roleId){
         if(userServiceImp.updateUserRoleByAdmin(userId,roleId)){
             return new ResponseEntity<>(

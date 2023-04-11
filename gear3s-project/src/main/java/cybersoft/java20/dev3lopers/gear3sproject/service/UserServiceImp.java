@@ -1,14 +1,17 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AdUserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.PasswordDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
@@ -64,11 +67,11 @@ public class UserServiceImp implements UserService {
 
     @Override
     public boolean checkEmailExistence(String email) {
-        if(userRepository.countByEmail(email) < 1){
-            LOGGER.error("Email '{}' does not exist",email);
+        if(userRepository.countByEmail(email) > 0){
+            LOGGER.error("Email '{}' already exists in database",email);
             return false;
         }
-        LOGGER.info("Email '{}' exists",email);
+        LOGGER.info("Email '{}' does not exist in database. OK to create this email",email);
         return true;
     }
 
@@ -88,6 +91,7 @@ public class UserServiceImp implements UserService {
                 user.setRoles(roleRepository.findByName(RoleModel.USER.getValue()));
             }
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Account '{}' has been created successfully",accountDTO.getEmail());
             return true;
         } catch (Exception e){
@@ -97,40 +101,32 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<UserDTO> readAllUser() {
-        List<UserDTO> userDtoList = new ArrayList<>();
+    public List<AdUserDTO> readAllUser() {
+        List<AdUserDTO> userDtoList = new ArrayList<>();
         Gson gson = new Gson();
 
         try {
-            String data = (String) redisTemplate.opsForValue().get("users");
-            //System.out.println(data);
+            String data = (String) redisTemplate.opsForValue().get(RedisKeyModel.USERS.getValue());
             if (data == null){
                 List<Users> usersList = userRepository.findAll();
 
                 for (Users user: usersList) {
-                    UserDTO userDTO = new UserDTO();
+                    AdUserDTO userDto = new AdUserDTO();
 
-                    userDTO.setId(user.getId());
-                    userDTO.setEmail(user.getEmail());
-                    userDTO.setPassword(null);
-                    userDTO.setFullname(user.getFullname());
+                    userDto.setId(user.getId());
+                    userDto.setEmail(user.getEmail());
+                    userDto.setFullname(user.getFullname());
                     if(user.getBirthday() != null){
-                        userDTO.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday()));
+                        userDto.setBirthday(new SimpleDateFormat("dd-MM-yyyy").format(user.getBirthday()));
                     }
-                    userDTO.setPhone(user.getPhone());
-                    userDTO.setAddress(user.getAddress());
-                    userDTO.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
-                    userDTO.setLastPay(user.getLastPayment());
+                    userDto.setPhone(user.getPhone());
                     if(user.getRoles() != null){
-                        userDTO.setRoleId(user.getRoles().getId());
+                        userDto.setRoleId(user.getRoles().getId());
                     }
-                    if(user.getSex() != null){
-                        userDTO.setSexId(user.getSex().getId());
-                    }
-                    userDtoList.add(userDTO);
+                    userDtoList.add(userDto);
                 }
-                redisTemplate.opsForValue().set("users",gson.toJson(userDtoList));
-                redisTemplate.expire("users",30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisKeyModel.USERS.getValue(),gson.toJson(userDtoList));
+                redisTemplate.expire(RedisKeyModel.USERS.getValue(),30, TimeUnit.MINUTES);
             } else {
                 userDtoList = gson.fromJson(data,new TypeToken<List<UserDTO>>(){}.getType());
             }
@@ -143,31 +139,36 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public UserDTO readUserById(int id) {
+    public UserDTO readUserById(int userId) {
         UserDTO userDto = new UserDTO();
 
         try {
-            Users user = userRepository.findById(id);
+            Users user = userRepository.findById(userId);
             if(user == null){
-                LOGGER.error("Account with Id '{}' does not exits",id);
+                LOGGER.error("Account with Id '{}' does not exits",userId);
                 return null;
             }
             userDto.setId(user.getId());
             userDto.setEmail(user.getEmail());
-            userDto.setPassword(null);
+            userDto.setPassword("**********");
             userDto.setFullname(user.getFullname());
-            userDto.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(user.getBirthday()));
+            if(user.getBirthday() != null){
+                userDto.setBirthday(new SimpleDateFormat("dd-MM-yyyy").format(user.getBirthday()));
+            }
             userDto.setPhone(user.getPhone());
             userDto.setAddress(user.getAddress());
             userDto.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
             userDto.setLastPay(user.getLastPayment());
-            userDto.setRoleId(user.getRoles().getId());
-            userDto.setSexId(user.getSex().getId());
-
-            LOGGER.info("Read user info with Id '{}' successfully",id);
+            if(user.getRoles() != null){
+                userDto.setRoleId(user.getRoles().getId());
+            }
+            if(user.getSex() != null){
+                userDto.setSexId(user.getSex().getId());
+            }
+            LOGGER.info("Read user info with Id '{}' successfully by User",userId);
             return userDto;
         } catch (Exception e){
-            LOGGER.error("Failed to read user info with Id '{}' : {}",id,e.getMessage());
+            LOGGER.error("Failed to read user info with Id '{}' by User : {}",userId,e.getMessage());
             return null;
         }
     }
@@ -203,7 +204,7 @@ public class UserServiceImp implements UserService {
                 user.setEmail(userDTO.getEmail());
             }
             user.setFullname(userDTO.getFullname());
-            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthday()));
+            user.setBirthday(new SimpleDateFormat("dd-MM-yyyy").parse(userDTO.getBirthday()));
             user.setPhone(userDTO.getPhone());
             user.setAddress(userDTO.getAddress());
             user.setSex(new Sex(userDTO.getSexId()));
@@ -238,7 +239,7 @@ public class UserServiceImp implements UserService {
                 user.setEmail(userDTO.getEmail());
             }
             user.setFullname(userDTO.getFullname());
-            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthday()));
+            user.setBirthday(new SimpleDateFormat("dd-MM-yyyy").parse(userDTO.getBirthday()));
             user.setPhone(userDTO.getPhone());
             user.setAddress(userDTO.getAddress());
             user.setSex(new Sex(userDTO.getSexId()));

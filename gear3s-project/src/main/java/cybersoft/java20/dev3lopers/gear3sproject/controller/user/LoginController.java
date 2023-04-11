@@ -3,6 +3,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.LoginRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.RegisterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,8 +46,6 @@ public class LoginController {
 
     @Autowired
     UserServiceImp userServiceImp;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest){
@@ -89,7 +89,6 @@ public class LoginController {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 AccountDetailsImp userDetails =
                         (AccountDetailsImp) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
                 return new ResponseEntity<>(
                         new BasicResponse("Successful account registration",jwtResponse(userDetails,jwt)),HttpStatus.OK);
             } else {

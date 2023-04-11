@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.RoleDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.RoleService;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class RoleServiceImp implements RoleService {
         Gson gson = new Gson();
 
         try {
-            String data = (String) redisTemplate.opsForValue().get("roles");
+            String data = (String) redisTemplate.opsForValue().get(RedisKeyModel.ROLES.getValue());
             if (data == null){
                 List<Roles> roleList = roleRepository.findAll();
 
@@ -44,8 +45,8 @@ public class RoleServiceImp implements RoleService {
 
                     roleDTOList.add(roleDTO);
                 }
-                redisTemplate.opsForValue().set("roles",gson.toJson(roleDTOList));
-                redisTemplate.expire("roles",30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisKeyModel.ROLES.getValue(),gson.toJson(roleDTOList));
+                redisTemplate.expire(RedisKeyModel.ROLES.getValue(),30, TimeUnit.MINUTES);
             } else {
                 roleDTOList = gson.fromJson(data,new TypeToken<List<RoleDTO>>(){}.getType());
             }
