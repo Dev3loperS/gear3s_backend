@@ -31,15 +31,15 @@ $(function () {
         // return $.cookie(TOKEN_KEY)
     }
 
-    function setCookie(cname, cvalue, exdays) {
+    function setCookie(cname, cvalue, hours) {
         const d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        d.setTime(d.getTime() + (hours*60*60*1000));
         let expires = "expires="+ d.toUTCString();
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     }
 
     function setJwtToken(token) {
-        setCookie(TOKEN_KEY, token, 1)
+        setCookie(TOKEN_KEY, token, 0.5)
         // $.cookie(TOKEN_KEY, token)
         // localStorage.setItem(TOKEN_KEY, token);
     }
@@ -54,14 +54,14 @@ $(function () {
         }
     }
 
-    function createAuthorizationTokenHeader() {
-        let token = getJwtToken();
-        if (token) {
-            return {"Authorization": "Bearer " + token};
-        } else {
-            return {};
-        }
-    }
+    // function createAuthorizationTokenHeader() {
+    //     let token = getJwtToken();
+    //     if (token) {
+    //         return {"Authorization": "Bearer " + token};
+    //     } else {
+    //         return {};
+    //     }
+    // }
 
     function doLogin(loginData) {
         $.ajax({
