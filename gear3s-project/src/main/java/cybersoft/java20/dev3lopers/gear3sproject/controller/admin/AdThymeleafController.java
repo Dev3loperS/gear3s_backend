@@ -12,12 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdThymeleafController {
 
     @GetMapping("/home")
-    public String getHomePage(Model model) {
+    public String getHomePage() {
         return "pages/admin-home";
     }
 
     @GetMapping("/users")
-    public String getUsersPage(Model model) {
+    public String getUsersPage() {
         return "pages/admin-users";
+    }
+
+    @GetMapping("/categories")
+    public String getCategoriesPage() {
+        return "pages/admin-categories";
+    }
+
+    @GetMapping("/products")
+    public String getProductsPage() {
+        return "pages/admin-products";
     }
 }
