@@ -9,16 +9,14 @@ public class AccountDTO {
     private String email;
     @NotBlank(message = "Password cannot be blank")
     private String password;
-    private int lastPay;
     private int roleId;
 
     public AccountDTO() {
     }
 
-    public AccountDTO(String email, String password, int lastPay, int roleId) {
+    public AccountDTO(String email, String password, int roleId) {
         this.email = email;
         this.password = password;
-        this.lastPay = lastPay;
         this.roleId = roleId;
     }
 
@@ -36,14 +34,6 @@ public class AccountDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public int getLastPay() {
-        return lastPay;
-    }
-
-    public void setLastPay(int lastPay) {
-        this.lastPay = lastPay;
     }
 
     public int getRoleId() {

@@ -30,7 +30,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/admin/login")
-public class LoginAdController {
+public class AdLoginController {
     @Value("${jwt.privateKey}")
     private String privateKey;
 

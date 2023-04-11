@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.SexDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.SexRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.SexService;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class SexServiceImp implements SexService {
         List<SexDTO> sexDTOList = new ArrayList<>();
         Gson gson = new Gson();
         try {
-            String data = (String) redisTemplate.opsForValue().get("sexes");
+            String data = (String) redisTemplate.opsForValue().get(RedisKeyModel.SEXES.getValue());
             if (data == null){
                 List<Sex> sexList = sexRepository.findAll();
 
@@ -42,8 +43,8 @@ public class SexServiceImp implements SexService {
 
                     sexDTOList.add(sexDTO);
                 }
-                redisTemplate.opsForValue().set("sexes",gson.toJson(sexDTOList));
-                redisTemplate.expire("sexes",30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisKeyModel.SEXES.getValue(),gson.toJson(sexDTOList));
+                redisTemplate.expire(RedisKeyModel.SEXES.getValue(),30, TimeUnit.MINUTES);
             } else {
                 sexDTOList = gson.fromJson(data,new TypeToken<List<SexDTO>>(){}.getType());
             }
