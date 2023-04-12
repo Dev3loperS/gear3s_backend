@@ -1,5 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
+import java.util.Date;
+
 public class ProductDTO {
     private int id;
     private String name;
@@ -8,7 +10,37 @@ public class ProductDTO {
     private int inventory ;
     private int sold_qty;
     private String description ;
-    private DiscountDTO discountDTO ;
+
+
+    private byte discount_per ;
+    private int view_qty;
+
+    public byte getDiscount_per() {
+        return discount_per;
+    }
+
+    public void setDiscount_per(byte discount_per) {
+        this.discount_per = discount_per;
+    }
+
+    public int getView_qty() {
+        return view_qty;
+    }
+
+    public void setView_qty(int view_qty) {
+        this.view_qty = view_qty;
+    }
+
+    public Date getCreate_date() {
+        return create_date;
+    }
+
+    public void setCreate_date(Date create_date) {
+        this.create_date = create_date;
+    }
+
+    private Date create_date;
+
     private ManufacturerDTO manufacturerDTO ;
     private CategoryDTO categoryDTO ;
 
@@ -68,13 +100,7 @@ public class ProductDTO {
         this.description = description;
     }
 
-    public DiscountDTO getDiscountDTO() {
-        return discountDTO;
-    }
 
-    public void setDiscountDTO(DiscountDTO discountDTO) {
-        this.discountDTO = discountDTO;
-    }
 
     public ManufacturerDTO getManufacturerDTO() {
         return manufacturerDTO;

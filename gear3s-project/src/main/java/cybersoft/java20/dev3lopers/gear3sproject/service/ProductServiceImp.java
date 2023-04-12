@@ -1,11 +1,9 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.CategoryDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.DiscountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ManufacturerDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Category;
-import cybersoft.java20.dev3lopers.gear3sproject.entity.Discount;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Manufacturer;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
@@ -38,17 +36,13 @@ public class ProductServiceImp implements ProductService {
                 productDTO.setInventory(product.getInventory());
                 productDTO.setSold_qty(product.getSoldQty());
                 productDTO.setDescription(product.getDescription());
+                productDTO.setCreate_date(product.getCreate_date());
+                productDTO.setView_qty(product.getView_qty());
+                productDTO.setDiscount_per(product.getDiscount_per());
 
-                DiscountDTO discountDTO =new DiscountDTO();
-                Discount discount = product.getDiscount();
-                if (discount==null)
-                {
-                    discountDTO.setId(-1);
-                }
-                else
-                {
-                    discountDTO.setId(discount.getId());
-                }
+
+
+
 
                 ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
@@ -78,7 +72,6 @@ public class ProductServiceImp implements ProductService {
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setDiscountDTO(discountDTO);
                 productDTO.setManufacturerDTO(manufacturerDTO);
 
                 productDTOs.add(productDTO);
@@ -97,8 +90,7 @@ public class ProductServiceImp implements ProductService {
         Product product= productRepository.findById(id);
         if (product!=null)
         {
-            ProductDTO productDTO = new ProductDTO();
-
+            ProductDTO productDTO= new ProductDTO();
             productDTO.setId(product.getId());
             productDTO.setName(product.getName());
             productDTO.setPrice_origin(product.getOriginPrice());
@@ -106,17 +98,14 @@ public class ProductServiceImp implements ProductService {
             productDTO.setInventory(product.getInventory());
             productDTO.setSold_qty(product.getSoldQty());
             productDTO.setDescription(product.getDescription());
+            productDTO.setCreate_date(product.getCreate_date());
+            productDTO.setView_qty(product.getView_qty());
 
-            DiscountDTO discountDTO =new DiscountDTO();
-            Discount discount = product.getDiscount();
-            if (discount==null)
-            {
-                discountDTO.setId(-1);
-            }
-            else
-            {
-                discountDTO.setId(discount.getId());
-            }
+            productDTO.setDiscount_per(product.getDiscount_per());
+
+
+
+
 
             ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
             Manufacturer manufacturer=product.getManufacturer();
@@ -146,7 +135,6 @@ public class ProductServiceImp implements ProductService {
 
 
             productDTO.setCategoryDTO(categoryDTO);
-            productDTO.setDiscountDTO(discountDTO);
             productDTO.setManufacturerDTO(manufacturerDTO);
             return productDTO;
         }else
@@ -163,8 +151,7 @@ public class ProductServiceImp implements ProductService {
         {
             for (Product product : products
             ) {
-                ProductDTO productDTO = new ProductDTO();
-
+                ProductDTO productDTO= new ProductDTO();
                 productDTO.setId(product.getId());
                 productDTO.setName(product.getName());
                 productDTO.setPrice_origin(product.getOriginPrice());
@@ -172,17 +159,14 @@ public class ProductServiceImp implements ProductService {
                 productDTO.setInventory(product.getInventory());
                 productDTO.setSold_qty(product.getSoldQty());
                 productDTO.setDescription(product.getDescription());
+                productDTO.setCreate_date(product.getCreate_date());
+                productDTO.setView_qty(product.getView_qty());
 
-                DiscountDTO discountDTO =new DiscountDTO();
-                Discount discount = product.getDiscount();
-                if (discount==null)
-                {
-                    discountDTO.setId(-1);
-                }
-                else
-                {
-                    discountDTO.setId(discount.getId());
-                }
+                productDTO.setDiscount_per(product.getDiscount_per());
+
+
+
+
 
                 ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
@@ -212,7 +196,6 @@ public class ProductServiceImp implements ProductService {
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setDiscountDTO(discountDTO);
                 productDTO.setManufacturerDTO(manufacturerDTO);
 
                 productDTOS.add(productDTO);
@@ -233,8 +216,7 @@ public class ProductServiceImp implements ProductService {
         {
             for (Product product : products
             ) {
-                ProductDTO productDTO = new ProductDTO();
-
+                ProductDTO productDTO= new ProductDTO();
                 productDTO.setId(product.getId());
                 productDTO.setName(product.getName());
                 productDTO.setPrice_origin(product.getOriginPrice());
@@ -242,17 +224,14 @@ public class ProductServiceImp implements ProductService {
                 productDTO.setInventory(product.getInventory());
                 productDTO.setSold_qty(product.getSoldQty());
                 productDTO.setDescription(product.getDescription());
+                productDTO.setCreate_date(product.getCreate_date());
+                productDTO.setView_qty(product.getView_qty());
 
-                DiscountDTO discountDTO =new DiscountDTO();
-                Discount discount = product.getDiscount();
-                if (discount==null)
-                {
-                    discountDTO.setId(-1);
-                }
-                else
-                {
-                    discountDTO.setId(discount.getId());
-                }
+                productDTO.setDiscount_per(product.getDiscount_per());
+
+
+
+
 
                 ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
@@ -282,7 +261,6 @@ public class ProductServiceImp implements ProductService {
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setDiscountDTO(discountDTO);
                 productDTO.setManufacturerDTO(manufacturerDTO);
                 productDTOS.add(productDTO);
             }
@@ -302,8 +280,7 @@ public class ProductServiceImp implements ProductService {
         {
             for (Product product : products
                  ) {
-                ProductDTO productDTO = new ProductDTO();
-
+                ProductDTO productDTO= new ProductDTO();
                 productDTO.setId(product.getId());
                 productDTO.setName(product.getName());
                 productDTO.setPrice_origin(product.getOriginPrice());
@@ -311,17 +288,13 @@ public class ProductServiceImp implements ProductService {
                 productDTO.setInventory(product.getInventory());
                 productDTO.setSold_qty(product.getSoldQty());
                 productDTO.setDescription(product.getDescription());
+                productDTO.setCreate_date(product.getCreate_date());
+                productDTO.setView_qty(product.getView_qty());
+                productDTO.setDiscount_per(product.getDiscount_per());
 
-                DiscountDTO discountDTO =new DiscountDTO();
-                Discount discount = product.getDiscount();
-                if (discount==null)
-                {
-                    discountDTO.setId(-1);
-                }
-                else
-                {
-                    discountDTO.setId(discount.getId());
-                }
+
+
+
 
                 ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
@@ -351,7 +324,6 @@ public class ProductServiceImp implements ProductService {
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setDiscountDTO(discountDTO);
                 productDTO.setManufacturerDTO(manufacturerDTO);
                 productDTOS.add(productDTO);
             }
@@ -469,6 +441,53 @@ public class ProductServiceImp implements ProductService {
             productRepository.save(newProduct);
 
         }
+        return true ;
+    }
+
+    @Override
+    public boolean insertProduct(ProductDTO productDTO) {
+        Product product = new Product() ;
+
+
+        product.setName(productDTO.getName());
+        product.setOriginPrice(productDTO.getPrice_origin());
+        product.setDiscountPrice(productDTO.getPrice_discount());
+        product.setInventory(productDTO.getInventory());
+        product.setSoldQty(productDTO.getSold_qty());
+        product.setDescription(productDTO.getDescription());
+        product.setCreate_date(productDTO.getCreate_date());
+        product.setView_qty(productDTO.getView_qty());
+        product.setDiscount_per(productDTO.getDiscount_per());
+
+
+        Manufacturer manufacturer= new Manufacturer();
+        if (productDTO.getManufacturerDTO()==null)
+        {
+            manufacturer.setId(-1);
+            manufacturer.setName("null");
+
+        }else
+        {
+            manufacturer.setId(productDTO.getManufacturerDTO().getId());
+            manufacturer.setName(productDTO.getManufacturerDTO().getName());
+        }
+
+
+        Category category = new Category();
+        if (productDTO.getCategoryDTO()==null)
+        {
+            category.setId(-1);
+            category.setName("null");
+        }else
+        {
+            category.setId(productDTO.getCategoryDTO().getId());
+            category.setName(productDTO.getCategoryDTO().getName());
+        }
+
+        product.setManufacturer(manufacturer);
+        product.setCategory(category);
+
+        productRepository.save(product);
         return true ;
     }
 }

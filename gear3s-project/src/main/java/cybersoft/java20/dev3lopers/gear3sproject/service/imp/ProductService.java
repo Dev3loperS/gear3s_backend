@@ -1,6 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service.imp;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface ProductService {
 
     boolean deleteProductById(int id ) ;
     boolean updateProductById(int id ,ProductDTO productDTO);
+
+    boolean insertProduct (ProductDTO productDTO);
 }
