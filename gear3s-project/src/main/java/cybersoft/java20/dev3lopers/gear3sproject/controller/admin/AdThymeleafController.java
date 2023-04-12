@@ -33,6 +33,6 @@ public class AdThymeleafController {
 
     @GetMapping("/test")
     public String getTestPage() {
-        return "pages/admin-test";
+        return "pages/admin-user1";
     }
 }
