@@ -30,4 +30,9 @@ public class AdThymeleafController {
     public String getProductsPage() {
         return "pages/admin-products";
     }
+
+    @GetMapping("/test")
+    public String getTestPage() {
+        return "pages/admin-test";
+    }
 }

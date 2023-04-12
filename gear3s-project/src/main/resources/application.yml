@@ -22,6 +22,9 @@ spring:
   redis:
     host: 103.160.2.183
     port: 6377
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
 
 #    static-path-pattern: /resources/**, /css/**, /js/**, /vendor/**
 
@@ -44,6 +47,8 @@ logging:
 uploads:
   path: ../../uploads/images
   defaultAvatar: person-icon.png
+
+
 
 
 
