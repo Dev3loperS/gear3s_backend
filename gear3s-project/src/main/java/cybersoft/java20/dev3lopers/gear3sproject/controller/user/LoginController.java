@@ -69,10 +69,7 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest register){
-        if(!register.getConfirmpass().equals(register.getPassword())){
-            return new ResponseEntity<>(
-                    new BasicResponse("Password are not matching",null),HttpStatus.BAD_REQUEST);
-        } else if(userServiceImp.checkEmailExistence(register.getEmail())){
+        if(userServiceImp.checkEmailExistence(register.getEmail())){
             return new ResponseEntity<>(
                     new BasicResponse("This email already exists",null),HttpStatus.BAD_REQUEST);
         } else {

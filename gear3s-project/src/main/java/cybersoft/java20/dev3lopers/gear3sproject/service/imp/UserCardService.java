@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserCardService {
     List<MyCardDTO> readUserCardByUserId(int userId);
+    boolean createUserCard(int userId, MyCardDTO myCardDTO);
+    boolean deleteUserCard(int userId, int myCardId);
 }

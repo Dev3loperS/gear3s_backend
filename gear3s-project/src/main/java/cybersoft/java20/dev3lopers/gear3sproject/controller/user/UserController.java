@@ -52,8 +52,8 @@ public class UserController {
         }
     }
 
-    @PutMapping("/password")
-    public ResponseEntity<?> editUserPassword(@RequestParam int userId, @Valid @RequestBody PasswordDTO passwordDTO){
+    @PutMapping("/password/{userId}")
+    public ResponseEntity<?> editUserPassword(@PathVariable int userId, @Valid @RequestBody PasswordDTO passwordDTO){
         if(userServiceImp.updateUserPassword(userId,passwordDTO)){
             return new ResponseEntity<>(
                     new BasicResponse("Changed password of account successfully",true), HttpStatus.CREATED);
@@ -63,8 +63,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/payment")
-    public ResponseEntity<?> getUserCardList(@RequestParam int userId){
+    @GetMapping("/payment/{userId}")
+    public ResponseEntity<?> getUserCardList(@PathVariable int userId){
         List<MyCardDTO> myCardList = userCardServiceImp.readUserCardByUserId(userId);
         if(myCardList != null && myCardList.size() > 0){
             return new ResponseEntity<>(new BasicResponse("Returned my card list successful", myCardList),HttpStatus.OK);
@@ -73,13 +73,21 @@ public class UserController {
         }
     }
 
-    @PostMapping("/payment")
-    public ResponseEntity<?> addUserCard(@RequestParam int userId){
-        List<MyCardDTO> myCardList = userCardServiceImp.readUserCardByUserId(userId);
-        if(myCardList != null && myCardList.size() > 0){
-            return new ResponseEntity<>(new BasicResponse("Returned my card list successful", myCardList),HttpStatus.OK);
+    @PostMapping("/payment/{userId}")
+    public ResponseEntity<?> addUserCard(@PathVariable int userId, @Valid @RequestBody MyCardDTO myCard){
+        if(userCardServiceImp.createUserCard(userId,myCard)){
+            return new ResponseEntity<>(new BasicResponse("Added new user card successful",true),HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new BasicResponse("My card list is empty", null),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new BasicResponse("Failed to add new user card", false),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/payment/{userId}/{myCardId}")
+    public ResponseEntity<?> deleteUserCard(@PathVariable int userId, @PathVariable int myCardId){
+        if(userCardServiceImp.deleteUserCard(userId,myCardId)){
+            return new ResponseEntity<>(new BasicResponse("Deleted user card successful",true),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BasicResponse("Failed to delete user card", false),HttpStatus.BAD_REQUEST);
         }
     }
 }

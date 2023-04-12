@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
+import java.util.Collections;
 import java.util.List;
 
 public class AccountDetailsImp implements UserDetails {
@@ -29,7 +31,7 @@ public class AccountDetailsImp implements UserDetails {
     }
 
     public static AccountDetailsImp build(Users user) {
-        //List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRoles().getName()));
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRoles().getName()));
         return new AccountDetailsImp(
                 user.getId(),
                 user.getEmail(),
