@@ -1,13 +1,24 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 public class MyCardDTO {
     private int id;
+    @NotBlank(message = "Card number can not be blank")
+    @Size(min = 16,max = 16)
     private String number;
+    @NotBlank(message = "Card name can not be blank")
     private String name;
+    @NotBlank(message = "Expiry date can not be blank")
+    @DateTimeFormat(pattern = "MM-yyyy")
     private String expiryDate;
-    @JsonIgnore
+    @NotBlank(message = "CVV number can not be blank")
+    @Size(min = 3,max = 3)
     private String cvv;
 
     public MyCardDTO() {

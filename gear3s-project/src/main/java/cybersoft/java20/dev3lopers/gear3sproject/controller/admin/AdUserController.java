@@ -50,8 +50,8 @@ public class AdUserController {
         }
     }
 
-    @PutMapping("/role")
-    public ResponseEntity<?> editUserRoleById(@RequestParam int userId, @RequestParam int roleId){
+    @PutMapping("/role/{userId}/{roleId}")
+    public ResponseEntity<?> editUserRoleById(@PathVariable int userId, @PathVariable int roleId){
         if(userServiceImp.updateUserRoleByAdmin(userId,roleId)){
             return new ResponseEntity<>(
                     new BasicResponse("Updated role of user successfully",true),HttpStatus.CREATED);
@@ -61,9 +61,9 @@ public class AdUserController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUserById(@RequestParam int id){
-        if(userServiceImp.deleteUser(id)){
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUserById(@PathVariable int userId){
+        if(userServiceImp.deleteUser(userId)){
             return new ResponseEntity<>(
                     new BasicResponse("Deleted user successfully",true),HttpStatus.OK);
         } else {

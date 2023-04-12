@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
         if(e.getBindingResult().hasErrors()){
             LOGGER.error("Validation error: {}",e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         }
-        return new BasicResponse("Invalid email or password entered",false);
+        return new BasicResponse("Invalid input data",false);
     }
 
     @ExceptionHandler(Exception.class)

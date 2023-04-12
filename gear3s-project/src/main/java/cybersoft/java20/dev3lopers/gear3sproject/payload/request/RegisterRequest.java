@@ -11,16 +11,12 @@ public class RegisterRequest {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    @NotBlank(message = "Confirmation password cannot be blank")
-    private String confirmpass;
-
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String email, String password, String confirmpass) {
+    public RegisterRequest(String email, String password) {
         this.email = email;
         this.password = password;
-        this.confirmpass = confirmpass;
     }
 
     public String getEmail() {
@@ -37,13 +33,5 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmpass() {
-        return confirmpass;
-    }
-
-    public void setConfirmpass(String confirmpass) {
-        this.confirmpass = confirmpass;
     }
 }
