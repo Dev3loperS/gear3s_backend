@@ -12,8 +12,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdThymeleafController {
 
     @GetMapping("/home")
-    public String users(Model model) {
-        model.addAttribute("message", "Dat");
-        return "users/admin-home";
+    public String getHomePage() {
+        return "pages/admin-home";
+    }
+
+    @GetMapping("/users")
+    public String getUsersPage() {
+        return "pages/admin-users";
+    }
+
+    @GetMapping("/categories")
+    public String getCategoriesPage() {
+        return "pages/admin-categories";
+    }
+
+    @GetMapping("/products")
+    public String getProductsPage() {
+        return "pages/admin-products";
+    }
+
+    @GetMapping("/test")
+    public String getTestPage() {
+        return "pages/admin-user1";
     }
 }

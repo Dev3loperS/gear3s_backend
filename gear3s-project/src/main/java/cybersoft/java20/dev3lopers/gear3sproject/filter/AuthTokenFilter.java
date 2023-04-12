@@ -43,7 +43,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         //System.out.println(request.getServletPath());
         try {
             String jwt = parseJwt(request);
-            if(jwt == null) {
+            if(jwt == null && request.getCookies() != null) {
                 Cookie[] cookies = request.getCookies();
                 for(int i = cookies.length - 1; i >= 0; i--) {
                     if ("jwt".equals(cookies[i].getName()) && cookies[i].getValue() != null) {
