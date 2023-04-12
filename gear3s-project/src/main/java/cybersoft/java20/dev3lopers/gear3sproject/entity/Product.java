@@ -1,6 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity(name = "product")
@@ -27,13 +28,21 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "discount_id")
-    private Discount discount;
+    @Column(name = "discount_per")
+    private byte discount_per;
+
+    @Column(name = "view_qty")
+    private int view_qty;
+
+
+    @Column(name = "create_date")
+    private Date create_date;
 
     @ManyToOne
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
+
+
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -99,6 +108,29 @@ public class Product {
         this.soldQty = soldQty;
     }
 
+    public byte getDiscount_per() {
+        return discount_per;
+    }
+
+    public void setDiscount_per(byte discount_per) {
+        this.discount_per = discount_per;
+    }
+
+    public int getView_qty() {
+        return view_qty;
+    }
+
+    public void setView_qty(int view_qty) {
+        this.view_qty = view_qty;
+    }
+
+    public Date getCreate_date() {
+        return create_date;
+    }
+
+    public void setCreate_date(Date create_date) {
+        this.create_date = create_date;
+    }
     public String getDescription() {
         return description;
     }
@@ -107,13 +139,6 @@ public class Product {
         this.description = description;
     }
 
-    public Discount getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
-    }
 
     public Manufacturer getManufacturer() {
         return manufacturer;

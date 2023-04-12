@@ -136,4 +136,21 @@ public class ProductAdController {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
 
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addNewProduct(@RequestBody ProductDTO productDTO) {
+        BasicResponse basicResponse = new BasicResponse();
+        boolean isSuccess = productService.insertProduct(productDTO);
+        if (isSuccess) {
+            basicResponse.setMessage("Addd succesfully product" );
+            basicResponse.setData(isSuccess);
+
+        } else {
+            basicResponse.setMessage("Add unsuccesfully product");
+            basicResponse.setData(isSuccess);
+
+        }
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+
+    }
 }
