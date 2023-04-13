@@ -5,6 +5,7 @@
 <head>
     <th:block layout:insert="~{fragments/head}"/>
     <th:block layout:insert="~{fragments/_css :: start}"/>
+    <th:block layout:fragment="css_added"/>
 </head>
 <body id="page-top">
 
@@ -42,7 +43,7 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="#">Logout</a>
+                <button id="btn-logout" class="btn btn-primary">Logout</button>
             </div>
         </div>
     </div>
@@ -50,6 +51,6 @@
 
 <!-- End content -->
     <th:block layout:replace="~{fragments/_js :: end}"/>
-<!--<th:block layout:fragment="body_end"/>-->
+    <th:block layout:fragment="js_added"/>
 </body>
 </html>
