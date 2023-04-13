@@ -3,6 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{default-layout}"
       th:with="title='Admin - Users'">
+<th:block layout:fragment="css_added" >
+    <!-- Custom styles for this page -->
+    <link th:href="@{/static/css/dataTables.bootstrap4.min.css}" rel="stylesheet">
+</th:block>
 <th:block layout:fragment="content">
     <div class="container-fluid">
 
@@ -13,8 +17,8 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary align-self-center">Users List</h6>
-                <a data-target="#logoutModal" data-toggle="modal" href="#" class="btn btn-sm btn-primary shadow-sm">
-                    <i class="fas fa-plus"></i> Create</a>
+                <a href="#" class="btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-plus"></i> CREATE</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -504,7 +508,12 @@
 
     </div>
 </th:block>
-<!--<th:block layout:fragment="body_end" >-->
-<!--    <p>Footer ne</p>-->
-<!--</th:block>-->
+<th:block layout:fragment="js_added" >
+    <!-- Page level plugins -->
+    <script th:src="@{/static/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/static/js/dataTables.bootstrap4.min.js}"></script>
+
+    <!-- Page level custom scripts -->
+    <script th:src="@{/static/js/datatables-demo.js}"></script>
+</th:block>
 </html>
