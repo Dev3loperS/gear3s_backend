@@ -41,7 +41,6 @@ public class ProductDTO {
 
     private Date create_date;
 
-    private ManufacturerDTO manufacturerDTO ;
     private CategoryDTO categoryDTO ;
 
     public int getId() {
@@ -98,16 +97,6 @@ public class ProductDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-
-
-    public ManufacturerDTO getManufacturerDTO() {
-        return manufacturerDTO;
-    }
-
-    public void setManufacturerDTO(ManufacturerDTO manufacturerDTO) {
-        this.manufacturerDTO = manufacturerDTO;
     }
 
     public CategoryDTO getCategoryDTO() {
