@@ -12,15 +12,12 @@ public class CategoryProperty {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "useFilter")
-    private boolean useFilter;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "category_property")
-    private Set<ProductProperty> listProdProperty;
+    private Set<ProductDesc> listProdDesc;
 
     public int getId() {
         return id;
@@ -38,14 +35,6 @@ public class CategoryProperty {
         this.name = name;
     }
 
-    public boolean isUseFilter() {
-        return useFilter;
-    }
-
-    public void setUseFilter(boolean useFilter) {
-        this.useFilter = useFilter;
-    }
-
     public Category getCategory() {
         return category;
     }
@@ -54,11 +43,11 @@ public class CategoryProperty {
         this.category = category;
     }
 
-    public Set<ProductProperty> getListProdProperty() {
-        return listProdProperty;
+    public Set<ProductDesc> getListProdDesc() {
+        return listProdDesc;
     }
 
-    public void setListProdProperty(Set<ProductProperty> listProdProperty) {
-        this.listProdProperty = listProdProperty;
+    public void setListProdDesc(Set<ProductDesc> listProdDesc) {
+        this.listProdDesc = listProdDesc;
     }
 }
