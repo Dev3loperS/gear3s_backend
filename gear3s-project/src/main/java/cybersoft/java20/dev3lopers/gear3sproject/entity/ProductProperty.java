@@ -16,8 +16,8 @@ public class ProductProperty {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "cate_property_id")
-    private CategoryProperty category_property;
+    @JoinColumn(name = "prod_desc_id")
+    private CategoryProperty product_desc;
 
     public int getId() {
         return id;
@@ -43,11 +43,11 @@ public class ProductProperty {
         this.product = product;
     }
 
-    public CategoryProperty getCategory_property() {
-        return category_property;
+    public CategoryProperty getProduct_desc() {
+        return product_desc;
     }
 
-    public void setCategory_property(CategoryProperty category_property) {
-        this.category_property = category_property;
+    public void setProduct_desc(CategoryProperty product_desc) {
+        this.product_desc = product_desc;
     }
 }
