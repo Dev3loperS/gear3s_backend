@@ -1,10 +1,8 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.CategoryDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.ManufacturerDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Category;
-import cybersoft.java20.dev3lopers.gear3sproject.entity.Manufacturer;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
@@ -44,7 +42,7 @@ public class ProductServiceImp implements ProductService {
 
 
 
-                ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
+                /*ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
                 if (manufacturer==null)
                 {
@@ -55,12 +53,12 @@ public class ProductServiceImp implements ProductService {
                 {
                     manufacturerDTO.setId(manufacturer.getId());
                     manufacturerDTO.setName(manufacturer.getName());
-                }
+                }*/
 
 
                 CategoryDTO categoryDTO = new CategoryDTO();
                 Category category = product.getCategory();
-                if (manufacturer==null)
+                /*if (manufacturer==null)
                 {
                     categoryDTO.setId(-1);
                     categoryDTO.setName("null");
@@ -68,11 +66,11 @@ public class ProductServiceImp implements ProductService {
                 {
                     categoryDTO.setId(category.getId());
                     categoryDTO.setName(category.getName());
-                }
+                }*/
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setManufacturerDTO(manufacturerDTO);
+                //productDTO.setManufacturerDTO(manufacturerDTO);
 
                 productDTOs.add(productDTO);
             }
@@ -107,7 +105,7 @@ public class ProductServiceImp implements ProductService {
 
 
 
-            ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
+            /*ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
             Manufacturer manufacturer=product.getManufacturer();
             if (manufacturer==null)
             {
@@ -118,12 +116,12 @@ public class ProductServiceImp implements ProductService {
             {
                 manufacturerDTO.setId(manufacturer.getId());
                 manufacturerDTO.setName(manufacturer.getName());
-            }
+            }*/
 
 
             CategoryDTO categoryDTO = new CategoryDTO();
             Category category = product.getCategory();
-            if (manufacturer==null)
+            /*if (manufacturer==null)
             {
                 categoryDTO.setId(-1);
                 categoryDTO.setName("null");
@@ -131,11 +129,11 @@ public class ProductServiceImp implements ProductService {
             {
                 categoryDTO.setId(category.getId());
                 categoryDTO.setName(category.getName());
-            }
+            }*/
 
 
             productDTO.setCategoryDTO(categoryDTO);
-            productDTO.setManufacturerDTO(manufacturerDTO);
+            //productDTO.setManufacturerDTO(manufacturerDTO);
             return productDTO;
         }else
         {
@@ -168,7 +166,7 @@ public class ProductServiceImp implements ProductService {
 
 
 
-                ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
+                /*ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
                 if (manufacturer==null)
                 {
@@ -179,12 +177,12 @@ public class ProductServiceImp implements ProductService {
                 {
                     manufacturerDTO.setId(manufacturer.getId());
                     manufacturerDTO.setName(manufacturer.getName());
-                }
+                }*/
 
 
                 CategoryDTO categoryDTO = new CategoryDTO();
                 Category category = product.getCategory();
-                if (manufacturer==null)
+                /*if (manufacturer==null)
                 {
                     categoryDTO.setId(-1);
                     categoryDTO.setName("null");
@@ -192,11 +190,11 @@ public class ProductServiceImp implements ProductService {
                 {
                     categoryDTO.setId(category.getId());
                     categoryDTO.setName(category.getName());
-                }
+                }*/
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setManufacturerDTO(manufacturerDTO);
+                //productDTO.setManufacturerDTO(manufacturerDTO);
 
                 productDTOS.add(productDTO);
             }
@@ -233,7 +231,7 @@ public class ProductServiceImp implements ProductService {
 
 
 
-                ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
+                /*ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
                 if (manufacturer==null)
                 {
@@ -244,12 +242,12 @@ public class ProductServiceImp implements ProductService {
                 {
                     manufacturerDTO.setId(manufacturer.getId());
                     manufacturerDTO.setName(manufacturer.getName());
-                }
+                }*/
 
 
                 CategoryDTO categoryDTO = new CategoryDTO();
                 Category category = product.getCategory();
-                if (manufacturer==null)
+                /*if (manufacturer==null)
                 {
                     categoryDTO.setId(-1);
                     categoryDTO.setName("null");
@@ -257,11 +255,11 @@ public class ProductServiceImp implements ProductService {
                 {
                     categoryDTO.setId(category.getId());
                     categoryDTO.setName(category.getName());
-                }
+                }*/
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setManufacturerDTO(manufacturerDTO);
+                //productDTO.setManufacturerDTO(manufacturerDTO);
                 productDTOS.add(productDTO);
             }
 
@@ -296,7 +294,7 @@ public class ProductServiceImp implements ProductService {
 
 
 
-                ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
+                /*ManufacturerDTO manufacturerDTO = new ManufacturerDTO();
                 Manufacturer manufacturer=product.getManufacturer();
                 if (manufacturer==null)
                 {
@@ -307,12 +305,12 @@ public class ProductServiceImp implements ProductService {
                 {
                     manufacturerDTO.setId(manufacturer.getId());
                     manufacturerDTO.setName(manufacturer.getName());
-                }
+                }*/
 
 
                 CategoryDTO categoryDTO = new CategoryDTO();
                 Category category = product.getCategory();
-                if (manufacturer==null)
+                /*if (manufacturer==null)
                 {
                     categoryDTO.setId(-1);
                     categoryDTO.setName("null");
@@ -320,11 +318,11 @@ public class ProductServiceImp implements ProductService {
                 {
                     categoryDTO.setId(category.getId());
                     categoryDTO.setName(category.getName());
-                }
+                }*/
 
 
                 productDTO.setCategoryDTO(categoryDTO);
-                productDTO.setManufacturerDTO(manufacturerDTO);
+                //productDTO.setManufacturerDTO(manufacturerDTO);
                 productDTOS.add(productDTO);
             }
 
@@ -460,7 +458,7 @@ public class ProductServiceImp implements ProductService {
         product.setDiscount_per(productDTO.getDiscount_per());
 
 
-        Manufacturer manufacturer= new Manufacturer();
+        /*Manufacturer manufacturer= new Manufacturer();
         if (productDTO.getManufacturerDTO()==null)
         {
             manufacturer.setId(-1);
@@ -470,7 +468,7 @@ public class ProductServiceImp implements ProductService {
         {
             manufacturer.setId(productDTO.getManufacturerDTO().getId());
             manufacturer.setName(productDTO.getManufacturerDTO().getName());
-        }
+        }*/
 
 
         Category category = new Category();
@@ -484,7 +482,7 @@ public class ProductServiceImp implements ProductService {
             category.setName(productDTO.getCategoryDTO().getName());
         }
 
-        product.setManufacturer(manufacturer);
+        //product.setManufacturer(manufacturer);
         product.setCategory(category);
 
         productRepository.save(product);

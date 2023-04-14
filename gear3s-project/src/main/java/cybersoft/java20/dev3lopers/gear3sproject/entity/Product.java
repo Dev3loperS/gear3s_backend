@@ -39,12 +39,6 @@ public class Product {
     private Date create_date;
 
     @ManyToOne
-    @JoinColumn(name = "manufacturer_id")
-    private Manufacturer manufacturer;
-
-
-
-    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -137,15 +131,6 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-
-    public Manufacturer getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(Manufacturer manufacturer) {
-        this.manufacturer = manufacturer;
     }
 
     public Category getCategory() {

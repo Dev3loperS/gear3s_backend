@@ -128,7 +128,7 @@ public class UserServiceImp implements UserService {
                 redisTemplate.opsForValue().set(RedisKeyModel.USERS.getValue(),gson.toJson(userDtoList));
                 redisTemplate.expire(RedisKeyModel.USERS.getValue(),30, TimeUnit.MINUTES);
             } else {
-                userDtoList = gson.fromJson(data,new TypeToken<List<UserDTO>>(){}.getType());
+                userDtoList = gson.fromJson(data,new TypeToken<List<AdUserDTO>>(){}.getType());
             }
             LOGGER.info("Read user list successfully");
             return userDtoList;
