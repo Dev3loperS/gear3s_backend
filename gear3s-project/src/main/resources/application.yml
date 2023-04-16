@@ -48,6 +48,12 @@ uploads:
   path: ../../uploads/images
   defaultAvatar: person-icon.png
 
+paypal:
+  mode: sandbox
+  client:
+    id: AZj1hOz7DjomVcIBKZ3TOZY4lJdV2t22fm4FPXB4XMyzGoL4zFu-YlHkIJ0H_SckGITPbUQOdX3z3Fb3
+    secret: ECqCLwPii98Xydk8xgFH_K0j9YhAxDeMSsu03x_PFuKOPwochRuDyiGAUg0OL3WLpio-EAOZwPn8cIfM
+
 
 
 
