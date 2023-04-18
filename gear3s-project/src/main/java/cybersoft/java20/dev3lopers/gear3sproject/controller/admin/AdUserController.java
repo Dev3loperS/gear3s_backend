@@ -50,6 +50,16 @@ public class AdUserController {
         }
     }
 
+    @GetMapping("/detail/{userId}")
+    public ResponseEntity<?> getUserDetail(@PathVariable int userId){
+        AdUserDTO user = userServiceImp.readUserByIdByAdmin(userId);
+        if(user != null){
+            return new ResponseEntity<>(new BasicResponse("Returned user info successful", user),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BasicResponse("User info is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PutMapping("/role/{userId}/{roleId}")
     public ResponseEntity<?> editUserRoleById(@PathVariable int userId, @PathVariable int roleId){
         if(userServiceImp.updateUserRoleByAdmin(userId,roleId)){

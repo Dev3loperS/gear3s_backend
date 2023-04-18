@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping("/profile/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable int userId){
-        UserDTO user = userServiceImp.readUserById(userId);
+        UserDTO user = userServiceImp.readUserByIdByUser(userId);
         if(user != null){
             return new ResponseEntity<>(new BasicResponse("Returned user info successful", user),HttpStatus.OK);
         } else {
