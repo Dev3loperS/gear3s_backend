@@ -42,13 +42,20 @@ $(function () {
                 },
                 {
                     data: null,
-                    defaultContent:
-                        '<button type="button" class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>'
+                    render: function (data, type, row) {
+                        let id = row.id
+                        return '<a href="#editModal" class="delete btn btn-outline-warning"><i class="fas fa-trash"></i></a>' +
+                            `<input type="hidden" id="id" value=${id}>`
+                    }
                 },
                 {
                     data: null,
-                    defaultContent:
-                        '<button type="button" class="btn btn-outline-info"><i class="fas fa-edit"></i></button>'
+                    render: function (data, type, row) {
+                        let id = row.id
+                        return '<a href="#deleteModal" class="edit btn btn-outline-info"><i class="fas fa-edit"></i></a>' +
+                            `<input type="hidden" id="id" value=${id}>`
+                    }
+
                 }
             ]
         });

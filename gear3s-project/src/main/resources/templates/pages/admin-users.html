@@ -13,7 +13,7 @@
         <!-- Page Heading -->
         <h3 class="h3 mb-2 text-gray-800">Admin > Users</h3>
 
-        <div id="alertBox" class="alert alert-primary align-self-center" role="alert" tabindex="-1" hidden>
+        <div id="alertBox" class="alert alert-primary align-self-center" role="alert" tabindex="-1">
             Message
         </div>
 
@@ -49,6 +49,50 @@
                                         <input type="checkbox"
                                                name="roleId"
                                                id="roleId"
+                                               checked data-toggle="toggle"
+                                               data-on="Admin"
+                                               data-off="User"
+                                               data-onstyle="success"
+                                               data-offstyle="primary"
+                                               data-width="100">
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade"
+                 id="editModal" tabindex="-1"
+                 role="dialog" aria-labelledby="exampleModalCenterTitle"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">CREATE AN ACCOUNT</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editForm">
+                                <div class="form-group">
+                                    <label>Email</label><input type="email" name="email" class="form-control">
+                                    <br>
+                                    <label>Password</label><input type="text" name="password" class="form-control">
+                                    <br>
+                                    <div>
+                                        <label>ROLE: </label>
+                                        <input type="checkbox"
+                                               name="roleId"
                                                checked data-toggle="toggle"
                                                data-on="Admin"
                                                data-off="User"
