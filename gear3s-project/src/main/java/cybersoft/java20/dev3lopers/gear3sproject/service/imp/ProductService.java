@@ -1,21 +1,31 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service.imp;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.CatePropDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdFilterDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface ProductService {
-    List<ProductDTO> getAllProducts();
-    ProductDTO findById (int id ) ;
-    List<ProductDTO> findByPriceDiscount (int minPrice ,int maxPrice  ) ;
-    List<ProductDTO> findByName(String name ) ;
-    List<ProductDTO> findByPriceOrigin (int min,int max  ) ;
+    List<ProdFilterDTO> readAllProdOrderByView(int categoryId);
+    List<ProdFilterDTO> readAllProdOrderByDate(int categoryId);
+    List<ProdFilterDTO> readAllProdOrderBySold(int categoryId);
+    List<ProdFilterDTO> readAllProdOrderByPriceDesc(int categoryId);
+    List<ProdFilterDTO> readAllProdOrderByPriceAsc(int categoryId);
+    List<ProdFilterDTO> readAllProdByPriceRange (int categoryId,int minPrice, int maxPrice) ;
+    List<ProdFilterDTO> readAllProdByName(int categoryId, String prodName ) ;
+    List<String> readAllProductImage(int productId, int categoryId);
+    List<ProductDTO> readAllProducts();
+    ProductDTO readProductById (int id ) ;
+
+
 
     boolean deleteProductById(int id ) ;
     boolean updateProductById(int id ,ProductDTO productDTO);
+    boolean createProduct (ProductDTO productDTO);
 
-    boolean insertProduct (ProductDTO productDTO);
+
+
+
 }
