@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/category")
-public class CategoryAdController {
+public class AdCategoryController {
     @Autowired
     CategoryService categoryService;
 

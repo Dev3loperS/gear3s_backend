@@ -184,6 +184,7 @@ public class UserServiceImp implements UserService {
             user.setRoles(new Roles(roleId));
 
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Role of account with Id '{}' has been changed successfully",userId);
             return true;
         } catch (Exception e){
@@ -219,6 +220,7 @@ public class UserServiceImp implements UserService {
             }
 
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Profile of account '{}' has been updated successfully",userDTO.getEmail());
             return true;
         } catch (Exception e){
@@ -283,18 +285,6 @@ public class UserServiceImp implements UserService {
     }*/
 
     @Override
-    public boolean deleteUser(int id) {
-        try {
-            userRepository.deleteById(id);
-            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
-            return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
     public boolean updateUserPassword(int userId, PasswordDTO passwordDTO) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         try {
@@ -313,6 +303,7 @@ public class UserServiceImp implements UserService {
             }
             user.setPassword(bCryptPasswordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Password of account '{}' has been changed successfully",user.getEmail());
             return true;
         } catch (Exception e){
@@ -320,6 +311,21 @@ public class UserServiceImp implements UserService {
             return false;
         }
     }
+
+    @Override
+    public boolean deleteUser(int id) {
+        try {
+            userRepository.deleteById(id);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
+            return false;
+        }
+    }
+
+
 
 
 }

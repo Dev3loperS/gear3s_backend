@@ -28,9 +28,6 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "discount_per")
-    private byte discount_per;
-
     @Column(name = "view_qty")
     private int view_qty;
 
@@ -102,14 +99,6 @@ public class Product {
         this.soldQty = soldQty;
     }
 
-    public byte getDiscount_per() {
-        return discount_per;
-    }
-
-    public void setDiscount_per(byte discount_per) {
-        this.discount_per = discount_per;
-    }
-
     public int getView_qty() {
         return view_qty;
     }
@@ -125,6 +114,7 @@ public class Product {
     public void setCreate_date(Date create_date) {
         this.create_date = create_date;
     }
+
     public String getDescription() {
         return description;
     }
