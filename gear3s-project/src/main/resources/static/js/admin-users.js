@@ -1,4 +1,4 @@
-$(function () {
+$(document).ready(function () {
     assignDataToTable()
     function assignDataToTable() {
         $('#dataTable').DataTable({
@@ -44,7 +44,10 @@ $(function () {
                     data: null,
                     render: function (data, type, row) {
                         let id = row.id
-                        return '<a href="#editModal" class="delete btn btn-outline-warning"><i class="fas fa-trash"></i></a>' +
+                        if (row.email === 'admin@gmail.com') {
+                            return null
+                        }
+                        return '<a href="#deleteModal" data-toggle="modal" class="deleteRowNe btn btn-outline-warning"><i class="fas fa-trash"></i></a>' +
                             `<input type="hidden" id="id" value=${id}>`
                     }
                 },
@@ -52,7 +55,10 @@ $(function () {
                     data: null,
                     render: function (data, type, row) {
                         let id = row.id
-                        return '<a href="#deleteModal" class="edit btn btn-outline-info"><i class="fas fa-edit"></i></a>' +
+                        if (row.email === 'admin@gmail.com') {
+                            return null
+                        }
+                        return `<a href="#editModal" data-toggle="modal" class="editRowNe btn btn-outline-info"><i class="fas fa-edit"></i></a>` +
                             `<input type="hidden" id="id" value=${id}>`
                     }
 
@@ -108,4 +114,30 @@ $(function () {
             }
         });
     });
+    $(document).on('click', '.editRowNe', function(){
+        let id = $(this).parent().find('#id').val()
+        $.ajax({
+            url: '/api/admin/user/detail/' + id,
+            type: "GET",
+            success: function (data) {
+                let userData = data.data
+                $('#editModal input[name="id"]').val(userData.id)
+                $('#editModal input[name="email"]').val(userData.email)
+                $('#editModal input[name="FullName"]').val(userData.fullname)
+                $('#editModal input[name="phone"]').val(userData.phone)
+                $('#editModal input[name="birthday"]').val(userData.birthday)
+                console.log(userData.roleId)
+                if (userData.roleId === 1) {
+                    $('#editModal input[name="roleId"]').bootstrapToggle('on')
+                } else {
+                    $('#editModal input[name="roleId"]').bootstrapToggle('off')
+                }
+            },
+            error: function (jqXHR) {
+                let errorMessage = $.parseJSON(jqXHR.responseText).message
+                showAlert(errorMessage)
+            }
+        });
+    })
 })
+

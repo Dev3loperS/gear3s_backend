@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{default-layout}"
       th:with="title='Admin - Users'">
-<th:block layout:fragment="css_added" >
+<th:block layout:fragment="css_added">
     <!-- Custom styles for this page -->
     <link th:href="@{/static/css/dataTables.bootstrap4.min.css}" rel="stylesheet">
 </th:block>
@@ -17,7 +17,7 @@
             Message
         </div>
 
-        <!-- DataTales Example -->
+        <!-- DataTales -->
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary align-self-center">Users List</h6>
@@ -56,15 +56,15 @@
                                                data-offstyle="primary"
                                                data-width="100">
                                     </div>
-                                    <br>
-                                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">ADD</button>
+                                    <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">CLOSE
+                                    </button>
                                 </div>
                             </form>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">CREATE AN ACCOUNT</h5>
+                            <h5 class="modal-title">ACCOUNT DETAILS</h5>
                             <button type="button" class="close" data-dismiss="modal"
                                     aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -85,9 +85,17 @@
                         <div class="modal-body">
                             <form id="editForm">
                                 <div class="form-group">
-                                    <label>Email</label><input type="email" name="email" class="form-control">
+                                    <label>ID</label><input type="number" name="id" class="form-control" disabled>
                                     <br>
-                                    <label>Password</label><input type="text" name="password" class="form-control">
+                                    <label>Email</label><input type="email" name="email" class="form-control" disabled>
+                                    <br>
+                                    <label>FullName</label><input type="text" name="fullName" class="form-control"
+                                                                  disabled>
+                                    <br>
+                                    <label>Phone</label><input type="text" name="phone" class="form-control" disabled>
+                                    <br>
+                                    <label>Birthday</label><input type="text" name="birthday" class="form-control"
+                                                                  disabled>
                                     <br>
                                     <div>
                                         <label>ROLE: </label>
@@ -100,15 +108,15 @@
                                                data-offstyle="primary"
                                                data-width="100">
                                     </div>
-                                    <br>
-                                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">EDIT</button>
+                                    <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close
+                                    </button>
                                 </div>
                             </form>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -152,7 +160,7 @@
         </div>
     </div>
 </th:block>
-<th:block layout:fragment="js_added" >
+<th:block layout:fragment="js_added">
     <!-- Page level plugins -->
     <script th:src="@{/static/js/jquery.dataTables.min.js}"></script>
     <script th:src="@{/static/js/dataTables.bootstrap4.min.js}"></script>
