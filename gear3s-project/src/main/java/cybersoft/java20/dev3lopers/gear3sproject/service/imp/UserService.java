@@ -10,7 +10,8 @@ public interface UserService {
     boolean checkEmailExistence(String email);
     boolean createUser(AccountDTO accountDTO,boolean byAdmin);
     List<AdUserDTO> readAllUser();
-    UserDTO readUserById(int userId);
+    UserDTO readUserByIdByUser(int userId);
+    AdUserDTO readUserByIdByAdmin(int userId);
     boolean updateUserByUser(UserDTO userDTO, MultipartFile avatarFile);
     //boolean updateUserByUser(UserDTO userDTO);
     //boolean updateAvatar(int userId, MultipartFile avatarFile);
