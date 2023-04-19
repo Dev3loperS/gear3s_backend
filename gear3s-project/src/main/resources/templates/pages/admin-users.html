@@ -24,6 +24,7 @@
                 <a data-target="#addModal" data-toggle="modal" href="#" class="btn btn-sm btn-primary shadow-sm">
                     <i class="fas fa-plus"></i> CREATE</a>
             </div>
+            <!--            add modal-->
             <div class="modal fade"
                  id="addModal" tabindex="-1"
                  role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -69,6 +70,7 @@
                     </div>
                 </div>
             </div>
+            <!--            edit modal-->
             <div class="modal fade"
                  id="editModal" tabindex="-1"
                  role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -111,9 +113,40 @@
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">EDIT</button>
+                                    <button type="submit" class="btn btn-warning" disabled>EDIT</button>
                                     <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Close
+                                            data-dismiss="modal">CLOSE
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--            delete modal-->
+            <div class="modal fade"
+                 id="deleteModal" tabindex="-1"
+                 role="dialog" aria-labelledby="exampleModalCenterTitle"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">WARNING</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="deleteForm">
+                                <div class="form-group">
+                                    <p id="content">Do you want to delete this account?</p>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger">DELETE</button>
+                                    <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">CLOSE
                                     </button>
                                 </div>
                             </form>
