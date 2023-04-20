@@ -312,18 +312,6 @@ public class UserServiceImp implements UserService {
         return true;
     }*/
 
-//    @Override
-//    public boolean deleteUser(int id) {
-//        try {
-//            userRepository.deleteById(id);
-//            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
-//            return true;
-//        } catch (Exception e){
-//            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
-//            return false;
-//        }
-//    }
-
     @Override
     public boolean updateUserPassword(int userId, PasswordDTO passwordDTO) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

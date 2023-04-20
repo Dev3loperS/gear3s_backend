@@ -45,8 +45,6 @@ public class Users {
     @OneToMany(mappedBy = "users")
     private Set<UserCard> listUserCard;
 
-//    @OneToMany(mappedBy = "users")
-//    private Set<Orders> listOrder;
 
     @OneToMany(mappedBy = "users")
     private Set<ProductRating> listProductRating;
