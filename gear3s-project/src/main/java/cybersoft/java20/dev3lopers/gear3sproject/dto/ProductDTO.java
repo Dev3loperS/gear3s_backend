@@ -30,16 +30,6 @@ public class ProductDTO {
         this.description = description;
     }
 
-//    public Date getCreate_date() {
-//        return create_date;
-//    }
-//
-//    public void setCreate_date(Date create_date) {
-//        this.create_date = create_date;
-//    }
-
-
-
     public int getId() {
         return id;
     }
