@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/admin/category")
 public class AdCategoryController {
     @Autowired
     CategoryService categoryService;
@@ -17,17 +19,20 @@ public class AdCategoryController {
     @GetMapping("")
     public ResponseEntity<?> getAllCategory ()
     {
-        return new ResponseEntity<>(categoryService.getAllCategory(), HttpStatus.OK);
+        BasicResponse basicResponse = new BasicResponse( );
+        basicResponse.setMessage("true");
+        basicResponse.setData(categoryService.getAllCategory());
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity <?>insertCategory (@RequestParam String name )
-//    {
-//        BasicResponse basicResponse = new BasicResponse();
-//
-//        basicResponse.setData(categoryService.insertCategory(name));
-//        return new ResponseEntity<>(basicResponse,HttpStatus.OK);
-//    }
+    @PostMapping("/add")
+    public ResponseEntity <?>insertCategory (@RequestParam String name )
+    {
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(categoryService.insertCategory(name));
+        basicResponse.setMessage("Insert successfully new category : "+name);
+        return new ResponseEntity<>(basicResponse,HttpStatus.OK);
+    }
 
     @PostMapping("/findById")
     public ResponseEntity <?>findCategoryById (@RequestParam int id  )
@@ -50,7 +55,7 @@ public class AdCategoryController {
     public ResponseEntity <?>findCategoryByName(@RequestParam String name   )
     {
         BasicResponse basicResponse = new BasicResponse();
-        CategoryDTO categoryDTO  = categoryService.findByName(name);
+        List<CategoryDTO> categoryDTO  = categoryService.findByName(name);
         if (categoryDTO !=null)
         {
             basicResponse.setData(categoryDTO);
@@ -67,10 +72,10 @@ public class AdCategoryController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity <?>updateCategory (@PathVariable int id , @RequestBody CategoryDTO category )
+    public ResponseEntity <?>updateCategory (@PathVariable int id ,@RequestParam String name  )
     {
         BasicResponse basicResponse = new BasicResponse();
-        boolean isSuccess = categoryService.updateCategory(id,category);
+        boolean isSuccess = categoryService.updateCategory(id,name);
         if (isSuccess)
         {
             basicResponse.setData(true );
@@ -78,7 +83,7 @@ public class AdCategoryController {
             return new ResponseEntity<>(basicResponse,HttpStatus.OK);
         }else
         {
-            basicResponse.setMessage("id not existed , insert successfully");
+            basicResponse.setMessage("id not existed , insert new category successfully");
             basicResponse.setData(true );
             return new ResponseEntity<>(basicResponse,HttpStatus.OK);
         }
@@ -90,9 +95,18 @@ public class AdCategoryController {
     public ResponseEntity <?>deleteCategory (@RequestParam int id )
     {
         BasicResponse basicResponse = new BasicResponse();
+        boolean isSuccess = categoryService.deleteById(id);
+        if (isSuccess)
+        {
+            basicResponse.setData(true );
+            basicResponse.setMessage("Delete successfully id : "+id);
+            return new ResponseEntity<>(basicResponse,HttpStatus.OK);
+        }else
+        {
+            basicResponse.setMessage("Delete unsuccessfully id : "+id);
+            basicResponse.setData(false );
+            return new ResponseEntity<>(basicResponse,HttpStatus.OK);
+        }
 
-        basicResponse.setData(categoryService.deleteById(id));
-
-        return new ResponseEntity<>(basicResponse,HttpStatus.OK);
     }
 }
