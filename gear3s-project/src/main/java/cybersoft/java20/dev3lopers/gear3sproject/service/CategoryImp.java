@@ -18,13 +18,19 @@ public class CategoryImp implements CategoryService {
     @Override
     public List<CategoryDTO> getAllCategory() {
         List<CategoryDTO> list = new ArrayList<>();
-        for (Category category : categoryRepository.getAllCategory()
-        ) {
-            CategoryDTO categoryDTO = new CategoryDTO();
-            categoryDTO.setId(category.getId());
-            categoryDTO.setName(category.getName());
-            list.add(categoryDTO);
+        try {
+            for (Category category : categoryRepository.getAllCategory()
+            ) {
+                CategoryDTO categoryDTO = new CategoryDTO();
+                categoryDTO.setId(category.getId());
+                categoryDTO.setName(category.getName());
+                list.add(categoryDTO);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in categoryImp : " + e.getMessage());
+
         }
+
         return list;
     }
 
@@ -33,67 +39,62 @@ public class CategoryImp implements CategoryService {
         Category category = new Category();
         category.setName(name);
         categoryRepository.save(category);
-        if (category.getName().isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+
+        return true ;
     }
 
     @Override
     public CategoryDTO findById(int id) {
-        Category category =null;
-        category= categoryRepository.findById(id);
-        CategoryDTO categoryDTO = new CategoryDTO();
-        if (category !=null){
-
-            categoryDTO.setName(category.getName());
-            categoryDTO.setId(category.getId());
-            return categoryDTO;
-        }else
-        {
-           return null ;
-        }
-
-
-    }
-
-    @Override
-    public CategoryDTO findByName(String name) {
         Category category = null;
-        category= categoryRepository.findByName(name);
+        category = categoryRepository.findById(id);
         CategoryDTO categoryDTO = new CategoryDTO();
-        if (category != null)
-        {
+        if (category != null) {
+
             categoryDTO.setName(category.getName());
             categoryDTO.setId(category.getId());
             return categoryDTO;
+        } else {
+            return null;
         }
-      else
-        {
-            return null ;
+
+
+    }
+
+    @Override
+    public List<CategoryDTO > findByName(String name) {
+        List<Category >categories= categoryRepository.findByNameLike(name);
+        List<CategoryDTO >categoryDTOS= new ArrayList<>();
+
+        if (categories != null) {
+            for (Category category :categories
+                 ) {
+                CategoryDTO categoryDTO = new CategoryDTO() ;
+                categoryDTO.setName(category.getName());
+                categoryDTO.setId(category.getId());
+                categoryDTOS.add(categoryDTO);
+            }
+
+            return categoryDTOS;
+        } else {
+            return null;
         }
 
     }
 
     @Override
-    public boolean updateCategory(int id, CategoryDTO newCategory) {
+    public boolean updateCategory(int id, String name ) {
 
         //boolean isSuccess = deleteById(id);
         Category result = new Category();
-        Category oldCategory = null ;
+        Category oldCategory = null;
         oldCategory = categoryRepository.findById(id);
-        if (oldCategory!=null )
-        {
-            oldCategory.setName(newCategory.getName());
+        if (oldCategory != null) {
+            oldCategory.setName(name);
             categoryRepository.save(oldCategory);
             return true;
 
-        }else
-        {
-            result.setId(id);
-            result.setName(newCategory.getName());
-            categoryRepository.save(result);
+        } else {
+            insertCategory(name);
             return false;
         }
 

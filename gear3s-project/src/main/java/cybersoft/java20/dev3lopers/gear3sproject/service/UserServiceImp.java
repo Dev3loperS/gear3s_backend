@@ -139,7 +139,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public UserDTO readUserById(int userId) {
+    public UserDTO readUserByIdByUser(int userId) {
         UserDTO userDto = new UserDTO();
 
         try {
@@ -165,10 +165,38 @@ public class UserServiceImp implements UserService {
             if(user.getSex() != null){
                 userDto.setSexId(user.getSex().getId());
             }
-            LOGGER.info("Read user info with Id '{}' successfully by User",userId);
+            LOGGER.info("Read user info with Id '{}' by User successfully",userId);
             return userDto;
         } catch (Exception e){
             LOGGER.error("Failed to read user info with Id '{}' by User : {}",userId,e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public AdUserDTO readUserByIdByAdmin(int userId) {
+        AdUserDTO userDto = new AdUserDTO();
+
+        try {
+            Users user = userRepository.findById(userId);
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userId);
+                return null;
+            }
+            userDto.setId(user.getId());
+            userDto.setEmail(user.getEmail());
+            userDto.setFullname(user.getFullname());
+            if(user.getBirthday() != null){
+                userDto.setBirthday(new SimpleDateFormat("dd-MM-yyyy").format(user.getBirthday()));
+            }
+            userDto.setPhone(user.getPhone());
+            if(user.getRoles() != null){
+                userDto.setRoleId(user.getRoles().getId());
+            }
+            LOGGER.info("Read user info with Id '{}' by Admin successfully ",userId);
+            return userDto;
+        } catch (Exception e){
+            LOGGER.error("Failed to read user info with Id '{}' by Admin : {}",userId,e.getMessage());
             return null;
         }
     }
@@ -184,6 +212,7 @@ public class UserServiceImp implements UserService {
             user.setRoles(new Roles(roleId));
 
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Role of account with Id '{}' has been changed successfully",userId);
             return true;
         } catch (Exception e){
@@ -219,6 +248,7 @@ public class UserServiceImp implements UserService {
             }
 
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Profile of account '{}' has been updated successfully",userDTO.getEmail());
             return true;
         } catch (Exception e){
@@ -282,17 +312,17 @@ public class UserServiceImp implements UserService {
         return true;
     }*/
 
-    @Override
-    public boolean deleteUser(int id) {
-        try {
-            userRepository.deleteById(id);
-            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
-            return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
-            return false;
-        }
-    }
+//    @Override
+//    public boolean deleteUser(int id) {
+//        try {
+//            userRepository.deleteById(id);
+//            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
+//            return true;
+//        } catch (Exception e){
+//            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
+//            return false;
+//        }
+//    }
 
     @Override
     public boolean updateUserPassword(int userId, PasswordDTO passwordDTO) {
@@ -313,6 +343,7 @@ public class UserServiceImp implements UserService {
             }
             user.setPassword(bCryptPasswordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(user);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Password of account '{}' has been changed successfully",user.getEmail());
             return true;
         } catch (Exception e){
@@ -320,6 +351,21 @@ public class UserServiceImp implements UserService {
             return false;
         }
     }
+
+    @Override
+    public boolean deleteUser(int id) {
+        try {
+            userRepository.deleteById(id);
+            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            LOGGER.info("Account with Id '{}' has been deleted successfully",id);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to delete account with Id '{}' : {}",id,e.getMessage());
+            return false;
+        }
+    }
+
+
 
 
 }

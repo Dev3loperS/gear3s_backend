@@ -22,4 +22,9 @@ public interface UserRepository extends JpaRepository<Users,Integer> {
     Users findById(int id);
     Users findByEmail(String email);
     Integer countByEmail(String email);
+
+    Users findByPhone(String phone ) ;
+
+    @Query(value = "select u from orders o inner join user_card uc on uc.id = o.user_card.id inner join users u on o.user_card.id = u.id where u.phone = ?1")
+    List<Users> findUserByPhone (String  phone  );
 }

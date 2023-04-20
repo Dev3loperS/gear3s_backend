@@ -19,9 +19,9 @@ public class Orders {
     @Column(name = "shipping_address")
     private String shippingAddress;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users users;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "user_card_id")
@@ -52,6 +52,7 @@ public class Orders {
 
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
+//        T17:00:00.000+00:00
     }
 
     public long getTotal() {
@@ -70,13 +71,13 @@ public class Orders {
         this.shippingAddress = shippingAddress;
     }
 
-    public Users getUsers() {
-        return users;
-    }
-
-    public void setUsers(Users users) {
-        this.users = users;
-    }
+//    public Users getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Users users) {
+//        this.users = users;
+//    }
 
     public UserCard getUser_card() {
         return user_card;

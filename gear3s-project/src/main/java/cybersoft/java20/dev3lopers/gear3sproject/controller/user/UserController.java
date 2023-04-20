@@ -31,9 +31,9 @@ public class UserController {
 
     @GetMapping("/profile/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable int userId){
-        UserDTO userList = userServiceImp.readUserById(userId);
-        if(userList != null){
-            return new ResponseEntity<>(new BasicResponse("Returned user info successful", userList),HttpStatus.OK);
+        UserDTO user = userServiceImp.readUserByIdByUser(userId);
+        if(user != null){
+            return new ResponseEntity<>(new BasicResponse("Returned user info successful", user),HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new BasicResponse("User info is empty", null),HttpStatus.NOT_FOUND);
         }

@@ -2,21 +2,25 @@ package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class RoleDTO {
+import javax.persistence.Column;
+
+public class ShippingDTO {
     @JsonIgnore
     private int id;
+
+
     private String name;
-    private String desc;
 
-    public RoleDTO() {
+
+    private int price;
+
+    public ShippingDTO() {
     }
 
-    public RoleDTO(int id) {
+    public ShippingDTO(int id, String name, int price) {
         this.id = id;
-    }
-
-    public RoleDTO(String name) {
         this.name = name;
+        this.price = price;
     }
 
     public int getId() {
@@ -35,11 +39,11 @@ public class RoleDTO {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public int getPrice() {
+        return price;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

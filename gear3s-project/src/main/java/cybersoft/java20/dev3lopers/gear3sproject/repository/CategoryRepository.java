@@ -13,7 +13,9 @@ public interface CategoryRepository extends JpaRepository<Category,Integer> {
     @Query(value = "select c from category c")
     List<Category> getAllCategory ();
     Category findById(int id ) ;
-    Category findByName(String name ) ;
+    @Query(value = "select c from category c where c.name like concat('%',?1,'%') ")
+
+    List<Category> findByNameLike(String name ) ;
 
 
 

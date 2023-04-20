@@ -1,6 +1,9 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class SexDTO {
+    @JsonIgnore
     private int id;
     private String name;
 

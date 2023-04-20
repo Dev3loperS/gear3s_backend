@@ -9,8 +9,8 @@ public interface CategoryService {
 
     boolean insertCategory (String name ) ;
     CategoryDTO findById(int id ) ;
-    CategoryDTO findByName(String name  ) ;
-    boolean updateCategory (int id , CategoryDTO categoryDTO);
+    List<CategoryDTO> findByName(String name  ) ;
+    boolean updateCategory (int id ,String name );
     boolean deleteById(int id ) ;
 
 }

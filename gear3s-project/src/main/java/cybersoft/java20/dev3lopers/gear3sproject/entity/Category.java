@@ -18,6 +18,13 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<CategoryProperty> listCateProperty;
 
+    public Category() {
+    }
+
+    public Category(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
