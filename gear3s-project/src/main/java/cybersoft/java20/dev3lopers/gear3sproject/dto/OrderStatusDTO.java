@@ -2,11 +2,26 @@ package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class CategoryDTO {
-    @JsonIgnore
-    int  id ;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-    String name ;
+public class OrderStatusDTO {
+
+    @JsonIgnore
+    private int id;
+
+
+    private String name;
+
+    public OrderStatusDTO() {
+    }
+
+    public OrderStatusDTO(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public int getId() {
         return id;
@@ -23,6 +38,4 @@ public class CategoryDTO {
     public void setName(String name) {
         this.name = name;
     }
-
-
 }

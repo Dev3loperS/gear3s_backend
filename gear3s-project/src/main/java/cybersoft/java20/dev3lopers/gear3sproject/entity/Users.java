@@ -45,8 +45,6 @@ public class Users {
     @OneToMany(mappedBy = "users")
     private Set<UserCard> listUserCard;
 
-    @OneToMany(mappedBy = "users")
-    private Set<Orders> listOrder;
 
     @OneToMany(mappedBy = "users")
     private Set<ProductRating> listProductRating;
@@ -147,13 +145,13 @@ public class Users {
         this.listUserCard = listUserCard;
     }
 
-    public Set<Orders> getListOrder() {
-        return listOrder;
-    }
-
-    public void setListOrder(Set<Orders> listOrder) {
-        this.listOrder = listOrder;
-    }
+//    public Set<Orders> getListOrder() {
+//        return listOrder;
+//    }
+//
+//    public void setListOrder(Set<Orders> listOrder) {
+//        this.listOrder = listOrder;
+//    }
 
     public Set<ProductRating> getListProductRating() {
         return listProductRating;
