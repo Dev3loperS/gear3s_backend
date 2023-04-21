@@ -5,7 +5,6 @@ import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdDescDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.CategoryProperty;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductDesc;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.CatePropRepository;
-import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.CatePropService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -45,6 +45,12 @@ public class CatePropServiceImp implements CatePropService {
 
                 catePropDtoList.add(catePropDTO);
             }
+            /*for(int i=0;i<catePropDtoList.size();i++){
+                if("Hãng sản xuất".equals(catePropDtoList.get(i).getName())) {
+                    if (i != 0) Collections.swap(catePropDtoList, 0, i);;
+                    break;
+                }
+            }*/
             LOGGER.info("Read product filter list by property by category with Id '{}' successfully",categoryId);
             return catePropDtoList;
         } catch (Exception e){
