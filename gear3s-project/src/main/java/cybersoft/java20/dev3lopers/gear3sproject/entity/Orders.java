@@ -19,7 +19,6 @@ public class Orders {
     @Column(name = "shipping_address")
     private String shippingAddress;
 
-
     @ManyToOne
     @JoinColumn(name = "user_card_id")
     private UserCard user_card;

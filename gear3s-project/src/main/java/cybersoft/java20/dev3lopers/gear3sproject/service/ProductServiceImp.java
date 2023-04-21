@@ -5,9 +5,12 @@ import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Category;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
+import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductDesc;
+import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductProperty;
 import cybersoft.java20.dev3lopers.gear3sproject.model.CategoryModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
+import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
 import org.slf4j.Logger;
@@ -55,15 +58,23 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
-    private void clearRedisData(){
-        redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
-        redisTemplate.delete(RedisKeyModel.PROD_POPULAR.getValue());
-        redisTemplate.delete(RedisKeyModel.PROD_LATEST.getValue());
-        redisTemplate.delete(RedisKeyModel.PROD_TOPSALES.getValue());
-        redisTemplate.delete(RedisKeyModel.PROD_PRICE_H2L.getValue());
-        redisTemplate.delete(RedisKeyModel.PROD_PRICE_L2H.getValue());
+    @Override
+    public List<String> readAllProductImage(int productId, int categoryId) {
+        List<String> imageList = new ArrayList<>();
+
+        for (int count=0,i=1;i<20;i++,count++){
+            Path imagePath = Paths.get(getImagePath(categoryId)+productId+"-"+i+".png");
+            if(Files.exists(imagePath)){
+                imageList.add(imagePath.toString());
+                count=0;
+            }
+            if(count > 2) break;
+        }
+
+        return imageList;
     }
 
+    // For Admin page --------------------------------------------------------------------------------------------------
     @Override
     public boolean createProduct(ProductDTO productDTO) {
         String localDate = LocalDate.now().toString();
@@ -81,7 +92,7 @@ public class ProductServiceImp implements ProductService {
             product.setCategory(new Category(productDTO.getCategoryId()));
 
             productRepository.save(product);
-            clearRedisData();
+            redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
             LOGGER.info("Product with Id '{}' has been created successfully",product.getId());
             return true;
         } catch (Exception e){
@@ -89,157 +100,6 @@ public class ProductServiceImp implements ProductService {
             return false;
         }
     }
-
-    private List<ProdFilterDTO> getProductFilterDtoList(String type, List<Product> prodList){
-        List<ProdFilterDTO> prodDtoList = new ArrayList<>();
-        try {
-            for (Product product : prodList){
-                ProdFilterDTO productDTO = new ProdFilterDTO();
-
-                productDTO.setId(product.getId());
-                productDTO.setName(product.getName());
-                productDTO.setOriginPrice(product.getOriginPrice());
-                productDTO.setDiscountPrice(product.getDiscountPrice());
-                productDTO.setSoldQty(product.getSoldQty());
-                if(product.getCategory() != null){
-                    productDTO.setCategoryId(product.getCategory().getId());
-                    productDTO.setImage(getImagePath(product.getCategory().getId())+product.getId()+"-1.png");
-                }
-                prodDtoList.add(productDTO);
-            }
-            LOGGER.info("Read product list order by '{}' successfully",type);
-            return prodDtoList;
-        } catch (Exception e){
-            LOGGER.error("Failed to read product list order by '{}' : {}",type,e.getMessage());
-            return null;
-        }
-    }
-
-    private List<ProdFilterDTO> getDataFromRedis(String filterName, List<Product> prodList){
-        Gson gson = new Gson();
-        try {
-            String data = (String) redisTemplate.opsForValue().get(filterName);
-            if(data == null){
-                List<ProdFilterDTO> prodFilterDtoList = getProductFilterDtoList(filterName,prodList);
-                if(prodFilterDtoList != null){
-                    redisTemplate.opsForValue().set(filterName,gson.toJson(prodFilterDtoList));
-                    redisTemplate.expire(filterName,30, TimeUnit.MINUTES);
-                }
-                return prodFilterDtoList;
-            } else {
-                return gson.fromJson(data, new TypeToken<List<ProductDTO>>(){}.getType());
-            }
-        } catch (Exception e){
-            LOGGER.error("Failed to read product list order by '{}' in Redis : {}",filterName,e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdOrderByView(int categoryId) {
-        List<Product> prodList;
-        List<ProdFilterDTO> prodFilterDtoList;
-
-        if(categoryId == 0) {
-            prodList = productRepository.findAllProdOrderByViewQty();
-            prodFilterDtoList = getDataFromRedis(RedisKeyModel.PROD_POPULAR.getValue(),prodList);
-        }
-        else {
-            prodList = productRepository.findAllProdByCateIdOrderByViewQty(categoryId);
-            prodFilterDtoList = getProductFilterDtoList(RedisKeyModel.PROD_POPULAR.getValue(),prodList);
-        }
-
-        return prodFilterDtoList;
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdOrderByDate(int categoryId) {
-        List<Product> prodList;
-        List<ProdFilterDTO> prodFilterDtoList;
-
-        if(categoryId == 0) {
-            prodList = productRepository.findAllProdOrderByCreateDate();
-            prodFilterDtoList = getDataFromRedis(RedisKeyModel.PROD_LATEST.getValue(),prodList);
-        }
-        else {
-            prodList = productRepository.findAllProdByCateIdOrderByCreateDate(categoryId);
-            prodFilterDtoList = getProductFilterDtoList(RedisKeyModel.PROD_LATEST.getValue(),prodList);
-        }
-
-        return prodFilterDtoList;
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdOrderBySold(int categoryId) {
-        List<Product> prodList;
-        List<ProdFilterDTO> prodFilterDtoList;
-
-        if(categoryId == 0) {
-            prodList = productRepository.findAllProdOrderBySoldQty();
-            prodFilterDtoList = getDataFromRedis(RedisKeyModel.PROD_TOPSALES.getValue(),prodList);
-        }
-        else {
-            prodList = productRepository.findAllProdByCateIdOrderBySoldQty(categoryId);
-            prodFilterDtoList = getProductFilterDtoList(RedisKeyModel.PROD_TOPSALES.getValue(),prodList);
-        }
-
-        return prodFilterDtoList;
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdOrderByPriceDesc(int categoryId) {
-        List<Product> prodList;
-        List<ProdFilterDTO> prodFilterDtoList;
-
-        if(categoryId == 0) {
-            prodList = productRepository.findAllProdOrderByPriceDesc();
-            prodFilterDtoList = getDataFromRedis(RedisKeyModel.PROD_PRICE_H2L.getValue(),prodList);
-        }
-        else {
-            prodList = productRepository.findAllProdByCateIdOrderByPriceDesc(categoryId);
-            prodFilterDtoList = getProductFilterDtoList(RedisKeyModel.PROD_PRICE_H2L.getValue(),prodList);
-        }
-
-        return prodFilterDtoList;
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdOrderByPriceAsc(int categoryId) {
-        List<Product> prodList;
-        List<ProdFilterDTO> prodFilterDtoList;
-
-        if(categoryId == 0) {
-            prodList = productRepository.findAllProdOrderByPriceAsc();
-            prodFilterDtoList = getDataFromRedis(RedisKeyModel.PROD_PRICE_L2H.getValue(),prodList);
-        }
-        else {
-            prodList = productRepository.findAllProdByCateIdOrderByPriceAsc(categoryId);
-            prodFilterDtoList = getProductFilterDtoList(RedisKeyModel.PROD_PRICE_L2H.getValue(),prodList);
-        }
-
-        return prodFilterDtoList;
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdByPriceRange(int categoryId, int minPrice, int maxPrice) {
-        List<Product> prodList;
-
-        if(categoryId == 0) prodList = productRepository.findAllProdByPriceRange(minPrice,maxPrice);
-        else                prodList = productRepository.findAllProdByCateIdByPriceRange(categoryId,minPrice,maxPrice);
-
-        return getProductFilterDtoList("prod_price_range",prodList);
-    }
-
-    @Override
-    public List<ProdFilterDTO> readAllProdByName(int categoryId, String prodName) {
-        List<Product> prodList;
-
-        if(categoryId == 0) prodList = productRepository.findAllProdByName(prodName);
-        else                prodList = productRepository.findAllProdByCateIdByName(categoryId,prodName);
-
-        return getProductFilterDtoList("prod_search_name",prodList);
-    }
-
 
     @Override
     public List<ProductDTO> readAllProducts() {
@@ -314,21 +174,7 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
-    @Override
-    public List<String> readAllProductImage(int productId, int categoryId) {
-        List<String> imageList = new ArrayList<>();
 
-        for (int count=0,i=1;i<20;i++,count++){
-            Path imagePath = Paths.get(getImagePath(categoryId)+productId+"-"+i+".png");
-            if(Files.exists(imagePath)){
-                imageList.add(imagePath.toString());
-                count=0;
-            }
-            if(count > 2) break;
-        }
-
-        return imageList;
-    }
 
     @Override
     public boolean updateProductById(int prodId,ProductDTO productDTO) {
@@ -349,7 +195,7 @@ public class ProductServiceImp implements ProductService {
             product.setCategory(new Category(productDTO.getCategoryId()));
 
             productRepository.save(product);
-            clearRedisData();
+            redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
             LOGGER.info("Product with Id '{}' has been updated successfully",prodId);
             return true;
         } catch (Exception e){
@@ -362,7 +208,7 @@ public class ProductServiceImp implements ProductService {
     public boolean deleteProductById(int prodId) {
         try {
             productRepository.deleteById(prodId);
-            clearRedisData();
+            redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
             LOGGER.info("Product with Id '{}' has been deleted successfully",prodId);
             return true;
         } catch (Exception e){
@@ -370,5 +216,161 @@ public class ProductServiceImp implements ProductService {
             return false;
         }
     }
+
+    // For User page ---------------------------------------------------------------------------------------------------
+    @Override
+    public List<ShortProdDTO> readAllProdAfterFilter(FilterRequest request) {
+        List<ShortProdDTO> prodDtoList = new ArrayList<>();
+
+        // Sort by type
+        List<Product> prodSortList = sortProdByType(request.getSortType(),request.getCategoryId());
+
+        // Filter by price range
+        List<Product> prodRangeFilterList = new ArrayList<>();
+        if (prodSortList != null && request.getMinPrice() >= 0 && request.getMaxPrice() >= 0
+                                                && request.getMinPrice() <= request.getMaxPrice()){
+            for (Product prod:prodSortList) {
+                if(prod.getDiscountPrice() >= request.getMinPrice() && prod.getDiscountPrice() <= request.getMaxPrice()){
+                    prodRangeFilterList.add(prod);
+                }
+            }
+        } else {
+            prodRangeFilterList = prodSortList;
+        }
+
+        // Filter by property
+        List<Product> prodPropFilterList = new ArrayList<>();
+        if (prodRangeFilterList != null && request.getCategoryId() != 0){
+            for (Product product : prodRangeFilterList) {
+                List<ProductProperty> prodPropList = new ArrayList<>(product.getListProdProperty());
+                if(filterProdByProperty(prodPropList,request.getPropDescList())){
+                    prodPropFilterList.add(product);
+                }
+            }
+        } else {
+            prodPropFilterList = prodRangeFilterList;
+        }
+
+        return getProductFilterDtoList(request.getSortType(),prodPropFilterList);
+    }
+
+    private List<Product> sortProdByType(String type, int categoryId){
+        switch (type){
+            case "popular":
+                return readAllProdOrderByView(categoryId);
+            case "latest":
+                return readAllProdOrderByDate(categoryId);
+            case "topSales":
+                return readAllProdOrderBySold(categoryId);
+            case "descPrice":
+                return readAllProdOrderByPriceDesc(categoryId);
+            case "ascPrice":
+                return readAllProdOrderByPriceAsc(categoryId);
+            default:
+                return null;
+        }
+    }
+
+    private List<Product> readAllProdOrderByView(int categoryId) {
+        List<Product> prodList;
+
+        if(categoryId == 0) prodList = productRepository.findAllProdOrderByViewQty();
+        else                prodList = productRepository.findAllProdByCateIdOrderByViewQty(categoryId);
+
+        return prodList;
+    }
+
+    private List<Product> readAllProdOrderByDate(int categoryId) {
+        List<Product> prodList;
+
+        if(categoryId == 0) prodList = productRepository.findAllProdOrderByCreateDate();
+        else                prodList = productRepository.findAllProdByCateIdOrderByCreateDate(categoryId);
+
+        return prodList;
+    }
+
+    private List<Product> readAllProdOrderBySold(int categoryId) {
+        List<Product> prodList;
+
+        if(categoryId == 0) prodList = productRepository.findAllProdOrderBySoldQty();
+        else                prodList = productRepository.findAllProdByCateIdOrderBySoldQty(categoryId);
+
+        return prodList;
+    }
+
+    private List<Product> readAllProdOrderByPriceDesc(int categoryId) {
+        List<Product> prodList;
+
+        if(categoryId == 0) prodList = productRepository.findAllProdOrderByPriceDesc();
+        else                prodList = productRepository.findAllProdByCateIdOrderByPriceDesc(categoryId);
+
+        return prodList;
+    }
+
+    private List<Product> readAllProdOrderByPriceAsc(int categoryId) {
+        List<Product> prodList;
+
+        if(categoryId == 0) prodList = productRepository.findAllProdOrderByPriceAsc();
+        else                prodList = productRepository.findAllProdByCateIdOrderByPriceAsc(categoryId);
+
+        return prodList;
+    }
+
+    private boolean filterProdByProperty(List<ProductProperty> prodPropList,List<PropDescDTO> propDescDtoList){
+        for (ProductProperty productProperty : prodPropList) {
+            ProductDesc productDesc = productProperty.getProduct_desc();
+            for (PropDescDTO propDesc : propDescDtoList) {
+                if (propDesc.getPropertyId() == productDesc.getCategory_property().getId()) {
+                    boolean isMatched = false;
+                    for (Integer descId: propDesc.getDescId()) {
+                        if(descId == 0 || descId == productDesc.getId()){
+                            isMatched = true;
+                            break;
+                        }
+                    }
+                    if(!isMatched)  return false;
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
+    private List<ShortProdDTO> getProductFilterDtoList(String type, List<Product> prodList){
+        List<ShortProdDTO> prodDtoList = new ArrayList<>();
+        try {
+            for (Product product : prodList){
+                ShortProdDTO productDTO = new ShortProdDTO();
+
+                productDTO.setId(product.getId());
+                productDTO.setName(product.getName());
+                productDTO.setOriginPrice(product.getOriginPrice());
+                productDTO.setDiscountPrice(product.getDiscountPrice());
+                productDTO.setSoldQty(product.getSoldQty());
+                if(product.getCategory() != null){
+                    productDTO.setCategoryId(product.getCategory().getId());
+                    productDTO.setImage(getImagePath(product.getCategory().getId())+product.getId()+"-1.png");
+                }
+                prodDtoList.add(productDTO);
+            }
+            LOGGER.info("Read product list order by '{}' successfully",type);
+            return prodDtoList;
+        } catch (Exception e){
+            LOGGER.error("Failed to read product list order by '{}' : {}",type,e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<ShortProdDTO> readAllProdByName(int categoryId, String prodName) {
+        List<Product> prodList;
+
+        if(categoryId == 0) prodList = productRepository.findAllProdByName(prodName);
+        else                prodList = productRepository.findAllProdByCateIdByName(categoryId,prodName);
+
+        return getProductFilterDtoList("prod_search_name",prodList);
+    }
+
+
 
 }

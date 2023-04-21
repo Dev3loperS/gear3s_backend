@@ -8,16 +8,13 @@ public class ProductProperty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "description")
-    private String description;
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "prod_desc_id")
-    private CategoryProperty product_desc;
+    private ProductDesc product_desc;
 
     public int getId() {
         return id;
@@ -25,14 +22,6 @@ public class ProductProperty {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Product getProduct() {
@@ -43,11 +32,11 @@ public class ProductProperty {
         this.product = product;
     }
 
-    public CategoryProperty getProduct_desc() {
+    public ProductDesc getProduct_desc() {
         return product_desc;
     }
 
-    public void setProduct_desc(CategoryProperty product_desc) {
+    public void setProduct_desc(ProductDesc product_desc) {
         this.product_desc = product_desc;
     }
 }

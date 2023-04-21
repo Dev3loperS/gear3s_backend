@@ -43,7 +43,7 @@ logging:
 
 uploads:
   path: ../../uploads/images
-  defaultAvatar: person-icon.png
+  defaultAvatar: 0.png
 
 paypal:
   mode: sandbox

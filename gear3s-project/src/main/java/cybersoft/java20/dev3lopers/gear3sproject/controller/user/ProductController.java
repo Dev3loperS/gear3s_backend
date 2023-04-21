@@ -1,18 +1,14 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
-import cybersoft.java20.dev3lopers.gear3sproject.dto.CatePropDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdFilterDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
+import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.ProductServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.CatePropServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,7 +32,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/image/list/{categoryId}/{productId}")
+    @GetMapping("/detail/image/{categoryId}/{productId}")
     public ResponseEntity<?> getProductImageList(@PathVariable int categoryId, @PathVariable int productId){
         List<String> imageList = productServiceImp.readAllProductImage(productId,categoryId);
         if (imageList != null) {
@@ -46,59 +42,9 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/list/popular/{categoryId}")
-    public ResponseEntity<?> getProductListByPopular(@PathVariable int categoryId) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdOrderByView(categoryId);
-        if (productList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned product list order by popular successful", productList),HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(new BasicResponse("Product list order by popular is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/list/latest/{categoryId}")
-    public ResponseEntity<?> getProductListByLatest(@PathVariable int categoryId) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdOrderByDate(categoryId);
-        if (productList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned product list order by latest successful", productList),HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(new BasicResponse("Product list order by latest is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/list/topsales/{categoryId}")
-    public ResponseEntity<?> getProductListByTopSales(@PathVariable int categoryId) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdOrderBySold(categoryId);
-        if (productList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned product list order by top sales successful", productList),HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(new BasicResponse("Product list order by top sales is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/list/price/high2low/{categoryId}")
-    public ResponseEntity<?> getProductListByPriceDesc(@PathVariable int categoryId) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdOrderByPriceDesc(categoryId);
-        if (productList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned product list order by price high to low successful", productList),HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(new BasicResponse("Product list order by price high to low is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/list/price/low2high/{categoryId}")
-    public ResponseEntity<?> getProductListByPriceAsc(@PathVariable int categoryId) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdOrderByPriceAsc(categoryId);
-        if (productList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned product list order by price low to high successful", productList),HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(new BasicResponse("Product list order by price low to high is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/list/search/{categoryId}/{productName}")
+    @GetMapping("/search/{categoryId}/{productName}")
     public ResponseEntity<?> getProductByName(@PathVariable int categoryId,@PathVariable String productName) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdByName(categoryId,productName);
+        List<ShortProdDTO> productList = productServiceImp.readAllProdByName(categoryId,productName);
         if (productList != null) {
             return new ResponseEntity<>(new BasicResponse("Returned product list search by name successful", productList),HttpStatus.OK);
         } else {
@@ -106,17 +52,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/list/price/{categoryId}/{minPrice}/{maxPrice}")
-    public ResponseEntity<?> getProductByPriceRange(@PathVariable int categoryId ,@PathVariable int minPrice ,@PathVariable int maxPrice) {
-        List<ProdFilterDTO> productList = productServiceImp.readAllProdByPriceRange(categoryId,minPrice,maxPrice);
-        if (productList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned product list by price range successful", productList),HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new BasicResponse("Product list by price range is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/filter/list/{categoryId}")
+    @GetMapping("/filter/list-property/{categoryId}")
     public ResponseEntity<?> getFilterListByCateId(@PathVariable int categoryId){
         List<CatePropDTO> filterList = catePropServiceImp.readProdFilterListByCateId(categoryId);
         if (filterList != null) {
@@ -125,4 +61,45 @@ public class ProductController {
             return new ResponseEntity<>(new BasicResponse("Product filter list by category is empty", null),HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/filter")
+    public ResponseEntity<?> getProdListAfterFilter(@RequestBody FilterRequest request){
+        List<ShortProdDTO> productList = productServiceImp.readAllProdAfterFilter(request);
+        if (productList != null) {
+            return new ResponseEntity<>(new BasicResponse("Returned product list after filter successful", productList),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BasicResponse("Product list after filter is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+    /*
+    * {
+          "categoryId": 1,
+          "maxPrice": 3000000,
+          "minPrice": 500000,
+          "propDescList":
+          [
+            {
+              "descId": [3,1],
+              "propertyId": 31
+            },
+            {
+              "descId": [4],
+              "propertyId": 7
+            },
+            {
+              "descId": [7],
+              "propertyId": 8
+            },
+            {
+              "descId": [0],
+              "propertyId": 9
+            },
+            {
+              "descId": [11],
+              "propertyId": 6
+            }
+           ],
+          "sortType": "topSales"
+      }
+    */
 }

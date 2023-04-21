@@ -15,7 +15,7 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     // Cài đặt thời hạn cho token (ms)
-    private long expiryTime = 30*60*1000;   // 30 phút
+    private long expiryTime = 8*60*60*1000;   // 4 tiếng
 
     @Value("${jwt.privateKey}")
     private String privateKey;

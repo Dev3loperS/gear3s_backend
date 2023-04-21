@@ -13,8 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Product findById(int id);
 
-
-
     void deleteById(int id);
 
     // Filter all product
