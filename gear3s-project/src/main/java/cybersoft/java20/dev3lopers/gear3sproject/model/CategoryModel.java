@@ -3,9 +3,10 @@ package cybersoft.java20.dev3lopers.gear3sproject.model;
 public enum CategoryModel {
     KEYBOARD(1),
     MOUSE(2),
-    LAPTOP(3),
-    SPEAKER(4),
-    HEADSET(5);
+    MONITOR(3),
+    HEADSET(4),
+    LAPTOP(5),
+    SPEAKER(6);
 
     private int value;
     CategoryModel(int value){
