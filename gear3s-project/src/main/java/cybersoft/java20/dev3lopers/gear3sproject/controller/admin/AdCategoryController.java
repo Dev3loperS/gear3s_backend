@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AdCategoryDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.CategoryDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.CategoryService;
@@ -38,7 +39,7 @@ public class AdCategoryController {
     public ResponseEntity <?>findCategoryById (@RequestParam int id  )
     {
         BasicResponse basicResponse = new BasicResponse();
-        CategoryDTO categoryDTO  =categoryService.findById(id);
+        AdCategoryDTO categoryDTO  =categoryService.findById(id);
         if (categoryDTO !=null)
         {
             basicResponse.setData(categoryDTO);
@@ -55,7 +56,7 @@ public class AdCategoryController {
     public ResponseEntity <?>findCategoryByName(@RequestParam String name   )
     {
         BasicResponse basicResponse = new BasicResponse();
-        List<CategoryDTO> categoryDTO  = categoryService.findByName(name);
+        List<AdCategoryDTO> categoryDTO  = categoryService.findByName(name);
         if (categoryDTO !=null)
         {
             basicResponse.setData(categoryDTO);
