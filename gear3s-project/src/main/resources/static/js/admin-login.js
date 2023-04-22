@@ -10,6 +10,13 @@ $(function () {
 
     // FUNCTIONS =============================================================
 
+    function removeJwtToken(cname, cvalue) {
+        let expires = "expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = cname + "=" + cvalue + ";" + expires;
+    }
+    removeJwtToken(TOKEN_KEY, null);
+    removeJwtToken("info")
+
     function getCookie(cname) {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
@@ -75,6 +82,7 @@ $(function () {
                 setJwtToken(data['data'].newToken);
                 console.log("TOKEN: " + getJwtToken())
                 // showTokenInformation();
+                setCookie('info', JSON.stringify(data['data']))
                 location.href = "/admin/home";
 
                 // $.ajax({
