@@ -4,7 +4,8 @@ public enum RedisKeyModel {
     USERS("users"),
     ROLES("roles"),
     SEXES("sexes"),
-    PRODUCTS("products");
+    PRODUCTS("products"),
+    RATING("ratings");
 
     private String value;
     RedisKeyModel(String value){

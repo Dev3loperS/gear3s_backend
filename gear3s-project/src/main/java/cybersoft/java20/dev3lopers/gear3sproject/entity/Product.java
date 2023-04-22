@@ -31,7 +31,6 @@ public class Product {
     @Column(name = "view_qty")
     private int view_qty;
 
-
     @Column(name = "create_date")
     private Date create_date;
 
@@ -50,6 +49,13 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private Set<ProductRating> listProdRating;
+
+    public Product() {
+    }
+
+    public Product(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

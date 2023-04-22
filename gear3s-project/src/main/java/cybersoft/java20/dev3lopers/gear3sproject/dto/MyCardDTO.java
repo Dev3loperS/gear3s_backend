@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 public class MyCardDTO {
     private int id;
     @NotBlank(message = "Card number can not be blank")
-    @Size(min = 16,max = 16)
+    //@Size(min = 16,max = 16)
     private String number;
     @NotBlank(message = "Card name can not be blank")
     private String name;
@@ -18,7 +18,7 @@ public class MyCardDTO {
     @DateTimeFormat(pattern = "MM-yyyy")
     private String expiryDate;
     @NotBlank(message = "CVV number can not be blank")
-    @Size(min = 3,max = 3)
+    //@Size(min = 3,max = 3)
     private String cvv;
 
     public MyCardDTO() {
