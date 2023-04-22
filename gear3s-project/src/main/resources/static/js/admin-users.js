@@ -83,11 +83,6 @@ $(document).ready(function () {
         $alertBox.fadeTo(2000, 500).slideUp(500, function() {
             $alertBox.slideUp(500);
         });
-        addInfo = {
-            email: '',
-            password: '',
-            roleId: 1
-        }
     }
 
     // ADD SUBMIT
@@ -106,6 +101,7 @@ $(document).ready(function () {
                 $("#addModal").modal("hide")
                 showAlert(data.message)
                 userTable.ajax.reload()
+                $( "#addForm" )[0].reset()
                 // setTimeout(() => {location.href = "/admin/users"}, 1500)
             },
             error: function (jqXHR) {
