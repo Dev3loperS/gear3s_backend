@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdCreateDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
@@ -18,7 +19,7 @@ public class AdProductController {
     ProductService productService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody ProductDTO product){
+    public ResponseEntity<?> addProduct(@RequestBody ProdCreateDTO product){
         if(productService.createProduct(product)){
             return new ResponseEntity<>(
                     new BasicResponse("Added new product successfully", true), HttpStatus.CREATED);
@@ -48,9 +49,9 @@ public class AdProductController {
         }
     }
 
-    @PutMapping("/edit/{productId}")
-    public ResponseEntity<?> updateProductById(@PathVariable int productId,@RequestBody ProductDTO product) {
-        if(productService.updateProductById(productId,product)){
+    @PutMapping("/edit")
+    public ResponseEntity<?> updateProductById(@RequestBody ProductDTO product) {
+        if(productService.updateProductById(product)){
             return new ResponseEntity<>(
                     new BasicResponse("Updated product successfully",true),HttpStatus.CREATED);
         } else {
@@ -59,7 +60,7 @@ public class AdProductController {
         }
     }
 
-    @PostMapping("/delete/{productId}")
+    @DeleteMapping("/delete/{productId}")
     public ResponseEntity<?> deleteProductById(@PathVariable int productId) {
         if(productService.deleteProductById(productId)){
             return new ResponseEntity<>(

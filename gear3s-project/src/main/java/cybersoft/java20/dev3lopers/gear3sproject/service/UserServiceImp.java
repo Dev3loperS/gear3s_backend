@@ -1,6 +1,5 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
@@ -240,9 +239,9 @@ public class UserServiceImp implements UserService {
 
             if (avatarFile != null && !"".equals(avatarFile.getOriginalFilename())){
                 if(!defaultAva.equals(user.getAvatar())){
-                    fileStorageServiceImp.deleteFile(imagePath+ ImagesModel.AVATAR.getValue()+user.getAvatar());
+                    fileStorageServiceImp.deleteFile(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
                 }
-                fileStorageServiceImp.saveFile(avatarFile,ImagesModel.AVATAR.getValue());
+                fileStorageServiceImp.uploadAvatar(user.getId(),avatarFile);
                 user.setAvatar(avatarFile.getOriginalFilename());
                 LOGGER.info("Avatar of account '{}' has been updated successfully",userDTO.getEmail());
             }
@@ -256,61 +255,6 @@ public class UserServiceImp implements UserService {
             return false;
         }
     }
-
-    /*@Override
-    public boolean updateUserByUser(UserDTO userDTO) {
-        try {
-            Users user = userRepository.findById(userDTO.getId());
-            if(user == null){
-                LOGGER.error("Account with Id '{}' does not exits",userDTO.getId());
-                return false;
-            }
-            if(!userDTO.getEmail().equals(user.getEmail())){
-                user.setEmail(userDTO.getEmail());
-            }
-            user.setFullname(userDTO.getFullname());
-            user.setBirthday(new SimpleDateFormat("dd-MM-yyyy").parse(userDTO.getBirthday()));
-            user.setPhone(userDTO.getPhone());
-            user.setAddress(userDTO.getAddress());
-            user.setSex(new Sex(userDTO.getSexId()));
-
-            userRepository.save(user);
-            LOGGER.info("Account '{}' has been updated successfully",userDTO.getEmail());
-            return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to update account '{}' : {}",userDTO.getEmail(),e.getMessage());
-            return false;
-        }
-    }*/
-
-    /*@Override
-    public boolean updateAvatar(int userId, MultipartFile avatarFile) {
-        try {
-            Users user = userRepository.findById(userId);
-            if(user == null){
-                LOGGER.error("Account with Id '{}' does not exits",userId);
-                return false;
-            }
-            if (avatarFile == null){
-                LOGGER.error("MultipartFile not found");
-                return false;
-            }
-            if(!defaultAva.equals(user.getAvatar())){
-                fileStorageServiceImp.deleteFile(imagePath+ ImagesModel.AVATAR.getValue()+user.getAvatar());
-            }
-            fileStorageServiceImp.saveFile(avatarFile,ImagesModel.AVATAR.getValue());
-            user.setAvatar(avatarFile.getOriginalFilename());
-            userRepository.save(user);
-
-            LOGGER.info("Avatar of user with Id '{}' has been updated successfully",userId);
-            return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to update avatar of user with Id '{}' : {}",userId,e.getMessage());
-            System.out.println(e.getMessage());
-        }
-
-        return true;
-    }*/
 
     @Override
     public boolean updateUserPassword(int userId, PasswordDTO passwordDTO) {

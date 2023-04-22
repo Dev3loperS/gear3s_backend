@@ -8,16 +8,16 @@ import java.util.List;
 public interface UserService {
     boolean checkLogin(String email, String password);
     boolean checkEmailExistence(String email);
+
     boolean createUser(AccountDTO accountDTO,boolean byAdmin);
     List<AdUserDTO> readAllUser();
     UserDTO readUserByIdByUser(int userId);
     AdUserDTO readUserByIdByAdmin(int userId);
     boolean updateUserByUser(UserDTO userDTO, MultipartFile avatarFile);
-    //boolean updateUserByUser(UserDTO userDTO);
-    //boolean updateAvatar(int userId, MultipartFile avatarFile);
+    boolean updateUserPassword(int userId, PasswordDTO passwordDTO);
     boolean updateUserRoleByAdmin(int userId, int roleId);
     boolean deleteUser(int id);
-    boolean updateUserPassword(int userId, PasswordDTO passwordDTO);
+
 
 
 }

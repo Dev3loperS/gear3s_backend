@@ -32,16 +32,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/detail/image/{categoryId}/{productId}")
-    public ResponseEntity<?> getProductImageList(@PathVariable int categoryId, @PathVariable int productId){
-        List<String> imageList = productServiceImp.readAllProductImage(productId,categoryId);
-        if (imageList != null) {
-            return new ResponseEntity<>(new BasicResponse("Returned image list successful", imageList),HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(new BasicResponse("Image list is empty", null),HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/search/{categoryId}/{productName}")
     public ResponseEntity<?> getProductByName(@PathVariable int categoryId,@PathVariable String productName) {
         List<ShortProdDTO> productList = productServiceImp.readAllProdByName(categoryId,productName);

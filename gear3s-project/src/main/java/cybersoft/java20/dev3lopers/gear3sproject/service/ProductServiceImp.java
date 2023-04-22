@@ -20,9 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,49 +44,35 @@ public class ProductServiceImp implements ProductService {
             return imagePath+ImagesModel.KEYBOARD.getValue();
         } else if(categoryId == CategoryModel.MOUSE.getValue()){
             return imagePath+ImagesModel.MOUSE.getValue();
+        } else if(categoryId == CategoryModel.MONITOR.getValue()){
+            return imagePath+ImagesModel.MONITOR.getValue();
+        } else if(categoryId == CategoryModel.HEADSET.getValue()){
+            return imagePath+ImagesModel.HEADSET.getValue();
         } else if(categoryId == CategoryModel.LAPTOP.getValue()){
             return imagePath+ImagesModel.LAPTOP.getValue();
         } else if(categoryId == CategoryModel.SPEAKER.getValue()){
             return imagePath+ImagesModel.SPEAKER.getValue();
-        } else if(categoryId == CategoryModel.HEADSET.getValue()){
-            return imagePath+ImagesModel.HEADSET.getValue();
-        } else {
+        }  else {
             return "";
         }
     }
 
-    @Override
-    public List<String> readAllProductImage(int productId, int categoryId) {
-        List<String> imageList = new ArrayList<>();
-
-        for (int count=0,i=1;i<20;i++,count++){
-            Path imagePath = Paths.get(getImagePath(categoryId)+productId+"-"+i+".png");
-            if(Files.exists(imagePath)){
-                imageList.add(imagePath.toString());
-                count=0;
-            }
-            if(count > 2) break;
-        }
-
-        return imageList;
-    }
-
     // For Admin page --------------------------------------------------------------------------------------------------
     @Override
-    public boolean createProduct(ProductDTO productDTO) {
+    public boolean createProduct(ProdCreateDTO prodCreateDTO) {
         String localDate = LocalDate.now().toString();
 
         try {
             Product product = new Product() ;
-            product.setName(productDTO.getName());
-            product.setOriginPrice(productDTO.getPrice_origin());
-            product.setDiscountPrice(productDTO.getPrice_discount());
-            product.setInventory(productDTO.getInventory());
+            product.setName(prodCreateDTO.getName());
+            product.setOriginPrice(prodCreateDTO.getPrice_origin());
+            product.setDiscountPrice(prodCreateDTO.getPrice_discount());
+            product.setInventory(prodCreateDTO.getInventory());
             product.setSoldQty(0);
             product.setView_qty(0);
-            product.setDescription(productDTO.getDescription());
+            product.setDescription(prodCreateDTO.getDescription());
             product.setCreate_date(new SimpleDateFormat("yyyy-MM-dd").parse(localDate));
-            product.setCategory(new Category(productDTO.getCategoryId()));
+            product.setCategory(new Category(prodCreateDTO.getCategoryId()));
 
             productRepository.save(product);
             redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
@@ -174,14 +157,12 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
-
-
     @Override
-    public boolean updateProductById(int prodId,ProductDTO productDTO) {
+    public boolean updateProductById(ProductDTO productDTO) {
         try {
-            Product product = productRepository.findById(prodId);
+            Product product = productRepository.findById(productDTO.getId());
             if (product == null){
-                LOGGER.error("Product with Id '{}' does not exits",prodId);
+                LOGGER.error("Product with Id '{}' does not exits",productDTO.getId());
                 return false;
             }
             product.setName(productDTO.getName());
@@ -196,10 +177,10 @@ public class ProductServiceImp implements ProductService {
 
             productRepository.save(product);
             redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
-            LOGGER.info("Product with Id '{}' has been updated successfully",prodId);
+            LOGGER.info("Product with Id '{}' has been updated successfully",productDTO.getId());
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to update product with Id '{}' : {}",prodId,e.getMessage());
+            LOGGER.error("Failed to update product with Id '{}' : {}",productDTO.getId(),e.getMessage());
             return false;
         }
     }
@@ -370,6 +351,8 @@ public class ProductServiceImp implements ProductService {
 
         return getProductFilterDtoList("prod_search_name",prodList);
     }
+
+
 
 
 
