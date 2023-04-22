@@ -45,9 +45,15 @@ public class Users {
     @OneToMany(mappedBy = "users")
     private Set<UserCard> listUserCard;
 
-
     @OneToMany(mappedBy = "users")
     private Set<ProductRating> listProductRating;
+
+    public Users() {
+    }
+
+    public Users(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

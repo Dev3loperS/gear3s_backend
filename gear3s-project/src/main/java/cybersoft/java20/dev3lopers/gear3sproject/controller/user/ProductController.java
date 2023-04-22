@@ -3,6 +3,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
+import cybersoft.java20.dev3lopers.gear3sproject.service.ProdRatingServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.ProductServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.CatePropServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class ProductController {
 
     @Autowired
     CatePropServiceImp catePropServiceImp;
+
+    @Autowired
+    ProdRatingServiceImp prodRatingServiceImp;
 
     @GetMapping("/detail/{productId}")
     public ResponseEntity<?> getProductDetail(@PathVariable int productId) {
@@ -92,4 +96,42 @@ public class ProductController {
           "sortType": "topSales"
       }
     */
+
+    @PutMapping("/detail/rating/add")
+    public ResponseEntity<?> addRatingForProduct(@RequestParam int userId,
+                                                 @RequestParam int productId,
+                                                 @RequestParam byte star,
+                                                 @RequestParam String comment){
+        if(prodRatingServiceImp.createProdRatingByUser(userId,productId,star,comment)){
+            return new ResponseEntity<>(
+                    new BasicResponse("Add rating for product successfully",true),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(
+                    new BasicResponse("Failed to add rating for product",false),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/detail/rating/list/{productId}")
+    public ResponseEntity<?> getAllProductRatingByProdId(@PathVariable int productId){
+        List<ProdRatingDTO> ratingList = prodRatingServiceImp.getAllRatingOfProd(productId);
+        if (ratingList != null) {
+            return new ResponseEntity<>(new BasicResponse("Returned product rating list successful", ratingList),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new BasicResponse("Product rating list is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/detail/rating/delete/{ratingId}")
+    public ResponseEntity<?> deleteProductRatingById(@PathVariable int ratingId) {
+        if(prodRatingServiceImp.deleteProdRating(ratingId)){
+            return new ResponseEntity<>(
+                    new BasicResponse("Deleted product rating successfully",true),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(
+                    new BasicResponse("Failed to delete product rating",false),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }

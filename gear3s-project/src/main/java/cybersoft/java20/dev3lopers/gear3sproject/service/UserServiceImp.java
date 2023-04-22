@@ -91,7 +91,7 @@ public class UserServiceImp implements UserService {
             }
             userRepository.save(user);
             redisTemplate.delete(RedisKeyModel.USERS.getValue());
-            LOGGER.info("Account '{}' has been created successfully",accountDTO.getEmail());
+            LOGGER.info(" Account '{}' has been created successfully",accountDTO.getEmail());
             return true;
         } catch (Exception e){
             LOGGER.error("Failed to create account '{}' : {}",accountDTO.getEmail(),e.getMessage());
@@ -237,15 +237,9 @@ public class UserServiceImp implements UserService {
             user.setAddress(userDTO.getAddress());
             user.setSex(new Sex(userDTO.getSexId()));
 
-            if (avatarFile != null && !"".equals(avatarFile.getOriginalFilename())){
-                if(!defaultAva.equals(user.getAvatar())){
-                    fileStorageServiceImp.deleteFile(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
-                }
-                fileStorageServiceImp.uploadAvatar(user.getId(),avatarFile);
+            if(uploadAvatarForUser(user.getId(),user.getAvatar(),avatarFile)){
                 user.setAvatar(avatarFile.getOriginalFilename());
-                LOGGER.info("Avatar of account '{}' has been updated successfully",userDTO.getEmail());
             }
-
             userRepository.save(user);
             redisTemplate.delete(RedisKeyModel.USERS.getValue());
             LOGGER.info("Profile of account '{}' has been updated successfully",userDTO.getEmail());
@@ -254,6 +248,21 @@ public class UserServiceImp implements UserService {
             LOGGER.error("Failed to update account '{}' : {}",userDTO.getEmail(),e.getMessage());
             return false;
         }
+    }
+
+    private boolean uploadAvatarForUser(int userId, String userAvatar, MultipartFile file){
+        if (file != null && !"".equals(file.getOriginalFilename())){
+            if(!defaultAva.equals(userAvatar)){
+                fileStorageServiceImp.deleteFile(imagePath+ImagesModel.AVATAR.getValue()+userAvatar);
+            }
+            if(fileStorageServiceImp.uploadAvatar(userId,file)){
+                LOGGER.info("Uploaded avatar of account with Id '{}' successfully",userId);
+                return true;
+            } else {
+                LOGGER.error("Failed to upload avatar of account with Id '{}' ",userId);
+                return false;
+            }
+        } else return false;
     }
 
     @Override
