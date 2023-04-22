@@ -1,5 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service;
 
+import cybersoft.java20.dev3lopers.gear3sproject.dto.AdCategoryDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.CategoryDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Category;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.CategoryRepository;
@@ -16,12 +17,12 @@ public class CategoryImp implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryDTO> getAllCategory() {
-        List<CategoryDTO> list = new ArrayList<>();
+    public List<AdCategoryDTO> getAllCategory() {
+        List<AdCategoryDTO> list = new ArrayList<>();
         try {
             for (Category category : categoryRepository.getAllCategory()
             ) {
-                CategoryDTO categoryDTO = new CategoryDTO();
+                AdCategoryDTO categoryDTO = new AdCategoryDTO();
                 categoryDTO.setId(category.getId());
                 categoryDTO.setName(category.getName());
                 list.add(categoryDTO);
@@ -44,10 +45,10 @@ public class CategoryImp implements CategoryService {
     }
 
     @Override
-    public CategoryDTO findById(int id) {
+    public AdCategoryDTO findById(int id) {
         Category category = null;
         category = categoryRepository.findById(id);
-        CategoryDTO categoryDTO = new CategoryDTO();
+        AdCategoryDTO categoryDTO = new AdCategoryDTO();
         if (category != null) {
 
             categoryDTO.setName(category.getName());
@@ -61,14 +62,14 @@ public class CategoryImp implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO > findByName(String name) {
+    public List<AdCategoryDTO > findByName(String name) {
         List<Category >categories= categoryRepository.findByNameLike(name);
-        List<CategoryDTO >categoryDTOS= new ArrayList<>();
+        List<AdCategoryDTO >categoryDTOS= new ArrayList<>();
 
         if (categories != null) {
             for (Category category :categories
                  ) {
-                CategoryDTO categoryDTO = new CategoryDTO() ;
+                AdCategoryDTO categoryDTO = new AdCategoryDTO() ;
                 categoryDTO.setName(category.getName());
                 categoryDTO.setId(category.getId());
                 categoryDTOS.add(categoryDTO);
