@@ -82,7 +82,8 @@ $(function () {
                 setJwtToken(data['data'].newToken);
                 console.log("TOKEN: " + getJwtToken())
                 // showTokenInformation();
-                setCookie('info', JSON.stringify(data['data']))
+                // setCookie('info', JSON.stringify(data['data']))
+                localStorage.setItem("info", JSON.stringify(data['data']));
                 location.href = "/admin/home";
 
                 // $.ajax({
