@@ -137,7 +137,7 @@ $(function () {
             type: "POST",
             success: function (data) {
                 let cateData = data.data
-                $("#deleteForm #content").html(`DO YOU WANT TO DELETE THIS CATEGORY WITH NAME: <b>${cateData.name}</b>`)
+                $("#deleteForm #content").html(`DO YOU WANT TO DELETE THIS CATEGORY WITH NAME: <b>${cateData.name}</b>?`)
             },
             error: function (jqXHR) {
                 let errorMessage = $.parseJSON(jqXHR.responseText).message
