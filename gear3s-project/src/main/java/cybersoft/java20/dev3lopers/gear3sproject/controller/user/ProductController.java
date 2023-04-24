@@ -133,5 +133,13 @@ public class ProductController {
         }
     }
 
-
+    @GetMapping("/detail/rating/start-average/{productId}")
+    public ResponseEntity<?> getAverageRatingStarByProdId(@PathVariable int productId){
+        float averageStar = prodRatingServiceImp.getAverageStarOfProd(productId);
+        if (averageStar >= 0) {
+            return new ResponseEntity<>(new BasicResponse("Returned average rating star successful", averageStar),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new BasicResponse("Average rating start is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -10,7 +10,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
@@ -55,7 +55,7 @@ public class UserServiceImp implements UserService {
     public boolean checkLogin(String email, String passwordRaw) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String databasePass = userRepository.getPassByEmail(email);
-
+        redisTemplate.delete(RedisModel.USER.getValue());
         if(!bCryptPasswordEncoder.matches(passwordRaw,databasePass)){
             LOGGER.error("Login failed with email: {}",email);
             return false;
@@ -90,7 +90,8 @@ public class UserServiceImp implements UserService {
                 user.setRoles(roleRepository.findByName(RoleModel.USER.getValue()));
             }
             userRepository.save(user);
-            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info(" Account '{}' has been created successfully",accountDTO.getEmail());
             return true;
         } catch (Exception e){
@@ -105,7 +106,7 @@ public class UserServiceImp implements UserService {
         Gson gson = new Gson();
 
         try {
-            String data = (String) redisTemplate.opsForValue().get(RedisKeyModel.USERS.getValue());
+            String data = (String) redisTemplate.opsForValue().get(RedisModel.USER_S.getValue());
             if (data == null){
                 List<Users> usersList = userRepository.findAll();
 
@@ -124,8 +125,8 @@ public class UserServiceImp implements UserService {
                     }
                     userDtoList.add(userDto);
                 }
-                redisTemplate.opsForValue().set(RedisKeyModel.USERS.getValue(),gson.toJson(userDtoList));
-                redisTemplate.expire(RedisKeyModel.USERS.getValue(),30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisModel.USER_S.getValue(),gson.toJson(userDtoList));
+                redisTemplate.expire(RedisModel.USER_S.getValue(),30, TimeUnit.MINUTES);
             } else {
                 userDtoList = gson.fromJson(data,new TypeToken<List<AdUserDTO>>(){}.getType());
             }
@@ -140,29 +141,37 @@ public class UserServiceImp implements UserService {
     @Override
     public UserDTO readUserByIdByUser(int userId) {
         UserDTO userDto = new UserDTO();
+        Gson gson = new Gson();
 
         try {
-            Users user = userRepository.findById(userId);
-            if(user == null){
-                LOGGER.error("Account with Id '{}' does not exits",userId);
-                return null;
-            }
-            userDto.setId(user.getId());
-            userDto.setEmail(user.getEmail());
-            userDto.setPassword("**********");
-            userDto.setFullname(user.getFullname());
-            if(user.getBirthday() != null){
-                userDto.setBirthday(new SimpleDateFormat("dd-MM-yyyy").format(user.getBirthday()));
-            }
-            userDto.setPhone(user.getPhone());
-            userDto.setAddress(user.getAddress());
-            userDto.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
-            userDto.setLastPay(user.getLastPayment());
-            if(user.getRoles() != null){
-                userDto.setRoleId(user.getRoles().getId());
-            }
-            if(user.getSex() != null){
-                userDto.setSexId(user.getSex().getId());
+            String data = (String) redisTemplate.opsForValue().get(RedisModel.USER.getValue());
+            if (data == null){
+                Users user = userRepository.findById(userId);
+                if(user == null){
+                    LOGGER.error("Account with Id '{}' does not exits",userId);
+                    return null;
+                }
+                userDto.setId(user.getId());
+                userDto.setEmail(user.getEmail());
+                userDto.setPassword("**********");
+                userDto.setFullname(user.getFullname());
+                if(user.getBirthday() != null){
+                    userDto.setBirthday(new SimpleDateFormat("dd-MM-yyyy").format(user.getBirthday()));
+                }
+                userDto.setPhone(user.getPhone());
+                userDto.setAddress(user.getAddress());
+                userDto.setAvatar(imagePath+ImagesModel.AVATAR.getValue()+user.getAvatar());
+                userDto.setLastPay(user.getLastPayment());
+                if(user.getRoles() != null){
+                    userDto.setRoleId(user.getRoles().getId());
+                }
+                if(user.getSex() != null){
+                    userDto.setSexId(user.getSex().getId());
+                }
+                redisTemplate.opsForValue().set(RedisModel.USER.getValue(),gson.toJson(userDto));
+                redisTemplate.expire(RedisModel.USER.getValue(),30, TimeUnit.MINUTES);
+            } else {
+                userDto = gson.fromJson(data,new TypeToken<UserDTO>(){}.getType());
             }
             LOGGER.info("Read user info with Id '{}' by User successfully",userId);
             return userDto;
@@ -211,7 +220,8 @@ public class UserServiceImp implements UserService {
             user.setRoles(new Roles(roleId));
 
             userRepository.save(user);
-            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Role of account with Id '{}' has been changed successfully",userId);
             return true;
         } catch (Exception e){
@@ -241,7 +251,8 @@ public class UserServiceImp implements UserService {
                 user.setAvatar(avatarFile.getOriginalFilename());
             }
             userRepository.save(user);
-            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Profile of account '{}' has been updated successfully",userDTO.getEmail());
             return true;
         } catch (Exception e){
@@ -255,6 +266,8 @@ public class UserServiceImp implements UserService {
             if(!defaultAva.equals(userAvatar)){
                 fileStorageServiceImp.deleteFile(imagePath+ImagesModel.AVATAR.getValue()+userAvatar);
             }
+            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
             if(fileStorageServiceImp.uploadAvatar(userId,file)){
                 LOGGER.info("Uploaded avatar of account with Id '{}' successfully",userId);
                 return true;
@@ -284,7 +297,8 @@ public class UserServiceImp implements UserService {
             }
             user.setPassword(bCryptPasswordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(user);
-            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Password of account '{}' has been changed successfully",user.getEmail());
             return true;
         } catch (Exception e){
@@ -297,7 +311,8 @@ public class UserServiceImp implements UserService {
     public boolean deleteUser(int id) {
         try {
             userRepository.deleteById(id);
-            redisTemplate.delete(RedisKeyModel.USERS.getValue());
+            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Account with Id '{}' has been deleted successfully",id);
             return true;
         } catch (Exception e){

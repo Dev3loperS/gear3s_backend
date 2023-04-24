@@ -55,7 +55,7 @@ public class AdProductController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<?> updateProductById(@RequestBody ProductDTO product) {
+    public ResponseEntity<?> updateProduct(@RequestBody ProductDTO product) {
         if(productServiceImp.updateProductById(product)){
             return new ResponseEntity<>(
                     new BasicResponse("Updated product successfully",true),HttpStatus.CREATED);
@@ -104,6 +104,17 @@ public class AdProductController {
             return new ResponseEntity<>(new BasicResponse("Deleted file successful",true),HttpStatus.OK);
         }else {
             return new ResponseEntity<>(new BasicResponse("Failed to delete file", false),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/update-soldQty")
+    public ResponseEntity<?> updateProductSoldQty(@RequestParam int productId, @RequestParam int soldQty) {
+        if(productServiceImp.updateProductSoldQty(productId,soldQty)){
+            return new ResponseEntity<>(
+                    new BasicResponse("Updated product sold qty successfully",true),HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(
+                    new BasicResponse("Failed to update sold qty product",false),HttpStatus.BAD_REQUEST);
         }
     }
 
