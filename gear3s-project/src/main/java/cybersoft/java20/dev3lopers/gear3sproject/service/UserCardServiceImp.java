@@ -96,7 +96,7 @@ public class UserCardServiceImp implements UserCardService {
                 LOGGER.info("Added new card for account '{}' successfully,",user.getEmail());
                 return true;
             }
-            LOGGER.error("Account with Id '{}' does not exist to add new user card",userId);
+            LOGGER.error("Account with Id '{}' does not exist to add new card",userId);
             return false;
         } catch (Exception e){
             LOGGER.error("Failed to add new user card for account with Id '{}' : {}",userId,e.getMessage());

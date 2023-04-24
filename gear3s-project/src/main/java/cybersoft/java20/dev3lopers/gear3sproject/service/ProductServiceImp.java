@@ -76,7 +76,7 @@ public class ProductServiceImp implements ProductService {
 
             productRepository.save(product);
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());
-            LOGGER.info("Product with Id '{}' has been created successfully",product.getId());
+            LOGGER.info("Created new product successfully");
             return true;
         } catch (Exception e){
             LOGGER.error("Failed to create product : {}",e.getMessage());
@@ -159,7 +159,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public boolean updateProductById(ProductDTO productDTO) {
+    public boolean updateProduct(ProductDTO productDTO) {
         try {
             Product product = productRepository.findById(productDTO.getId());
             if (product == null){
@@ -354,15 +354,19 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public boolean updateProductSoldQty(int productId, int soldQty) {
+    public boolean confirmOrder(int productId, int requestNum) {
         try {
             Product product = productRepository.findById(productId);
             if (product == null){
                 LOGGER.error("Product with Id '{}' does not exits",productId);
                 return false;
             }
-            product.setInventory(product.getInventory()-soldQty);
-            product.setSoldQty(product.getSoldQty()+soldQty);
+            if(requestNum > product.getInventory()){
+                LOGGER.error("Quantity requested exceeds inventory of product with Id '{}'",productId);
+                return false;
+            }
+            product.setInventory(product.getInventory()-requestNum);
+            product.setSoldQty(product.getSoldQty()+requestNum);
 
             productRepository.save(product);
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());

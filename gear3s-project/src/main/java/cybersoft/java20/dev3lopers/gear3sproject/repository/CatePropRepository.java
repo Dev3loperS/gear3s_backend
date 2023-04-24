@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CatePropRepository extends JpaRepository<CategoryProperty,Integer> {
     List<CategoryProperty> findAllByCategoryId(int categoryId);
+    CategoryProperty findById(int catePropId);
 }

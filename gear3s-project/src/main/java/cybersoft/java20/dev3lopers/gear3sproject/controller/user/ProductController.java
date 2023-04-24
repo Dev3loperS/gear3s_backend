@@ -48,7 +48,7 @@ public class ProductController {
 
     @GetMapping("/filter/list-property/{categoryId}")
     public ResponseEntity<?> getFilterListByCateId(@PathVariable int categoryId){
-        List<CatePropDTO> filterList = catePropServiceImp.readProdFilterListByCateId(categoryId);
+        List<CatePropFilterDTO> filterList = catePropServiceImp.readProdFilterListByCateId(categoryId);
         if (filterList != null) {
             return new ResponseEntity<>(new BasicResponse("Returned product filter list by category successful", filterList),HttpStatus.OK);
         } else {
