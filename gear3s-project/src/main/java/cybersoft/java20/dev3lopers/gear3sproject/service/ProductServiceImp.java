@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -127,7 +128,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDTO readProductById(int productId) {
-        ProductDTO productDTO= new ProductDTO();
+        ProductDTO productDTO = new ProductDTO();
 
         try {
             Product product= productRepository.findById(productId);
@@ -393,6 +394,43 @@ public class ProductServiceImp implements ProductService {
             LOGGER.info("Updated viewQty of product with Id '{}' successfully",productId);
         } catch (Exception e){
             LOGGER.error("Failed to update viewQty of product with Id '{}' : {}",productId,e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ProdPropDescDTO> readProdPropDescById(int productId) {
+        List<ProdPropDescDTO> propDescDtoList = new ArrayList<>();
+
+        try {
+            Product product = productRepository.findById(productId);
+            if (product == null){
+                LOGGER.error("Product with Id '{}' does not exits",productId);
+                return null;
+            }
+            List<ProductProperty> prodPropList = new ArrayList<>(product.getListProdProperty());
+            for (ProductProperty prodProp : prodPropList) {
+                ProdPropDescDTO propDescDto = new ProdPropDescDTO();
+                if(prodProp.getProduct_desc().getCategory_property() != null){
+                    propDescDto.setProperty(prodProp.getProduct_desc().getCategory_property().getName());
+                }
+                if(prodProp.getProduct_desc() != null){
+                    propDescDto.setDescription(prodProp.getProduct_desc().getDescription());
+                }
+                propDescDtoList.add(propDescDto);
+            }
+            if(propDescDtoList.size() > 1){
+                for(int i=0;i<propDescDtoList.size();i++){
+                    if("Hãng sản xuất".equals(propDescDtoList.get(i).getProperty())) {
+                        if (i != 0) Collections.swap(propDescDtoList, 0, i);;
+                        break;
+                    }
+                }
+            }
+            LOGGER.info("Read property description of product with Id '{}' successfully",productId);
+            return propDescDtoList;
+        } catch (Exception e){
+            LOGGER.error("Failed to read property description of product with Id '{}' : {}",productId,e.getMessage());
+            return null;
         }
     }
 
