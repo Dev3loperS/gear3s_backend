@@ -56,7 +56,7 @@ public class AdProductController {
 
     @PutMapping("/edit")
     public ResponseEntity<?> updateProduct(@RequestBody ProductDTO product) {
-        if(productServiceImp.updateProductById(product)){
+        if(productServiceImp.updateProduct(product)){
             return new ResponseEntity<>(
                     new BasicResponse("Updated product successfully",true),HttpStatus.CREATED);
         } else {

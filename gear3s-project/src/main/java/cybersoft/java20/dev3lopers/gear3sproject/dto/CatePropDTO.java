@@ -1,19 +1,17 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-import java.util.List;
-
 public class CatePropDTO {
     private int id;
     private String name;
-    private List<ProdDescDTO> prodDescDtoList;
+    private AdCategoryDTO categoryDTO;
 
     public CatePropDTO() {
     }
 
-    public CatePropDTO(int id, String name, List<ProdDescDTO> prodDescDtoList) {
+    public CatePropDTO(int id, String name, AdCategoryDTO categoryDTO) {
         this.id = id;
         this.name = name;
-        this.prodDescDtoList = prodDescDtoList;
+        this.categoryDTO = categoryDTO;
     }
 
     public int getId() {
@@ -32,11 +30,11 @@ public class CatePropDTO {
         this.name = name;
     }
 
-    public List<ProdDescDTO> getProdDescDtoList() {
-        return prodDescDtoList;
+    public AdCategoryDTO getCategoryDTO() {
+        return categoryDTO;
     }
 
-    public void setProdDescDtoList(List<ProdDescDTO> prodDescDtoList) {
-        this.prodDescDtoList = prodDescDtoList;
+    public void setCategoryDTO(AdCategoryDTO categoryDTO) {
+        this.categoryDTO = categoryDTO;
     }
 }

@@ -8,6 +8,14 @@ public class AdCategoryDTO {
 
     String name ;
 
+    public AdCategoryDTO() {
+    }
+
+    public AdCategoryDTO(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

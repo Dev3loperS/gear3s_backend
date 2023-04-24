@@ -1,31 +1,30 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
 public class ProdDescDTO {
-    private int id;
-    private String desc;
+    private String property;
+    private String description;
 
     public ProdDescDTO() {
     }
 
-    public ProdDescDTO(int id, String desc) {
-        this.id = id;
-        this.desc = desc;;
+    public ProdDescDTO(String property, String description) {
+        this.property = property;
+        this.description = description;
     }
 
-    public int getId() {
-        return id;
+    public String getProperty() {
+        return property;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProperty(String property) {
+        this.property = property;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
-
 }

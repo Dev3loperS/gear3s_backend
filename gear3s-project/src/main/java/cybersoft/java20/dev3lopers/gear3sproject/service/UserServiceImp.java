@@ -97,10 +97,10 @@ public class UserServiceImp implements UserService {
             userRepository.save(user);
             redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
-            LOGGER.info(" Account '{}' has been created successfully",accountDTO.getEmail());
+            LOGGER.info("Created new account '{}' successfully",accountDTO.getEmail());
             return true;
         } catch (Exception e){
-            LOGGER.error("Failed to create account '{}' : {}",accountDTO.getEmail(),e.getMessage());
+            LOGGER.error("Failed to create new account '{}' : {}",accountDTO.getEmail(),e.getMessage());
             return false;
         }
     }

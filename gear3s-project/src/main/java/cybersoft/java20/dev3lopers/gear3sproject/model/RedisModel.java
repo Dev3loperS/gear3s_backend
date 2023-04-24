@@ -7,7 +7,8 @@ public enum RedisModel {
     ROLES("roles"),
     SEXES("sexes"),
     PRODUCTS("products"),
-    RATING("ratings");
+    RATING("ratings"),
+    CATEPROP("cateProps");
 
     private String value;
     RedisModel(String value){
