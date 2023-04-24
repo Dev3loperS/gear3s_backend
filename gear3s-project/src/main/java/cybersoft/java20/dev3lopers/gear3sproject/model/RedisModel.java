@@ -1,7 +1,7 @@
 package cybersoft.java20.dev3lopers.gear3sproject.model;
 
 public enum RedisModel {
-    USER_S("users"),
+    ALLUSERS("users"),
     USER("user"),
     MYCARDS("mycards"),
     ROLES("roles"),

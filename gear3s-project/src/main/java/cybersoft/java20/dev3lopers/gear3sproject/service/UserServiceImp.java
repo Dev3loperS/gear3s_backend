@@ -8,11 +8,13 @@ import cybersoft.java20.dev3lopers.gear3sproject.dto.PasswordDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Roles;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Sex;
+import cybersoft.java20.dev3lopers.gear3sproject.entity.UserCard;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RedisModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RoleModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.RoleRepository;
+import cybersoft.java20.dev3lopers.gear3sproject.repository.UserCardRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.UserRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.UserService;
 import org.slf4j.Logger;
@@ -45,6 +47,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     FileStorageServiceImp fileStorageServiceImp;
+
+    @Autowired
+    UserCardRepository userCardRepository;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -90,7 +95,7 @@ public class UserServiceImp implements UserService {
                 user.setRoles(roleRepository.findByName(RoleModel.USER.getValue()));
             }
             userRepository.save(user);
-            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info(" Account '{}' has been created successfully",accountDTO.getEmail());
             return true;
@@ -106,7 +111,7 @@ public class UserServiceImp implements UserService {
         Gson gson = new Gson();
 
         try {
-            String data = (String) redisTemplate.opsForValue().get(RedisModel.USER_S.getValue());
+            String data = (String) redisTemplate.opsForValue().get(RedisModel.ALLUSERS.getValue());
             if (data == null){
                 List<Users> usersList = userRepository.findAll();
 
@@ -125,8 +130,8 @@ public class UserServiceImp implements UserService {
                     }
                     userDtoList.add(userDto);
                 }
-                redisTemplate.opsForValue().set(RedisModel.USER_S.getValue(),gson.toJson(userDtoList));
-                redisTemplate.expire(RedisModel.USER_S.getValue(),30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisModel.ALLUSERS.getValue(),gson.toJson(userDtoList));
+                redisTemplate.expire(RedisModel.ALLUSERS.getValue(),30, TimeUnit.MINUTES);
             } else {
                 userDtoList = gson.fromJson(data,new TypeToken<List<AdUserDTO>>(){}.getType());
             }
@@ -220,7 +225,7 @@ public class UserServiceImp implements UserService {
             user.setRoles(new Roles(roleId));
 
             userRepository.save(user);
-            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Role of account with Id '{}' has been changed successfully",userId);
             return true;
@@ -251,7 +256,7 @@ public class UserServiceImp implements UserService {
                 user.setAvatar(avatarFile.getOriginalFilename());
             }
             userRepository.save(user);
-            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Profile of account '{}' has been updated successfully",userDTO.getEmail());
             return true;
@@ -266,7 +271,7 @@ public class UserServiceImp implements UserService {
             if(!defaultAva.equals(userAvatar)){
                 fileStorageServiceImp.deleteFile(imagePath+ImagesModel.AVATAR.getValue()+userAvatar);
             }
-            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
             if(fileStorageServiceImp.uploadAvatar(userId,file)){
                 LOGGER.info("Uploaded avatar of account with Id '{}' successfully",userId);
@@ -297,7 +302,7 @@ public class UserServiceImp implements UserService {
             }
             user.setPassword(bCryptPasswordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(user);
-            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Password of account '{}' has been changed successfully",user.getEmail());
             return true;
@@ -311,7 +316,7 @@ public class UserServiceImp implements UserService {
     public boolean deleteUser(int id) {
         try {
             userRepository.deleteById(id);
-            redisTemplate.delete(RedisModel.USER_S.getValue());
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
             redisTemplate.delete(RedisModel.USER.getValue());
             LOGGER.info("Account with Id '{}' has been deleted successfully",id);
             return true;
@@ -321,7 +326,31 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    @Override
+    public boolean updateLastPay(int userId, int userCardId) {
+        try {
+            Users user = userRepository.findById(userId);
+            if(user == null){
+                LOGGER.error("Account with Id '{}' does not exits",userId);
+                return false;
+            }
+            UserCard userCard = userCardRepository.findById(userCardId);
+            if(userCard.getUsers().getId() != userId){
+                LOGGER.error("UserCard with Id '{}' is not belong to account has Id '{}'",userCardId,userId);
+                return false;
+            }
+            user.setLastPayment(userCardId);
 
+            userRepository.save(user);
+            redisTemplate.delete(RedisModel.ALLUSERS.getValue());
+            redisTemplate.delete(RedisModel.USER.getValue());
+            LOGGER.info("Updated last payment Id of account with Id '{}' successfully",userId);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to updated last payment Id of account with Id '{}' : {}",userId,e.getMessage());
+            return false;
+        }
+    }
 
 
 }

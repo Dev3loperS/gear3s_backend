@@ -17,7 +17,7 @@ public interface UserService {
     boolean updateUserPassword(int userId, PasswordDTO passwordDTO);
     boolean updateUserRoleByAdmin(int userId, int roleId);
     boolean deleteUser(int id);
-
+    boolean updateLastPay(int userId, int userCardId);
 
 
 }
