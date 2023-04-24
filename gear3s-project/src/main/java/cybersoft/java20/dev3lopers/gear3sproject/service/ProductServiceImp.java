@@ -374,7 +374,8 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
-    private void updateProductView(int productId) {
+    @Override
+    public void updateProductView(int productId) {
         try {
             Product product = productRepository.findById(productId);
             if (product == null){
