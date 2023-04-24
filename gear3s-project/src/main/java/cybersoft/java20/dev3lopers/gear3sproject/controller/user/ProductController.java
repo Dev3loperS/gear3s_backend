@@ -36,6 +36,16 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/detail/property/{productId}")
+    public ResponseEntity<?> getProductPropertyDesc(@PathVariable int productId) {
+        List<ProdPropDescDTO> propDescList = productServiceImp.readProdPropDescById(productId);
+        if(propDescList != null){
+            return new ResponseEntity<>(new BasicResponse("Returned product property description successful",propDescList),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BasicResponse("Product property description is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/search/{categoryId}/{productName}")
     public ResponseEntity<?> getProductByName(@PathVariable int categoryId,@PathVariable String productName) {
         List<ShortProdDTO> productList = productServiceImp.readAllProdByName(categoryId,productName);

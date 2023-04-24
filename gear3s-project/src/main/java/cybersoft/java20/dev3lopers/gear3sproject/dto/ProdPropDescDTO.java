@@ -1,13 +1,13 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-public class ProdDescDTO {
+public class ProdPropDescDTO {
     private String property;
     private String description;
 
-    public ProdDescDTO() {
+    public ProdPropDescDTO() {
     }
 
-    public ProdDescDTO(String property, String description) {
+    public ProdPropDescDTO(String property, String description) {
         this.property = property;
         this.description = description;
     }
