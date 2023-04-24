@@ -16,5 +16,6 @@ public interface ProductService {
 
     List<ShortProdDTO> readAllProdAfterFilter(FilterRequest request);
     List<ShortProdDTO> readAllProdByName(int categoryId, String prodName ) ;
+    boolean updateProductSoldQty(int productId, int soldQty);
 
 }

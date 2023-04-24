@@ -2,14 +2,11 @@ package cybersoft.java20.dev3lopers.gear3sproject.controller.admin;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AdUserDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.RoleServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.SexServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

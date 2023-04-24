@@ -1,14 +1,16 @@
 package cybersoft.java20.dev3lopers.gear3sproject.model;
 
-public enum RedisKeyModel {
-    USERS("users"),
+public enum RedisModel {
+    USER_S("users"),
+    USER("user"),
+    MYCARDS("mycards"),
     ROLES("roles"),
     SEXES("sexes"),
     PRODUCTS("products"),
     RATING("ratings");
 
     private String value;
-    RedisKeyModel(String value){
+    RedisModel(String value){
         this.value = value;
     }
 

@@ -7,7 +7,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductRating;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Users;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisModel;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProdRatingRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProdRatingService;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class ProdRatingServiceImp implements ProdRatingService {
             rating.setComment(comment);
 
             prodRatingRepository.save(rating);
-            redisTemplate.delete(RedisKeyModel.RATING.getValue());
+            redisTemplate.delete(RedisModel.RATING.getValue());
             LOGGER.info("Create rating for product with Id '{}' by user has Id '{}' successfully",prodId,userId);
             return true;
         } catch (Exception e){
@@ -58,7 +58,7 @@ public class ProdRatingServiceImp implements ProdRatingService {
         List<ProdRatingDTO> resultList = new ArrayList<>();
         Gson gson = new Gson();
         try {
-            String data = (String) redisTemplate.opsForValue().get(RedisKeyModel.RATING.getValue());
+            String data = (String) redisTemplate.opsForValue().get(RedisModel.RATING.getValue());
             if(data == null){
                 List<ProductRating> prodRatingList = prodRatingRepository.findAll();
                 for (ProductRating rating : prodRatingList){
@@ -79,8 +79,8 @@ public class ProdRatingServiceImp implements ProdRatingService {
 
                     resultList.add(ratingDto);
                 }
-                redisTemplate.opsForValue().set(RedisKeyModel.RATING.getValue(),gson.toJson(resultList));
-                redisTemplate.expire(RedisKeyModel.RATING.getValue(),30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisModel.RATING.getValue(),gson.toJson(resultList));
+                redisTemplate.expire(RedisModel.RATING.getValue(),30, TimeUnit.MINUTES);
             } else {
                 resultList = gson.fromJson(data, new TypeToken<List<ProdRatingDTO>>(){}.getType());
             }
@@ -154,10 +154,31 @@ public class ProdRatingServiceImp implements ProdRatingService {
     }
 
     @Override
+    public float getAverageStarOfProd(int productId) {
+        float averageStar = 0.0f;
+        try {
+            List<ProductRating> prodRatingList = prodRatingRepository.findAllByProductId(productId);
+            if(prodRatingList.size() < 1){
+                LOGGER.error("Product with Id '{}' does not have rating",productId);
+                return averageStar;
+            }
+            for (ProductRating rating : prodRatingList){
+                averageStar += rating.getStar();
+            }
+            LOGGER.info("Calculate average rating star of product with Id '{}' successfully",productId);
+            return averageStar/prodRatingList.size();
+        } catch (Exception e){
+            LOGGER.error("Failed to calculate average rating star of product with Id '{}' : {}",productId,e.getMessage());
+            return -1;
+        }
+
+    }
+
+    @Override
     public boolean deleteProdRating(int prodRatingId) {
         try {
             prodRatingRepository.deleteById(prodRatingId);
-            redisTemplate.delete(RedisKeyModel.RATING.getValue());
+            redisTemplate.delete(RedisModel.RATING.getValue());
             LOGGER.info("Deleted product rating with Id '{}' successfully",prodRatingId);
             return true;
         } catch (Exception e){

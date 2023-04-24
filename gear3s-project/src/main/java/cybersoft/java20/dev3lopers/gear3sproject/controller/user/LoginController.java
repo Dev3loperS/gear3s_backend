@@ -1,9 +1,8 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.AccountDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.UserDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.LoginRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.RegisterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
@@ -13,11 +12,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.service.UserServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.utils.JwtUtils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

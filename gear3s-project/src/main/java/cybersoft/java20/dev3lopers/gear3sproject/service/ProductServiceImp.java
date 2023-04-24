@@ -9,7 +9,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductDesc;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductProperty;
 import cybersoft.java20.dev3lopers.gear3sproject.model.CategoryModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
-import cybersoft.java20.dev3lopers.gear3sproject.model.RedisKeyModel;
+import cybersoft.java20.dev3lopers.gear3sproject.model.RedisModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
@@ -75,7 +75,7 @@ public class ProductServiceImp implements ProductService {
             product.setCategory(new Category(prodCreateDTO.getCategoryId()));
 
             productRepository.save(product);
-            redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
+            redisTemplate.delete(RedisModel.PRODUCTS.getValue());
             LOGGER.info("Product with Id '{}' has been created successfully",product.getId());
             return true;
         } catch (Exception e){
@@ -90,7 +90,7 @@ public class ProductServiceImp implements ProductService {
         Gson gson = new Gson();
 
         try {
-            String data = (String) redisTemplate.opsForValue().get(RedisKeyModel.PRODUCTS.getValue());
+            String data = (String) redisTemplate.opsForValue().get(RedisModel.PRODUCTS.getValue());
             if (data == null){
                 List<Product> productList = productRepository.findAll();
                 for (Product product : productList) {
@@ -112,8 +112,8 @@ public class ProductServiceImp implements ProductService {
                     }
                     productDtoList.add(productDTO);
                 }
-                redisTemplate.opsForValue().set(RedisKeyModel.PRODUCTS.getValue(),gson.toJson(productDtoList));
-                redisTemplate.expire(RedisKeyModel.PRODUCTS.getValue(),30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisModel.PRODUCTS.getValue(),gson.toJson(productDtoList));
+                redisTemplate.expire(RedisModel.PRODUCTS.getValue(),30, TimeUnit.MINUTES);
             } else {
                 productDtoList = gson.fromJson(data, new TypeToken<List<ProductDTO>>(){}.getType());
             }
@@ -149,6 +149,7 @@ public class ProductServiceImp implements ProductService {
             if(product.getCategory() != null){
                 productDTO.setCategoryId(product.getCategory().getId());
             }
+            updateProductView(productId);
             LOGGER.info("Read product info with Id '{}' successfully by User",productId);
             return productDTO;
         } catch (Exception e){
@@ -176,7 +177,7 @@ public class ProductServiceImp implements ProductService {
             product.setCategory(new Category(productDTO.getCategoryId()));
 
             productRepository.save(product);
-            redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
+            redisTemplate.delete(RedisModel.PRODUCTS.getValue());
             LOGGER.info("Product with Id '{}' has been updated successfully",productDTO.getId());
             return true;
         } catch (Exception e){
@@ -189,7 +190,7 @@ public class ProductServiceImp implements ProductService {
     public boolean deleteProductById(int prodId) {
         try {
             productRepository.deleteById(prodId);
-            redisTemplate.delete(RedisKeyModel.PRODUCTS.getValue());
+            redisTemplate.delete(RedisModel.PRODUCTS.getValue());
             LOGGER.info("Product with Id '{}' has been deleted successfully",prodId);
             return true;
         } catch (Exception e){
@@ -349,11 +350,46 @@ public class ProductServiceImp implements ProductService {
         if(categoryId == 0) prodList = productRepository.findAllProdByName(prodName);
         else                prodList = productRepository.findAllProdByCateIdByName(categoryId,prodName);
 
-        return getProductFilterDtoList("prod_search_name",prodList);
+        return getProductFilterDtoList("searchName",prodList);
     }
 
+    @Override
+    public boolean updateProductSoldQty(int productId, int soldQty) {
+        try {
+            Product product = productRepository.findById(productId);
+            if (product == null){
+                LOGGER.error("Product with Id '{}' does not exits",productId);
+                return false;
+            }
+            product.setInventory(product.getInventory()-soldQty);
+            product.setSoldQty(product.getSoldQty()+soldQty);
 
+            productRepository.save(product);
+            redisTemplate.delete(RedisModel.PRODUCTS.getValue());
+            LOGGER.info("Updated soldQty of product with Id '{}' successfully",productId);
+            return true;
+        } catch (Exception e){
+            LOGGER.error("Failed to update soldQty of product with Id '{}' : {}",productId,e.getMessage());
+            return false;
+        }
+    }
 
+    private void updateProductView(int productId) {
+        try {
+            Product product = productRepository.findById(productId);
+            if (product == null){
+                LOGGER.error("Product with Id '{}' does not exits",productId);
+                return;
+            }
+            product.setView_qty(product.getView_qty()+1);
+
+            productRepository.save(product);
+            redisTemplate.delete(RedisModel.PRODUCTS.getValue());
+            LOGGER.info("Updated viewQty of product with Id '{}' successfully",productId);
+        } catch (Exception e){
+            LOGGER.error("Failed to update viewQty of product with Id '{}' : {}",productId,e.getMessage());
+        }
+    }
 
 
 }

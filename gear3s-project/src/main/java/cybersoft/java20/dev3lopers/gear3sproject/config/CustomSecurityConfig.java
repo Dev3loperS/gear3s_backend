@@ -48,7 +48,7 @@ public class CustomSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/admin","/api/admin/login/**","/api/login/**")
+                    .antMatchers("/admin","/api/admin/login/**","/api/login/**","/api/product/**")
                     .permitAll()
                     .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
                                     "/swagger-resources","/configuration/security", "/swagger-ui.html",

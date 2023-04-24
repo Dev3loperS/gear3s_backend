@@ -9,5 +9,6 @@ public interface ProdRatingService {
     List<ProdRatingDTO> getAllProdRating();
     ProdRatingDTO getProdRatingById(int prodRatingId);
     List<ProdRatingDTO> getAllRatingOfProd(int productId);
+    float getAverageStarOfProd(int productId);
     boolean deleteProdRating(int prodRatingId);
 }
