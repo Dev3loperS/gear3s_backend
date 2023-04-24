@@ -79,15 +79,4 @@ public class AdUserController {
         }
     }
 
-    @PutMapping("/update-lastPay")
-    public ResponseEntity<?> updateUserLastPayById(@RequestParam int userId, @RequestParam int userCardId){
-        if(userServiceImp.updateLastPay(userId,userCardId)){
-            return new ResponseEntity<>(
-                    new BasicResponse("Updated last payment of user successfully",true),HttpStatus.CREATED);
-        }else {
-            return new ResponseEntity<>(
-                    new BasicResponse("Failed to update last payment of user",false),HttpStatus.BAD_REQUEST);
-        }
-    }
-
 }
