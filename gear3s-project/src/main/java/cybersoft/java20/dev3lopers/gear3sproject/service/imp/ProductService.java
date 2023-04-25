@@ -2,7 +2,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.service.imp;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdCreateDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdPropDescDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.dto.ShortProdDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdShortDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
 
@@ -15,8 +15,8 @@ public interface ProductService {
     boolean updateProduct(ProductDTO productDTO);
     boolean deleteProductById(int productId ) ;
 
-    List<ShortProdDTO> readAllProdAfterFilter(FilterRequest request);
-    List<ShortProdDTO> readAllProdByName(int categoryId, String prodName ) ;
+    List<ProdShortDTO> readAllProdAfterFilter(FilterRequest request);
+    List<ProdShortDTO> readAllProdByName(int categoryId, String prodName ) ;
     boolean confirmOrder(int productId, int requestNum);
     void updateProductView(int productId);
     List<ProdPropDescDTO> readProdPropDescById(int productId);

@@ -1,13 +1,13 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-public class ProdDescFilterDTO {
+public class FilterProdDescDTO {
     private int id;
     private String desc;
 
-    public ProdDescFilterDTO() {
+    public FilterProdDescDTO() {
     }
 
-    public ProdDescFilterDTO(int id, String desc) {
+    public FilterProdDescDTO(int id, String desc) {
         this.id = id;
         this.desc = desc;;
     }

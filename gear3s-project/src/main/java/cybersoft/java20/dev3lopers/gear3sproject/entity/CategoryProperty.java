@@ -19,6 +19,13 @@ public class CategoryProperty {
     @OneToMany(mappedBy = "category_property")
     private Set<ProductDesc> listProdDesc;
 
+    public CategoryProperty() {
+    }
+
+    public CategoryProperty(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

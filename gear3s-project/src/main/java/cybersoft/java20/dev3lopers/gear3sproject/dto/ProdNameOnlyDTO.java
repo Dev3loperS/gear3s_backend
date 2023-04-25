@@ -1,17 +1,17 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-public class CatePropCreateDTO {
+public class ProdNameOnlyDTO {
     private int id;
     private String name;
-    private int categoryId;
+    private String categoryName;
 
-    public CatePropCreateDTO() {
+    public ProdNameOnlyDTO() {
     }
 
-    public CatePropCreateDTO(int id, String name, int categoryId) {
+    public ProdNameOnlyDTO(int id, String name, String categoryName) {
         this.id = id;
         this.name = name;
-        this.categoryId = categoryId;
+        this.categoryName = categoryName;
     }
 
     public int getId() {
@@ -22,19 +22,19 @@ public class CatePropCreateDTO {
         this.id = id;
     }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

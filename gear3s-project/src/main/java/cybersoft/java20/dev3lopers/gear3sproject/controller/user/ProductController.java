@@ -48,7 +48,7 @@ public class ProductController {
 
     @GetMapping("/search/{categoryId}/{productName}")
     public ResponseEntity<?> getProductByName(@PathVariable int categoryId,@PathVariable String productName) {
-        List<ShortProdDTO> productList = productServiceImp.readAllProdByName(categoryId,productName);
+        List<ProdShortDTO> productList = productServiceImp.readAllProdByName(categoryId,productName);
         if (productList != null) {
             return new ResponseEntity<>(new BasicResponse("Returned product list search by name successful", productList),HttpStatus.OK);
         } else {
@@ -58,7 +58,7 @@ public class ProductController {
 
     @GetMapping("/filter/list-property/{categoryId}")
     public ResponseEntity<?> getFilterListByCateId(@PathVariable int categoryId){
-        List<CatePropFilterDTO> filterList = catePropServiceImp.readProdFilterListByCateId(categoryId);
+        List<FilterCatePropDTO> filterList = catePropServiceImp.readProdFilterListByCateId(categoryId);
         if (filterList != null) {
             return new ResponseEntity<>(new BasicResponse("Returned product filter list by category successful", filterList),HttpStatus.OK);
         } else {
@@ -68,7 +68,7 @@ public class ProductController {
 
     @PostMapping("/filter")
     public ResponseEntity<?> getProdListAfterFilter(@RequestBody FilterRequest request){
-        List<ShortProdDTO> productList = productServiceImp.readAllProdAfterFilter(request);
+        List<ProdShortDTO> productList = productServiceImp.readAllProdAfterFilter(request);
         if (productList != null) {
             return new ResponseEntity<>(new BasicResponse("Returned product list after filter successful", productList),HttpStatus.OK);
         } else {

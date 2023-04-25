@@ -19,6 +19,13 @@ public class ProductDesc {
     @OneToMany(mappedBy = "product_desc")
     private Set<ProductProperty> listProdProperty;
 
+    public ProductDesc() {
+    }
+
+    public ProductDesc(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
