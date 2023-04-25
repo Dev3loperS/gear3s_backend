@@ -12,4 +12,6 @@ public interface OrderService {
     boolean updateById(int id ,OrderDTO orderDTO );
 
     OrderDTO findById (int id ) ;
+
+    int countAllOrder() ;
 }

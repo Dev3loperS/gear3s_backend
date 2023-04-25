@@ -29,6 +29,16 @@ public class OrderController {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/countAllById")
+    public ResponseEntity<?> countAllById() {
+
+        int total = orderService.countAllOrder();
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(total);
+        basicResponse.setMessage("true");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+
     @GetMapping("/findById")
     public ResponseEntity<?> findById(@RequestParam int id ) {
         OrderDTO list = orderService.findById(id);

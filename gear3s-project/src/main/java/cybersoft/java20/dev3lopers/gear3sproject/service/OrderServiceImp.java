@@ -438,5 +438,10 @@ public class OrderServiceImp implements OrderService {
         return  orderDTO;
     }
 
+    @Override
+    public int countAllOrder() {
+        return orderRepository.countAll();
+    }
+
 
 }
