@@ -68,8 +68,6 @@ public class AdCategoryController {
             basicResponse.setMessage("false");
             return new ResponseEntity<>(basicResponse,HttpStatus.NOT_FOUND);
         }
-
-
     }
 
     @PostMapping("/update/{id}")

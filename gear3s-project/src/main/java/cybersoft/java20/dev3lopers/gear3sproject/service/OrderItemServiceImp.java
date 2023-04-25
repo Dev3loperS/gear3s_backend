@@ -6,6 +6,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.repository.OrderItemRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.OrderRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.OrderItemService;
+import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
+import cybersoft.java20.dev3lopers.gear3sproject.service.imp.UserService;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,12 @@ public class OrderItemServiceImp implements OrderItemService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public List<OrderItemDTO> findAll() {
@@ -319,34 +327,53 @@ public class OrderItemServiceImp implements OrderItemService {
     @Override
     public boolean addNewOrderItem(OrderItemDTO orderItemDTO) {
         OrderItem orderItem = new OrderItem();
+        int amount = orderItemDTO.getAmount();
+        int productId = orderItemDTO.getProduct().getId();
+        if (productService.confirmOrder(productId,amount) )
+        {
+            orderItem.setAmount(orderItemDTO.getAmount());
+            orderItem.setSubtotal(orderItemDTO.getSubtotal());
 
-        orderItem.setAmount(orderItemDTO.getAmount());
-        orderItem.setSubtotal(orderItemDTO.getSubtotal());
-
-        //set order_id
-        Orders order = new Orders();
-        int orderId = orderItemDTO.getOrder().getId();
-        try {
-            order = orderRepository.findById(orderId);
-            orderItem.setOrder(order);
-        } catch (Exception e) {
-            System.out.println("Error in orderItemServiceImp - (addNewOrderItem) :" + e.getMessage());
-            return false;
-        }
+            //set order_id
+            Orders order = new Orders();
+            int orderId = orderItemDTO.getOrder().getId();
+            try {
+                order = orderRepository.findById(orderId);
+                orderItem.setOrder(order);
+            } catch (Exception e) {
+                System.out.println("Error in orderItemServiceImp - (addNewOrderItem) :" + e.getMessage());
+                return false;
+            }
 
 //        String productName = orderItemDTO.getProduct().getName();
-        int productId = orderItemDTO.getProduct().getId();
 
-        try {
-            Product temp = productRepository.findById(productId);
-            orderItem.setProduct(temp);
-        } catch (Exception e) {
-            System.out.println("Error in orderItemServiceImp - (addNewOrderItem) :" + e.getMessage());
-            return false;
+
+            try {
+                Product temp = productRepository.findById(productId);
+                orderItem.setProduct(temp);
+            } catch (Exception e) {
+                System.out.println("Error in orderItemServiceImp - (addNewOrderItem) :" + e.getMessage());
+                return false;
+            }
+
+            try {
+                orderItemRepository.save(orderItem);
+
+            } catch (Exception e) {
+                System.out.println("Error in OrderItemServiceImp : " + e.getMessage());
+                return false ;
+            }
+
+            return true;
+        }else
+        {
+            return false ;
         }
-        orderItemRepository.save(orderItem);
-        return true;
+
+
     }
+
+
 
     @Override
     public boolean updateOrderItem(int id , OrderItemDTO orderItemDTO) {
