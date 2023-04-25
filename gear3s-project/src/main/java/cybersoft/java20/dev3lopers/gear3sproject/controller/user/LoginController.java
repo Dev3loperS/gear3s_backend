@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.SecretKey;
 import javax.validation.Valid;
-
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
