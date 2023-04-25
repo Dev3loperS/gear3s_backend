@@ -174,4 +174,28 @@ public class CatePropServiceImp implements CatePropService {
             return null;
         }
     }
+
+    @Override
+    public List<CatePropCreateDTO> readAllCatePropByCateId(int categoryId) {
+        List<CatePropCreateDTO> catePropDtoList = new ArrayList<>();
+
+        try {
+            List<CategoryProperty> catePropList = catePropRepository.findAllByCategoryId(categoryId);
+            for (CategoryProperty cateProp : catePropList) {
+                CatePropCreateDTO catePropDto = new CatePropCreateDTO();
+
+                catePropDto.setId(cateProp.getId());
+                catePropDto.setName(cateProp.getName());
+                if(cateProp.getCategory() != null){
+                    catePropDto.setCategoryId(cateProp.getCategory().getId());
+                }
+                catePropDtoList.add(catePropDto);
+            }
+            LOGGER.info("Read category property list by category with Id '{}' successfully",categoryId);
+            return catePropDtoList;
+        } catch (Exception e){
+            LOGGER.error("Failed to read category property list by category with Id '{}' : {}",categoryId,e.getMessage());
+            return null;
+        }
+    }
 }

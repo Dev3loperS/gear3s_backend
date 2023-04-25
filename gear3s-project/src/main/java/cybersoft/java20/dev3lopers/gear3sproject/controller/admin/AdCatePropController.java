@@ -40,6 +40,16 @@ public class AdCatePropController {
         }
     }
 
+    @GetMapping("/list-by-category/{categoryId}")
+    public ResponseEntity<?> getCatePropertyListByCateId(@PathVariable int categoryId) {
+        List<CatePropCreateDTO> catePropList = catePropServiceImp.readAllCatePropByCateId(categoryId);
+        if (catePropList != null) {
+            return new ResponseEntity<>(new BasicResponse("Returned category property list by category successful", catePropList),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new BasicResponse("Category property list by category is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/detail/{catePropertyId}")
     public ResponseEntity<?> getCatePropertyDetailById(@PathVariable int catePropertyId) {
         CatePropDTO cateProp = catePropServiceImp.readCatePropById(catePropertyId);

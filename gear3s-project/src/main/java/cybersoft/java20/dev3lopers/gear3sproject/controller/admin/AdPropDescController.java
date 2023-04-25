@@ -38,6 +38,16 @@ public class AdPropDescController {
         }
     }
 
+    @GetMapping("/list-by-cate-prop/{catePropId}")
+    public ResponseEntity<?> getPropDescriptionListByCatePropId(@PathVariable int catePropId) {
+        List<PropDescCreateDTO> propDescList = propDescServiceImp.readAllPropDescByCatePropId(catePropId);
+        if (propDescList != null) {
+            return new ResponseEntity<>(new BasicResponse("Returned property description list by category property successful", propDescList),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new BasicResponse("Property description list by category property is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/detail/{propDescId}")
     public ResponseEntity<?> getPropDescriptionDetailById(@PathVariable int propDescId) {
         PropDescDTO propDesc = propDescServiceImp.readPropDescById(propDescId);

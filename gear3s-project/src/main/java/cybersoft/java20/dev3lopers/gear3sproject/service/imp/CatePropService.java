@@ -15,5 +15,6 @@ public interface CatePropService {
     boolean deleteCatePropById(int catePropId);
 
     List<FilterCatePropDTO> readProdFilterListByCateId(int categoryId);
+    List<CatePropCreateDTO> readAllCatePropByCateId(int categoryId);
 
 }

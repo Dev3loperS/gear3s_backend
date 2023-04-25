@@ -3,15 +3,15 @@ package cybersoft.java20.dev3lopers.gear3sproject.dto;
 public class ProdPropCreateDTO {
     private int id;
     private int ProductId;
-    private int PropertyId;
+    private int PropDescId;
 
     public ProdPropCreateDTO() {
     }
 
-    public ProdPropCreateDTO(int id, int productId, int propertyId) {
+    public ProdPropCreateDTO(int id, int productId, int propDescId) {
         this.id = id;
         ProductId = productId;
-        PropertyId = propertyId;
+        PropDescId = propDescId;
     }
 
     public int getId() {
@@ -30,11 +30,11 @@ public class ProdPropCreateDTO {
         ProductId = productId;
     }
 
-    public int getPropertyId() {
-        return PropertyId;
+    public int getPropDescId() {
+        return PropDescId;
     }
 
-    public void setPropertyId(int propertyId) {
-        PropertyId = propertyId;
+    public void setPropDescId(int propDescId) {
+        PropDescId = propDescId;
     }
 }

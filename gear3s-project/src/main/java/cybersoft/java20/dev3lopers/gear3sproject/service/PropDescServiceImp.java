@@ -139,4 +139,28 @@ public class PropDescServiceImp implements PropDescService {
             return false;
         }
     }
+
+    @Override
+    public List<PropDescCreateDTO> readAllPropDescByCatePropId(int catePropId) {
+        List<PropDescCreateDTO> propDescDtoList = new ArrayList<>();
+
+        try {
+            List<ProductDesc> propDescList = propDescRepository.findAllByCatePropId(catePropId);
+            for (ProductDesc propDesc : propDescList) {
+                PropDescCreateDTO propDescDto = new PropDescCreateDTO();
+
+                propDescDto.setId(propDesc.getId());
+                propDescDto.setDesc(propDesc.getDescription());
+                if(propDesc.getCategory_property() != null){
+                    propDescDto.setCatePropId(propDesc.getCategory_property().getId());
+                }
+                propDescDtoList.add(propDescDto);
+            }
+            LOGGER.info("Read property description list by category property with Id '{}' successfully",catePropId);
+            return propDescDtoList;
+        } catch (Exception e){
+            LOGGER.error("Failed to read property description list by category property with Id '{}' : {}",catePropId,e.getMessage());
+            return null;
+        }
+    }
 }
