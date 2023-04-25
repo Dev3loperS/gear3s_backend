@@ -73,10 +73,10 @@ public class UserServiceImp implements UserService {
     public boolean checkEmailExistence(String email) {
         if(userRepository.countByEmail(email) > 0){
             LOGGER.error("Email '{}' already exists in database",email);
-            return false;
+            return true;
         }
         LOGGER.info("Email '{}' does not exist in database. OK to create this email",email);
-        return true;
+        return false;
     }
 
     @Override

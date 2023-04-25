@@ -51,6 +51,11 @@ public class Users {
     public Users() {
     }
 
+    public Users(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public Users(int id) {
         this.id = id;
     }
