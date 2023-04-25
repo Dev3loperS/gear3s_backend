@@ -4,6 +4,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.*;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.*;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.OrderService;
+import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ public class OrderServiceImp implements OrderService {
 
     @Autowired
     MyCardRepository myCardRepository;
+
+
 
     @Override
     public List<OrderDTO> findAll() {
@@ -196,7 +199,20 @@ public class OrderServiceImp implements OrderService {
         order.setOrder_status(status);
         order.setUser_card(userCard);
 
-        orderRepository.save(order);
+        try
+        {
+            orderRepository.save(order);
+
+
+        }catch (Exception e )
+        {
+            System.out.println("Error in orderServiceImp : "+e.getMessage());
+            return false ;
+
+        }
+
+
+
         return true;
     }
 
