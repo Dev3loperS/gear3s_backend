@@ -3,7 +3,6 @@ package cybersoft.java20.dev3lopers.gear3sproject.service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
-import cybersoft.java20.dev3lopers.gear3sproject.entity.CategoryProperty;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductDesc;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.ProductProperty;
@@ -35,7 +34,7 @@ public class ProdPropServiceImp implements ProdPropService {
         try {
             ProductProperty prodProp = new ProductProperty();
             prodProp.setProduct(new Product(prodPropCreateDTO.getProductId()));
-            prodProp.setProduct_desc(new ProductDesc(prodPropCreateDTO.getPropertyId()));
+            prodProp.setProduct_desc(new ProductDesc(prodPropCreateDTO.getPropDescId()));
 
             prodPropRepository.save(prodProp);
             redisTemplate.delete(RedisModel.PRODPROP.getValue());
@@ -131,7 +130,7 @@ public class ProdPropServiceImp implements ProdPropService {
             }
 
             prodProp.setProduct(new Product(prodPropCreateDTO.getProductId()));
-            prodProp.setProduct_desc(new ProductDesc(prodPropCreateDTO.getPropertyId()));
+            prodProp.setProduct_desc(new ProductDesc(prodPropCreateDTO.getPropDescId()));
 
             prodPropRepository.save(prodProp);
             redisTemplate.delete(RedisModel.PRODPROP.getValue());

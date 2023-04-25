@@ -11,4 +11,6 @@ public interface PropDescService {
     PropDescDTO readPropDescById(int propDescId);
     boolean updatePropDesc(PropDescCreateDTO propDescCreateDTO);
     boolean deletePropDescById(int propDescId);
+
+    List<PropDescCreateDTO> readAllPropDescByCatePropId(int catePropId);
 }
