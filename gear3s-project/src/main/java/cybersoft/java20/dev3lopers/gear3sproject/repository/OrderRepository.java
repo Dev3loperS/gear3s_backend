@@ -2,6 +2,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.repository;
 
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     List<Orders >findAll( );
 
     void deleteById(int id );
+
+    @Query(value = "select count(o) from orders o")
+    int countAll();
 
 
 }
