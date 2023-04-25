@@ -202,8 +202,8 @@ public class ProductServiceImp implements ProductService {
 
     // For User page ---------------------------------------------------------------------------------------------------
     @Override
-    public List<ShortProdDTO> readAllProdAfterFilter(FilterRequest request) {
-        List<ShortProdDTO> prodDtoList = new ArrayList<>();
+    public List<ProdShortDTO> readAllProdAfterFilter(FilterRequest request) {
+        List<ProdShortDTO> prodDtoList = new ArrayList<>();
 
         // Sort by type
         List<Product> prodSortList = sortProdByType(request.getSortType(),request.getCategoryId());
@@ -299,10 +299,10 @@ public class ProductServiceImp implements ProductService {
         return prodList;
     }
 
-    private boolean filterProdByProperty(List<ProductProperty> prodPropList,List<PropDescDTO> propDescDtoList){
+    private boolean filterProdByProperty(List<ProductProperty> prodPropList,List<FilterPropDescDTO> filterPropDescDtoList){
         for (ProductProperty productProperty : prodPropList) {
             ProductDesc productDesc = productProperty.getProduct_desc();
-            for (PropDescDTO propDesc : propDescDtoList) {
+            for (FilterPropDescDTO propDesc : filterPropDescDtoList) {
                 if (propDesc.getPropertyId() == productDesc.getCategory_property().getId()) {
                     boolean isMatched = false;
                     for (Integer descId: propDesc.getDescId()) {
@@ -319,11 +319,11 @@ public class ProductServiceImp implements ProductService {
         return true;
     }
 
-    private List<ShortProdDTO> getProductFilterDtoList(String type, List<Product> prodList){
-        List<ShortProdDTO> prodDtoList = new ArrayList<>();
+    private List<ProdShortDTO> getProductFilterDtoList(String type, List<Product> prodList){
+        List<ProdShortDTO> prodDtoList = new ArrayList<>();
         try {
             for (Product product : prodList){
-                ShortProdDTO productDTO = new ShortProdDTO();
+                ProdShortDTO productDTO = new ProdShortDTO();
 
                 productDTO.setId(product.getId());
                 productDTO.setName(product.getName());
@@ -345,7 +345,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<ShortProdDTO> readAllProdByName(int categoryId, String prodName) {
+    public List<ProdShortDTO> readAllProdByName(int categoryId, String prodName) {
         List<Product> prodList;
 
         if(categoryId == 0) prodList = productRepository.findAllProdByName(prodName);

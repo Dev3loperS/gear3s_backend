@@ -33,7 +33,7 @@ public class CatePropServiceImp implements CatePropService {
     public boolean createCateProp(CatePropCreateDTO catePropCreateDTO) {
         try {
             CategoryProperty categoryProperty = new CategoryProperty();
-            categoryProperty.setName(catePropCreateDTO.getPropName());
+            categoryProperty.setName(catePropCreateDTO.getName());
             categoryProperty.setCategory(new Category(catePropCreateDTO.getCategoryId()));
 
             catePropRepository.save(categoryProperty);
@@ -95,10 +95,10 @@ public class CatePropServiceImp implements CatePropService {
                 catePropDto.setCategoryDTO(new AdCategoryDTO(cateProp.getCategory().getId(),
                         cateProp.getCategory().getName()));
             }
-            LOGGER.info("Read category property info with Id '{}' successfully by User",catePropId);
+            LOGGER.info("Read category property info with Id '{}' successfully",catePropId);
             return catePropDto;
         } catch (Exception e){
-            LOGGER.error("Failed to read category property info with Id '{}' by User : {}",catePropId,e.getMessage());
+            LOGGER.error("Failed to read category property info with Id '{}' : {}",catePropId,e.getMessage());
             return null;
         }
     }
@@ -112,7 +112,7 @@ public class CatePropServiceImp implements CatePropService {
                 return false;
             }
 
-            categoryProperty.setName(catePropCreateDTO.getPropName());
+            categoryProperty.setName(catePropCreateDTO.getName());
             categoryProperty.setCategory(new Category(catePropCreateDTO.getCategoryId()));
 
             catePropRepository.save(categoryProperty);
@@ -139,27 +139,27 @@ public class CatePropServiceImp implements CatePropService {
     }
 
     @Override
-    public List<CatePropFilterDTO> readProdFilterListByCateId(int categoryId) {
-        List<CatePropFilterDTO> catePropFilterDtoList = new ArrayList<>();
+    public List<FilterCatePropDTO> readProdFilterListByCateId(int categoryId) {
+        List<FilterCatePropDTO> filterCatePropDtoList = new ArrayList<>();
         try {
             List<CategoryProperty> catePropList = catePropRepository.findAllByCategoryId(categoryId);
             for (CategoryProperty cateProp:catePropList) {
-                CatePropFilterDTO catePropFilterDTO = new CatePropFilterDTO();
+                FilterCatePropDTO filterCatePropDTO = new FilterCatePropDTO();
 
-                catePropFilterDTO.setId(cateProp.getId());
-                catePropFilterDTO.setName(cateProp.getName());
+                filterCatePropDTO.setId(cateProp.getId());
+                filterCatePropDTO.setName(cateProp.getName());
                 List<ProductDesc> prodDescList = new ArrayList<>(cateProp.getListProdDesc());
 
-                List<ProdDescFilterDTO> proDescDtoList = new ArrayList<>();
+                List<FilterProdDescDTO> proDescDtoList = new ArrayList<>();
                 for (ProductDesc prodDesc: prodDescList) {
-                    ProdDescFilterDTO prodDescFilterDTO = new ProdDescFilterDTO();
-                    prodDescFilterDTO.setId(prodDesc.getId());
-                    prodDescFilterDTO.setDesc(prodDesc.getDescription());
-                    proDescDtoList.add(prodDescFilterDTO);
+                    FilterProdDescDTO filterProdDescDTO = new FilterProdDescDTO();
+                    filterProdDescDTO.setId(prodDesc.getId());
+                    filterProdDescDTO.setDesc(prodDesc.getDescription());
+                    proDescDtoList.add(filterProdDescDTO);
                 }
-                catePropFilterDTO.setProdDescDtoList(proDescDtoList);
+                filterCatePropDTO.setProdDescDtoList(proDescDtoList);
 
-                catePropFilterDtoList.add(catePropFilterDTO);
+                filterCatePropDtoList.add(filterCatePropDTO);
             }
             /*for(int i=0;i<catePropDtoList.size();i++){
                 if("Hãng sản xuất".equals(catePropDtoList.get(i).getName())) {
@@ -168,7 +168,7 @@ public class CatePropServiceImp implements CatePropService {
                 }
             }*/
             LOGGER.info("Read product filter list by property by category with Id '{}' successfully",categoryId);
-            return catePropFilterDtoList;
+            return filterCatePropDtoList;
         } catch (Exception e){
             LOGGER.error("Failed to read product filter list by property by category with Id '{}' : {}",categoryId,e.getMessage());
             return null;

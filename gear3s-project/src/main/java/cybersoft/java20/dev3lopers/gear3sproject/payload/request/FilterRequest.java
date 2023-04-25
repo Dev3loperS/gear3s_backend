@@ -1,6 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.payload.request;
 
-import cybersoft.java20.dev3lopers.gear3sproject.dto.PropDescDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.FilterPropDescDTO;
 
 import java.util.List;
 
@@ -9,12 +9,12 @@ public class FilterRequest {
     private String sortType;
     private int minPrice;
     private int maxPrice;
-    private List<PropDescDTO> propDescList;
+    private List<FilterPropDescDTO> propDescList;
 
     public FilterRequest() {
     }
 
-    public FilterRequest(int categoryId, String sortType, int minPrice, int maxPrice, List<PropDescDTO> propDescList) {
+    public FilterRequest(int categoryId, String sortType, int minPrice, int maxPrice, List<FilterPropDescDTO> propDescList) {
         this.categoryId = categoryId;
         this.sortType = sortType;
         this.minPrice = minPrice;
@@ -54,11 +54,11 @@ public class FilterRequest {
         this.maxPrice = maxPrice;
     }
 
-    public List<PropDescDTO> getPropDescList() {
+    public List<FilterPropDescDTO> getPropDescList() {
         return propDescList;
     }
 
-    public void setPropDescList(List<PropDescDTO> propDescList) {
+    public void setPropDescList(List<FilterPropDescDTO> propDescList) {
         this.propDescList = propDescList;
     }
 }

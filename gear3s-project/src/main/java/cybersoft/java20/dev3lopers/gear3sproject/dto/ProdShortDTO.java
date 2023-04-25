@@ -1,6 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-public class ShortProdDTO {
+public class ProdShortDTO {
     private int id;
     private String name;
     private int originPrice;
@@ -9,7 +9,7 @@ public class ShortProdDTO {
     private int categoryId;
     private String image;
 
-    public ShortProdDTO() {
+    public ProdShortDTO() {
     }
 
     public int getId() {

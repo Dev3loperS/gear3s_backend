@@ -1,17 +1,17 @@
 package cybersoft.java20.dev3lopers.gear3sproject.dto;
 
-public class PropDescDTO {
+public class PropDescCreateDTO {
     private int id;
     private String desc;
-    private CatePropCreateDTO catePropDTO;
+    private int catePropId;
 
-    public PropDescDTO() {
+    public PropDescCreateDTO() {
     }
 
-    public PropDescDTO(int id, String desc, CatePropCreateDTO catePropDTO) {
+    public PropDescCreateDTO(int id, String desc, int catePropId) {
         this.id = id;
         this.desc = desc;
-        this.catePropDTO = catePropDTO;
+        this.catePropId = catePropId;
     }
 
     public int getId() {
@@ -30,11 +30,11 @@ public class PropDescDTO {
         this.desc = desc;
     }
 
-    public CatePropCreateDTO getCatePropDTO() {
-        return catePropDTO;
+    public int getCatePropId() {
+        return catePropId;
     }
 
-    public void setCatePropDTO(CatePropCreateDTO catePropDTO) {
-        this.catePropDTO = catePropDTO;
+    public void setCatePropId(int catePropId) {
+        this.catePropId = catePropId;
     }
 }
