@@ -6,6 +6,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.ProdRatingServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.ProductServiceImp;
 import cybersoft.java20.dev3lopers.gear3sproject.service.CatePropServiceImp;
+import cybersoft.java20.dev3lopers.gear3sproject.service.imp.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,9 @@ public class ProductController {
 
     @Autowired
     ProdRatingServiceImp prodRatingServiceImp;
+
+    @Autowired
+    CategoryService categoryService;
 
     @GetMapping("/detail/{productId}")
     public ResponseEntity<?> getProductDetail(@PathVariable int productId) {
@@ -150,6 +154,16 @@ public class ProductController {
             return new ResponseEntity<>(new BasicResponse("Returned average rating star successful", averageStar),HttpStatus.OK);
         }else {
             return new ResponseEntity<>(new BasicResponse("Average rating start is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/list-category")
+    public ResponseEntity<?> getCategoryList(){
+        List<AdCategoryDTO> categoryList = categoryService.getAllCategory();
+        if (categoryList != null) {
+            return new ResponseEntity<>(new BasicResponse("Returned category list successful", categoryList),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new BasicResponse("Category list is empty", null),HttpStatus.NOT_FOUND);
         }
     }
 }
