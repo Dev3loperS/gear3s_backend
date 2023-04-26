@@ -2,9 +2,10 @@ package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.*;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.CountOrdersGroupByMonthDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.CountOrdersGroupByYearDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.*;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.OrderService;
-import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -439,9 +440,24 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public int countAllOrder() {
-        return orderRepository.countAll();
+    public List<CountOrdersGroupByYearDTO> countOrdersGroupByYear() {
+        return orderRepository.countOrdersGroupByYear();
     }
+
+    public List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth() {
+        return orderRepository.countOrdersGroupByMonth();
+    }
+
+    @Override
+    public List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear() {
+        return orderRepository.sumOrdersGroupByYear();
+    }
+
+    @Override
+    public List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth() {
+        return orderRepository.sumOrdersGroupByMonth();
+    }
+
 
 
 }
