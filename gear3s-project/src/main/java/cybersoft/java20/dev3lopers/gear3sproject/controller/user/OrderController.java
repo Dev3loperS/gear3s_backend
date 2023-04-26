@@ -1,9 +1,8 @@
 package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 
-import cybersoft.java20.dev3lopers.gear3sproject.dto.OrderDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.OrderService;
-import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +28,51 @@ public class OrderController {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/countAllById")
-    public ResponseEntity<?> countAllById() {
+    @GetMapping("/countOrdersGroupByYear")
+    public ResponseEntity<?> countOrdersGroupByYear() {
 
-        int total = orderService.countAllOrder();
+        List<CountOrdersGroupByYearDTO> countOrdersGroupByYear  = orderService.countOrdersGroupByYear();
         BasicResponse basicResponse = new BasicResponse();
-        basicResponse.setData(total);
+        basicResponse.setData(countOrdersGroupByYear);
+        basicResponse.setMessage("true");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/countOrdersGroupByMonth")
+    public ResponseEntity<?> countOrdersGroupByMonth() {
+
+        List<CountOrdersGroupByMonthDTO> countOrdersGroupByYear  = orderService.countOrdersGroupByMonth();
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(countOrdersGroupByYear);
+        basicResponse.setMessage("true");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+    @GetMapping("/sumOrdersGroupByYear")
+    public ResponseEntity<?> sumOrdersGroupByYear() {
+
+        List<SumTotalOrdersGroupByYearDTO> countOrdersGroupByYear  = orderService.sumOrdersGroupByYear();
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(countOrdersGroupByYear);
+        basicResponse.setMessage("true");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/sumOrdersGroupByMonth")
+    public ResponseEntity<?> sumOrdersGroupByMonth() {
+
+        List<SumTotalOrdersGroupByMonthDTO> countOrdersGroupByYear  = orderService.sumOrdersGroupByMonth();
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(countOrdersGroupByYear);
+        basicResponse.setMessage("true");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/sumOrdersGroupByAllMonths")
+    public ResponseEntity<?> sumOrdersGroupByAllMonths() {
+
+        List<SumTotalOrdersGroupByMonthDTO> countOrdersGroupByYear  = orderService.sumOrdersGroupByAllMonths();
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(countOrdersGroupByYear);
         basicResponse.setMessage("true");
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }

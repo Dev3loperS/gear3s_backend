@@ -40,20 +40,20 @@ public class ProductServiceImp implements ProductService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
 
-    private String getImagePath (int categoryId){
-        if (categoryId == CategoryModel.KEYBOARD.getValue()){
-            return imagePath+ImagesModel.KEYBOARD.getValue();
-        } else if(categoryId == CategoryModel.MOUSE.getValue()){
-            return imagePath+ImagesModel.MOUSE.getValue();
-        } else if(categoryId == CategoryModel.MONITOR.getValue()){
-            return imagePath+ImagesModel.MONITOR.getValue();
-        } else if(categoryId == CategoryModel.HEADSET.getValue()){
-            return imagePath+ImagesModel.HEADSET.getValue();
-        } else if(categoryId == CategoryModel.LAPTOP.getValue()){
-            return imagePath+ImagesModel.LAPTOP.getValue();
-        } else if(categoryId == CategoryModel.SPEAKER.getValue()){
-            return imagePath+ImagesModel.SPEAKER.getValue();
-        }  else {
+    private String getImagePath(int categoryId) {
+        if (categoryId == CategoryModel.KEYBOARD.getValue()) {
+            return imagePath + ImagesModel.KEYBOARD.getValue();
+        } else if (categoryId == CategoryModel.MOUSE.getValue()) {
+            return imagePath + ImagesModel.MOUSE.getValue();
+        } else if (categoryId == CategoryModel.MONITOR.getValue()) {
+            return imagePath + ImagesModel.MONITOR.getValue();
+        } else if (categoryId == CategoryModel.HEADSET.getValue()) {
+            return imagePath + ImagesModel.HEADSET.getValue();
+        } else if (categoryId == CategoryModel.LAPTOP.getValue()) {
+            return imagePath + ImagesModel.LAPTOP.getValue();
+        } else if (categoryId == CategoryModel.SPEAKER.getValue()) {
+            return imagePath + ImagesModel.SPEAKER.getValue();
+        } else {
             return "";
         }
     }
@@ -64,7 +64,7 @@ public class ProductServiceImp implements ProductService {
         String localDate = LocalDate.now().toString();
 
         try {
-            Product product = new Product() ;
+            Product product = new Product();
             product.setName(prodCreateDTO.getName());
             product.setOriginPrice(prodCreateDTO.getPrice_origin());
             product.setDiscountPrice(prodCreateDTO.getPrice_discount());
@@ -79,8 +79,8 @@ public class ProductServiceImp implements ProductService {
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());
             LOGGER.info("Created new product successfully");
             return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to create product : {}",e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to create product : {}", e.getMessage());
             return false;
         }
     }
@@ -92,7 +92,7 @@ public class ProductServiceImp implements ProductService {
 
         try {
             String data = (String) redisTemplate.opsForValue().get(RedisModel.PRODUCTS.getValue());
-            if (data == null){
+            if (data == null) {
                 List<Product> productList = productRepository.findAll();
                 for (Product product : productList) {
                     ProductDTO productDTO = new ProductDTO();
@@ -105,23 +105,24 @@ public class ProductServiceImp implements ProductService {
                     productDTO.setSold_qty(product.getSoldQty());
                     productDTO.setView_qty(product.getView_qty());
                     productDTO.setDescription(product.getDescription());
-                    if(product.getCreate_date() != null){
+                    if (product.getCreate_date() != null) {
                         productDTO.setCreateDate(new SimpleDateFormat("dd-MM-yyyy").format(product.getCreate_date()));
                     }
-                    if(product.getCategory() != null){
+                    if (product.getCategory() != null) {
                         productDTO.setCategoryId(product.getCategory().getId());
                     }
                     productDtoList.add(productDTO);
                 }
-                redisTemplate.opsForValue().set(RedisModel.PRODUCTS.getValue(),gson.toJson(productDtoList));
-                redisTemplate.expire(RedisModel.PRODUCTS.getValue(),30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(RedisModel.PRODUCTS.getValue(), gson.toJson(productDtoList));
+                redisTemplate.expire(RedisModel.PRODUCTS.getValue(), 30, TimeUnit.MINUTES);
             } else {
-                productDtoList = gson.fromJson(data, new TypeToken<List<ProductDTO>>(){}.getType());
+                productDtoList = gson.fromJson(data, new TypeToken<List<ProductDTO>>() {
+                }.getType());
             }
             LOGGER.info("Read product list successfully");
             return productDtoList;
-        } catch (Exception e){
-            LOGGER.error("Failed to read product list : {}",e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to read product list : {}", e.getMessage());
             return null;
         }
     }
@@ -131,9 +132,9 @@ public class ProductServiceImp implements ProductService {
         ProductDTO productDTO = new ProductDTO();
 
         try {
-            Product product= productRepository.findById(productId);
-            if (product == null){
-                LOGGER.error("Product with Id '{}' does not exits",productId);
+            Product product = productRepository.findById(productId);
+            if (product == null) {
+                LOGGER.error("Product with Id '{}' does not exits", productId);
                 return null;
             }
             productDTO.setId(product.getId());
@@ -144,17 +145,17 @@ public class ProductServiceImp implements ProductService {
             productDTO.setSold_qty(product.getSoldQty());
             productDTO.setView_qty(product.getView_qty());
             productDTO.setDescription(product.getDescription());
-            if(product.getCreate_date() != null){
+            if (product.getCreate_date() != null) {
                 productDTO.setCreateDate(new SimpleDateFormat("dd-MM-yyyy").format(product.getCreate_date()));
             }
-            if(product.getCategory() != null){
+            if (product.getCategory() != null) {
                 productDTO.setCategoryId(product.getCategory().getId());
             }
             updateProductView(productId);
-            LOGGER.info("Read product info with Id '{}' successfully by User",productId);
+            LOGGER.info("Read product info with Id '{}' successfully by User", productId);
             return productDTO;
-        } catch (Exception e){
-            LOGGER.error("Failed to read product info with Id '{}' by User : {}",productId,e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to read product info with Id '{}' by User : {}", productId, e.getMessage());
             return null;
         }
     }
@@ -163,8 +164,8 @@ public class ProductServiceImp implements ProductService {
     public boolean updateProduct(ProductDTO productDTO) {
         try {
             Product product = productRepository.findById(productDTO.getId());
-            if (product == null){
-                LOGGER.error("Product with Id '{}' does not exits",productDTO.getId());
+            if (product == null) {
+                LOGGER.error("Product with Id '{}' does not exits", productDTO.getId());
                 return false;
             }
             product.setName(productDTO.getName());
@@ -179,10 +180,10 @@ public class ProductServiceImp implements ProductService {
 
             productRepository.save(product);
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());
-            LOGGER.info("Product with Id '{}' has been updated successfully",productDTO.getId());
+            LOGGER.info("Product with Id '{}' has been updated successfully", productDTO.getId());
             return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to update product with Id '{}' : {}",productDTO.getId(),e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to update product with Id '{}' : {}", productDTO.getId(), e.getMessage());
             return false;
         }
     }
@@ -192,10 +193,10 @@ public class ProductServiceImp implements ProductService {
         try {
             productRepository.deleteById(prodId);
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());
-            LOGGER.info("Product with Id '{}' has been deleted successfully",prodId);
+            LOGGER.info("Product with Id '{}' has been deleted successfully", prodId);
             return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to delete product with Id '{}' : {}",prodId,e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to delete product with Id '{}' : {}", prodId, e.getMessage());
             return false;
         }
     }
@@ -206,14 +207,14 @@ public class ProductServiceImp implements ProductService {
         List<ProdShortDTO> prodDtoList = new ArrayList<>();
 
         // Sort by type
-        List<Product> prodSortList = sortProdByType(request.getSortType(),request.getCategoryId());
+        List<Product> prodSortList = sortProdByType(request.getSortType(), request.getCategoryId());
 
         // Filter by price range
         List<Product> prodRangeFilterList = new ArrayList<>();
         if (prodSortList != null && request.getMinPrice() >= 0 && request.getMaxPrice() >= 0
-                                                && request.getMinPrice() <= request.getMaxPrice()){
-            for (Product prod:prodSortList) {
-                if(prod.getDiscountPrice() >= request.getMinPrice() && prod.getDiscountPrice() <= request.getMaxPrice()){
+                && request.getMinPrice() <= request.getMaxPrice()) {
+            for (Product prod : prodSortList) {
+                if (prod.getDiscountPrice() >= request.getMinPrice() && prod.getDiscountPrice() <= request.getMaxPrice()) {
                     prodRangeFilterList.add(prod);
                 }
             }
@@ -223,10 +224,10 @@ public class ProductServiceImp implements ProductService {
 
         // Filter by property
         List<Product> prodPropFilterList = new ArrayList<>();
-        if (prodRangeFilterList != null && request.getCategoryId() != 0){
+        if (prodRangeFilterList != null && request.getCategoryId() != 0) {
             for (Product product : prodRangeFilterList) {
                 List<ProductProperty> prodPropList = new ArrayList<>(product.getListProdProperty());
-                if(filterProdByProperty(prodPropList,request.getPropDescList())){
+                if (filterProdByProperty(prodPropList, request.getPropDescList())) {
                     prodPropFilterList.add(product);
                 }
             }
@@ -234,11 +235,12 @@ public class ProductServiceImp implements ProductService {
             prodPropFilterList = prodRangeFilterList;
         }
 
-        return getProductFilterDtoList(request.getSortType(),prodPropFilterList);
+        return getProductFilterDtoList(request.getSortType(), prodPropFilterList);
     }
 
-    private List<Product> sortProdByType(String type, int categoryId){
-        switch (type){
+
+    private List<Product> sortProdByType(String type, int categoryId) {
+        switch (type) {
             case "popular":
                 return readAllProdOrderByView(categoryId);
             case "latest":
@@ -254,20 +256,22 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
+
     private List<Product> readAllProdOrderByView(int categoryId) {
         List<Product> prodList;
 
-        if(categoryId == 0) prodList = productRepository.findAllProdOrderByViewQty();
-        else                prodList = productRepository.findAllProdByCateIdOrderByViewQty(categoryId);
+        if (categoryId == 0) prodList = productRepository.findAllProdOrderByViewQty();
+        else prodList = productRepository.findAllProdByCateIdOrderByViewQty(categoryId);
 
         return prodList;
     }
 
+
     private List<Product> readAllProdOrderByDate(int categoryId) {
         List<Product> prodList;
 
-        if(categoryId == 0) prodList = productRepository.findAllProdOrderByCreateDate();
-        else                prodList = productRepository.findAllProdByCateIdOrderByCreateDate(categoryId);
+        if (categoryId == 0) prodList = productRepository.findAllProdOrderByCreateDate();
+        else prodList = productRepository.findAllProdByCateIdOrderByCreateDate(categoryId);
 
         return prodList;
     }
@@ -275,8 +279,8 @@ public class ProductServiceImp implements ProductService {
     private List<Product> readAllProdOrderBySold(int categoryId) {
         List<Product> prodList;
 
-        if(categoryId == 0) prodList = productRepository.findAllProdOrderBySoldQty();
-        else                prodList = productRepository.findAllProdByCateIdOrderBySoldQty(categoryId);
+        if (categoryId == 0) prodList = productRepository.findAllProdOrderBySoldQty();
+        else prodList = productRepository.findAllProdByCateIdOrderBySoldQty(categoryId);
 
         return prodList;
     }
@@ -284,8 +288,8 @@ public class ProductServiceImp implements ProductService {
     private List<Product> readAllProdOrderByPriceDesc(int categoryId) {
         List<Product> prodList;
 
-        if(categoryId == 0) prodList = productRepository.findAllProdOrderByPriceDesc();
-        else                prodList = productRepository.findAllProdByCateIdOrderByPriceDesc(categoryId);
+        if (categoryId == 0) prodList = productRepository.findAllProdOrderByPriceDesc();
+        else prodList = productRepository.findAllProdByCateIdOrderByPriceDesc(categoryId);
 
         return prodList;
     }
@@ -293,25 +297,25 @@ public class ProductServiceImp implements ProductService {
     private List<Product> readAllProdOrderByPriceAsc(int categoryId) {
         List<Product> prodList;
 
-        if(categoryId == 0) prodList = productRepository.findAllProdOrderByPriceAsc();
-        else                prodList = productRepository.findAllProdByCateIdOrderByPriceAsc(categoryId);
+        if (categoryId == 0) prodList = productRepository.findAllProdOrderByPriceAsc();
+        else prodList = productRepository.findAllProdByCateIdOrderByPriceAsc(categoryId);
 
         return prodList;
     }
 
-    private boolean filterProdByProperty(List<ProductProperty> prodPropList,List<FilterPropDescDTO> filterPropDescDtoList){
+    private boolean filterProdByProperty(List<ProductProperty> prodPropList, List<FilterPropDescDTO> filterPropDescDtoList) {
         for (ProductProperty productProperty : prodPropList) {
             ProductDesc productDesc = productProperty.getProduct_desc();
             for (FilterPropDescDTO propDesc : filterPropDescDtoList) {
                 if (propDesc.getPropertyId() == productDesc.getCategory_property().getId()) {
                     boolean isMatched = false;
-                    for (Integer descId: propDesc.getDescId()) {
-                        if(descId == 0 || descId == productDesc.getId()){
+                    for (Integer descId : propDesc.getDescId()) {
+                        if (descId == 0 || descId == productDesc.getId()) {
                             isMatched = true;
                             break;
                         }
                     }
-                    if(!isMatched)  return false;
+                    if (!isMatched) return false;
                     break;
                 }
             }
@@ -319,10 +323,10 @@ public class ProductServiceImp implements ProductService {
         return true;
     }
 
-    private List<ProdShortDTO> getProductFilterDtoList(String type, List<Product> prodList){
+    private List<ProdShortDTO> getProductFilterDtoList(String type, List<Product> prodList) {
         List<ProdShortDTO> prodDtoList = new ArrayList<>();
         try {
-            for (Product product : prodList){
+            for (Product product : prodList) {
                 ProdShortDTO productDTO = new ProdShortDTO();
 
                 productDTO.setId(product.getId());
@@ -330,16 +334,16 @@ public class ProductServiceImp implements ProductService {
                 productDTO.setOriginPrice(product.getOriginPrice());
                 productDTO.setDiscountPrice(product.getDiscountPrice());
                 productDTO.setSoldQty(product.getSoldQty());
-                if(product.getCategory() != null){
+                if (product.getCategory() != null) {
                     productDTO.setCategoryId(product.getCategory().getId());
-                    productDTO.setImage(getImagePath(product.getCategory().getId())+product.getId()+"-1.png");
+                    productDTO.setImage(getImagePath(product.getCategory().getId()) + product.getId() + "-1.png");
                 }
                 prodDtoList.add(productDTO);
             }
-            LOGGER.info("Read product list order by '{}' successfully",type);
+            LOGGER.info("Read product list order by '{}' successfully", type);
             return prodDtoList;
-        } catch (Exception e){
-            LOGGER.error("Failed to read product list order by '{}' : {}",type,e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to read product list order by '{}' : {}", type, e.getMessage());
             return null;
         }
     }
@@ -348,33 +352,33 @@ public class ProductServiceImp implements ProductService {
     public List<ProdShortDTO> readAllProdByName(int categoryId, String prodName) {
         List<Product> prodList;
 
-        if(categoryId == 0) prodList = productRepository.findAllProdByName(prodName);
-        else                prodList = productRepository.findAllProdByCateIdByName(categoryId,prodName);
+        if (categoryId == 0) prodList = productRepository.findAllProdByName(prodName);
+        else prodList = productRepository.findAllProdByCateIdByName(categoryId, prodName);
 
-        return getProductFilterDtoList("searchName",prodList);
+        return getProductFilterDtoList("searchName", prodList);
     }
 
     @Override
     public boolean confirmOrder(int productId, int requestNum) {
         try {
             Product product = productRepository.findById(productId);
-            if (product == null){
-                LOGGER.error("Product with Id '{}' does not exits",productId);
+            if (product == null) {
+                LOGGER.error("Product with Id '{}' does not exits", productId);
                 return false;
             }
-            if(requestNum > product.getInventory()){
-                LOGGER.error("Quantity requested exceeds inventory of product with Id '{}'",productId);
+            if (requestNum > product.getInventory()) {
+                LOGGER.error("Quantity requested exceeds inventory of product with Id '{}'", productId);
                 return false;
             }
-            product.setInventory(product.getInventory()-requestNum);
-            product.setSoldQty(product.getSoldQty()+requestNum);
+            product.setInventory(product.getInventory() - requestNum);
+            product.setSoldQty(product.getSoldQty() + requestNum);
 
             productRepository.save(product);
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());
-            LOGGER.info("Updated soldQty of product with Id '{}' successfully",productId);
+            LOGGER.info("Updated soldQty of product with Id '{}' successfully", productId);
             return true;
-        } catch (Exception e){
-            LOGGER.error("Failed to update soldQty of product with Id '{}' : {}",productId,e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to update soldQty of product with Id '{}' : {}", productId, e.getMessage());
             return false;
         }
     }
@@ -383,17 +387,17 @@ public class ProductServiceImp implements ProductService {
     public void updateProductView(int productId) {
         try {
             Product product = productRepository.findById(productId);
-            if (product == null){
-                LOGGER.error("Product with Id '{}' does not exits",productId);
+            if (product == null) {
+                LOGGER.error("Product with Id '{}' does not exits", productId);
                 return;
             }
-            product.setView_qty(product.getView_qty()+1);
+            product.setView_qty(product.getView_qty() + 1);
 
             productRepository.save(product);
             redisTemplate.delete(RedisModel.PRODUCTS.getValue());
-            LOGGER.info("Updated viewQty of product with Id '{}' successfully",productId);
-        } catch (Exception e){
-            LOGGER.error("Failed to update viewQty of product with Id '{}' : {}",productId,e.getMessage());
+            LOGGER.info("Updated viewQty of product with Id '{}' successfully", productId);
+        } catch (Exception e) {
+            LOGGER.error("Failed to update viewQty of product with Id '{}' : {}", productId, e.getMessage());
         }
     }
 
@@ -403,33 +407,34 @@ public class ProductServiceImp implements ProductService {
 
         try {
             Product product = productRepository.findById(productId);
-            if (product == null){
-                LOGGER.error("Product with Id '{}' does not exits",productId);
+            if (product == null) {
+                LOGGER.error("Product with Id '{}' does not exits", productId);
                 return null;
             }
             List<ProductProperty> prodPropList = new ArrayList<>(product.getListProdProperty());
             for (ProductProperty prodProp : prodPropList) {
                 ProdPropDescDTO propDescDto = new ProdPropDescDTO();
-                if(prodProp.getProduct_desc().getCategory_property() != null){
+                if (prodProp.getProduct_desc().getCategory_property() != null) {
                     propDescDto.setProperty(prodProp.getProduct_desc().getCategory_property().getName());
                 }
-                if(prodProp.getProduct_desc() != null){
+                if (prodProp.getProduct_desc() != null) {
                     propDescDto.setDescription(prodProp.getProduct_desc().getDescription());
                 }
                 propDescDtoList.add(propDescDto);
             }
-            if(propDescDtoList.size() > 1){
-                for(int i=0;i<propDescDtoList.size();i++){
-                    if("Hãng sản xuất".equals(propDescDtoList.get(i).getProperty())) {
-                        if (i != 0) Collections.swap(propDescDtoList, 0, i);;
+            if (propDescDtoList.size() > 1) {
+                for (int i = 0; i < propDescDtoList.size(); i++) {
+                    if ("Hãng sản xuất".equals(propDescDtoList.get(i).getProperty())) {
+                        if (i != 0) Collections.swap(propDescDtoList, 0, i);
+                        ;
                         break;
                     }
                 }
             }
-            LOGGER.info("Read property description of product with Id '{}' successfully",productId);
+            LOGGER.info("Read property description of product with Id '{}' successfully", productId);
             return propDescDtoList;
-        } catch (Exception e){
-            LOGGER.error("Failed to read property description of product with Id '{}' : {}",productId,e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Failed to read property description of product with Id '{}' : {}", productId, e.getMessage());
             return null;
         }
     }

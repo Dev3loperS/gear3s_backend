@@ -1,6 +1,6 @@
 package cybersoft.java20.dev3lopers.gear3sproject.service.imp;
 
-import cybersoft.java20.dev3lopers.gear3sproject.dto.OrderDTO;
+import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 
 import java.util.List;
 
@@ -13,5 +13,11 @@ public interface OrderService {
 
     OrderDTO findById (int id ) ;
 
-    int countAllOrder() ;
+    List<CountOrdersGroupByYearDTO> countOrdersGroupByYear( ) ;
+    List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth(  ) ;
+
+    List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear( ) ;
+    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth( ) ;
+    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByAllMonths( ) ;
+
 }
