@@ -9,6 +9,8 @@ import cybersoft.java20.dev3lopers.gear3sproject.service.imp.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -440,24 +442,54 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public List<CountOrdersGroupByYearDTO> countOrdersGroupByYear() {
-        return orderRepository.countOrdersGroupByYear();
+    public List<CountOrdersGroupByYearDTO> countOrdersGroupByYear( ) {
+        LocalDate currentdate = LocalDate.now();
+        int  year = currentdate.getYear();
+        return orderRepository.countOrdersGroupByYear(year);
     }
 
-    public List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth() {
-        return orderRepository.countOrdersGroupByMonth();
+    public List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth( ) {
+        LocalDate currentdate = LocalDate.now();
+        int  month = currentdate.getMonth().getValue();
+        return orderRepository.countOrdersGroupByMonth(month);
     }
 
     @Override
-    public List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear() {
-        return orderRepository.sumOrdersGroupByYear();
+    public List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear( ) {
+        LocalDate currentdate = LocalDate.now();
+        int  year = currentdate.getYear();
+        return orderRepository.sumOrdersGroupByYear(year);
     }
 
     @Override
-    public List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth() {
-        return orderRepository.sumOrdersGroupByMonth();
+    public List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth( ) {
+        LocalDate currentdate = LocalDate.now();
+        int  month = currentdate.getMonth().getValue();
+        return orderRepository.sumOrdersGroupByMonth(month);
     }
 
+    @Override
+    public List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByAllMonths( ) {
+        List<SumTotalOrdersGroupByMonthDTO> finalList = new ArrayList<>();
+        List<SumTotalOrdersGroupByMonthDTO> existed = orderRepository.sumOrdersGroupByExistedMonth();
+        for (int i = 1; i <=12 ; i++) {
+            SumTotalOrdersGroupByMonthDTO sumTotalOrdersGroupByMonthDTO= new SumTotalOrdersGroupByMonthDTO();
+            sumTotalOrdersGroupByMonthDTO.setMonth(i);
+            for (SumTotalOrdersGroupByMonthDTO item: existed
+                 ) {
+                if (item.getMonth() == i)
+                {
+                    sumTotalOrdersGroupByMonthDTO.setRevenue(item.getRevenue());
+                    break;
+                }
 
+                    sumTotalOrdersGroupByMonthDTO.setRevenue(0);
+
+
+            }
+            finalList.add(sumTotalOrdersGroupByMonthDTO);
+        }
+        return finalList;
+    }
 
 }

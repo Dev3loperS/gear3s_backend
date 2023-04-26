@@ -21,15 +21,18 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
 
 
-    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.CountOrdersGroupByYearDTO (YEAR(o.orderDate)  , COUNT(*))  from orders o GROUP BY YEAR(o.orderDate)")
-    List<CountOrdersGroupByYearDTO> countOrdersGroupByYear ();
+    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.CountOrdersGroupByYearDTO (YEAR(o.orderDate)  , COUNT(*))  from orders o  WHERE YEAR(o.orderDate) =?1 GROUP BY YEAR(o.orderDate)")
+    List<CountOrdersGroupByYearDTO> countOrdersGroupByYear (int year);
 
-    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.CountOrdersGroupByMonthDTO (MONTH (o.orderDate)  , COUNT(*))  from orders o GROUP BY MONTH(o.orderDate)")
-    List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth ();
+    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.CountOrdersGroupByMonthDTO (MONTH (o.orderDate)  , COUNT(*))  from orders o WHERE MONTH (o.orderDate) =?1 GROUP BY MONTH(o.orderDate)")
+    List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth (int month );
 
-    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.SumTotalOrdersGroupByYearDTO (YEAR(o.orderDate)  , SUM(o.total))  from orders o GROUP BY YEAR(o.orderDate)")
-    List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear ();
+    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.SumTotalOrdersGroupByYearDTO (YEAR(o.orderDate)  , SUM(o.total))  from orders o WHERE YEAR(o.orderDate) =?1 GROUP BY YEAR(o.orderDate)")
+    List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear (int year);
+
+    @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.SumTotalOrdersGroupByMonthDTO (MONTH (o.orderDate)  , SUM(o.total))   from orders o WHERE MONTH (o.orderDate) =?1 GROUP BY MONTH(o.orderDate)")
+    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth (int month);
 
     @Query(value = "select new cybersoft.java20.dev3lopers.gear3sproject.dto.SumTotalOrdersGroupByMonthDTO (MONTH (o.orderDate)  , SUM(o.total))   from orders o GROUP BY MONTH(o.orderDate)")
-    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth ();
+    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByExistedMonth ();
 }

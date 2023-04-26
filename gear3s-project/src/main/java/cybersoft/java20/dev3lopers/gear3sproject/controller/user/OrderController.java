@@ -67,6 +67,16 @@ public class OrderController {
         return new ResponseEntity<>(basicResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/sumOrdersGroupByAllMonths")
+    public ResponseEntity<?> sumOrdersGroupByAllMonths() {
+
+        List<SumTotalOrdersGroupByMonthDTO> countOrdersGroupByYear  = orderService.sumOrdersGroupByAllMonths();
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setData(countOrdersGroupByYear);
+        basicResponse.setMessage("true");
+        return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
+
     @GetMapping("/findById")
     public ResponseEntity<?> findById(@RequestParam int id ) {
         OrderDTO list = orderService.findById(id);

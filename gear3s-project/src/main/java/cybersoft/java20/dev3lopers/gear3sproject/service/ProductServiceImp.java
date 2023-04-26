@@ -259,8 +259,8 @@ public class ProductServiceImp implements ProductService {
 
     private List<Product> readAllProdOrderByView(int categoryId) {
         List<Product> prodList;
-        int defaultCate = 0;
-        if (defaultCate == 0 && categoryId == 0) prodList = productRepository.findAllProdOrderByViewQty();
+
+        if (categoryId == 0) prodList = productRepository.findAllProdOrderByViewQty();
         else prodList = productRepository.findAllProdByCateIdOrderByViewQty(categoryId);
 
         return prodList;

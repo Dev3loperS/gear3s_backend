@@ -9,6 +9,10 @@ public class SumTotalOrdersGroupByMonthDTO {
         this.revenue = revenue;
     }
 
+    public SumTotalOrdersGroupByMonthDTO() {
+
+    }
+
     public int getMonth() {
         return month;
     }

@@ -13,10 +13,11 @@ public interface OrderService {
 
     OrderDTO findById (int id ) ;
 
-    List<CountOrdersGroupByYearDTO> countOrdersGroupByYear() ;
-    List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth() ;
+    List<CountOrdersGroupByYearDTO> countOrdersGroupByYear( ) ;
+    List<CountOrdersGroupByMonthDTO> countOrdersGroupByMonth(  ) ;
 
-    List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear() ;
-    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth() ;
+    List<SumTotalOrdersGroupByYearDTO> sumOrdersGroupByYear( ) ;
+    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByMonth( ) ;
+    List<SumTotalOrdersGroupByMonthDTO> sumOrdersGroupByAllMonths( ) ;
 
 }
