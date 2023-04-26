@@ -3,9 +3,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.controller.user;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
-import cybersoft.java20.dev3lopers.gear3sproject.service.ProdRatingServiceImp;
-import cybersoft.java20.dev3lopers.gear3sproject.service.ProductServiceImp;
-import cybersoft.java20.dev3lopers.gear3sproject.service.CatePropServiceImp;
+import cybersoft.java20.dev3lopers.gear3sproject.service.*;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +27,10 @@ public class ProductController {
     ProdRatingServiceImp prodRatingServiceImp;
 
     @Autowired
-    CategoryService categoryService;
+    CategoryImp categoryImp;
+
+    @Autowired
+    FileStorageServiceImp fileStorageServiceImp;
 
     @GetMapping("/detail/{productId}")
     public ResponseEntity<?> getProductDetail(@PathVariable int productId) {
@@ -160,11 +161,21 @@ public class ProductController {
 
     @GetMapping("/list-category")
     public ResponseEntity<?> getCategoryList(){
-        List<AdCategoryDTO> categoryList = categoryService.getAllCategory();
+        List<AdCategoryDTO> categoryList = categoryImp.getAllCategory();
         if (categoryList != null) {
             return new ResponseEntity<>(new BasicResponse("Returned category list successful", categoryList),HttpStatus.OK);
         }else {
             return new ResponseEntity<>(new BasicResponse("Category list is empty", null),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/detail/list-image/{categoryId}/{productId}")
+    public ResponseEntity<?> getAllProductImage(@PathVariable int categoryId, @PathVariable int productId){
+        List<String> imageList = fileStorageServiceImp.readAllProdImage(categoryId,productId);
+        if (imageList != null) {
+            return new ResponseEntity<>(new BasicResponse("Returned product image list successful", imageList),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new BasicResponse("Product image list is empty", null),HttpStatus.NOT_FOUND);
         }
     }
 }
