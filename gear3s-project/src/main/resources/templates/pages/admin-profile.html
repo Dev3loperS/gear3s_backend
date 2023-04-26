@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{default-layout}"
+      th:with="title='Profile'">
+<th:block layout:fragment="css_added" >
+    <!-- Custom styles for this page -->
+    <link th:href="@{/static/css/dataTables.bootstrap4.min.css}" rel="stylesheet">
+</th:block>
+<th:block layout:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h3 class="h3 mb-2 text-gray-800">Your Profile</h3>
+
+        <div id="alertBox" class="alert alert-warning align-self-center" role="alert">
+            Message
+        </div>
+
+        <!--            delete modal-->
+        <div class="modal fade"
+             id="deleteModal" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">WARNING</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="deleteForm">
+                            <div class="form-group">
+                                <p id="content">Do you want to delete this category?</p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger">DELETE</button>
+                                <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">CLOSE
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section style="background-color: #eee;">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-end mb-2">
+                            <button type="button" class="btn btn-primary">Save Info</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <img src="/static/vendor/img/undraw_profile.svg"
+                                     onerror="this.src='/static/vendor/img/undraw_profile.svg'"
+                                     alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;">
+                                <h5 class="my-3">Full name</h5>
+                                <p class="text-muted mb-1">email@gmail.com</p>
+                            </div>
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="button" class="btn btn-primary">Save Avatar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Full Name</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">Johnatan Smith</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Email</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">example@example.com</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">(097) 234-5678</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Birthday</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">14/08/1999</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</th:block>
+<th:block layout:fragment="js_added" >
+    <!-- Page level plugins -->
+    <script th:src="@{/static/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/static/js/dataTables.bootstrap4.min.js}"></script>
+    <script th:src="@{/static/js/admin-categories.js}"></script>
+</th:block>
+</html>
