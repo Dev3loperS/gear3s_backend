@@ -29,4 +29,9 @@ public class AdThymeleafController {
     public String getProductsPage() {
         return "pages/admin-products";
     }
+
+    @GetMapping("/profile")
+    public String getProfilePage() {
+        return "pages/admin-profile";
+    }
 }
