@@ -17,3 +17,4 @@ CÔNG NGHỆ SỬ DỤNG PHÍA BACKEND
 12. Sử dụng Apache Log4j để ghi log vào file và console
 13. Làm document cho các REST API thông qua Swagger2.0
 14. Sử dụng RabbitMQ để xử lý hàng đợi message (chưa hoàn thiện)
+15. Sử dụng Docker để deploy dự án
