@@ -18,3 +18,5 @@ CÔNG NGHỆ SỬ DỤNG PHÍA BACKEND
 13. Làm document cho các REST API thông qua Swagger2.0
 14. Sử dụng RabbitMQ để xử lý hàng đợi message (chưa hoàn thiện)
 15. Sử dụng Docker để deploy dự án
+16. Sử dụng Thymeleaf layout, bootstrap 4, fontawesome 5 để xây dựng web admin
+17. Sử dụng ajax để call api
