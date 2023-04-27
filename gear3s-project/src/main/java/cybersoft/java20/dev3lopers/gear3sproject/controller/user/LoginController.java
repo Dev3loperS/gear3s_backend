@@ -90,6 +90,11 @@ public class LoginController {
             }
         }
     }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logOut(){
+        return new ResponseEntity<>(
+                new BasicResponse("Logout Successfully",null),HttpStatus.OK);
+    }
 
     private JwtResponse jwtResponse(AccountDetailsImp account,String jwt){
         SecretKey key = Keys.hmacShaKeyFor(privateKey.getBytes());
