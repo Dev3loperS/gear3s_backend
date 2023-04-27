@@ -253,7 +253,7 @@ public class UserServiceImp implements UserService {
             user.setSex(new Sex(userDTO.getSexId()));
 
             if(uploadAvatarForUser(user.getId(),user.getAvatar(),avatarFile)){
-                user.setAvatar(avatarFile.getOriginalFilename());
+                user.setAvatar(user.getId()+".png");
             }
             userRepository.save(user);
             redisTemplate.delete(RedisModel.ALLUSERS.getValue());

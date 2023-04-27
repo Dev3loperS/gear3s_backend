@@ -204,8 +204,6 @@ public class ProductServiceImp implements ProductService {
     // For User page ---------------------------------------------------------------------------------------------------
     @Override
     public List<ProdShortDTO> readAllProdAfterFilter(FilterRequest request) {
-        List<ProdShortDTO> prodDtoList = new ArrayList<>();
-
         // Sort by type
         List<Product> prodSortList = sortProdByType(request.getSortType(), request.getCategoryId());
 
