@@ -1,4 +1,4 @@
-package cybersoft.java20.dev3lopers.gear3sproject.service.imp;
+package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

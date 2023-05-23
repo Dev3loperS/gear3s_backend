@@ -2,6 +2,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.controller;
 
 import cybersoft.java20.dev3lopers.gear3sproject.payload.response.BasicResponse;
 import cybersoft.java20.dev3lopers.gear3sproject.service.RoleServiceImp;
+import cybersoft.java20.dev3lopers.gear3sproject.service.SexServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/role")
 public class RoleController {
+    private final SexServiceImp sexService123;
+
+    public RoleController(SexServiceImp sexServiceImp){
+        this.sexService123 = sexServiceImp;
+    }
+
     @Autowired
     RoleServiceImp roleServiceImp;
 
     @GetMapping("/list")
     public ResponseEntity<?> getRoleList(){
+
         return new ResponseEntity<>(new BasicResponse("Returned role list",roleServiceImp.readAllRole()),HttpStatus.OK);
     }
 }
