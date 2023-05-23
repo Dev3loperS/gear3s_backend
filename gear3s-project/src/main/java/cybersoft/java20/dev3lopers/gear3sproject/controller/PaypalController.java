@@ -14,7 +14,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.BillDTO;
-import cybersoft.java20.dev3lopers.gear3sproject.service.imp.PaypalService;
+import cybersoft.java20.dev3lopers.gear3sproject.service.PaypalService;
 @CrossOrigin(origins = {"http://localhost:3000"})
 @Controller
 public class PaypalController {

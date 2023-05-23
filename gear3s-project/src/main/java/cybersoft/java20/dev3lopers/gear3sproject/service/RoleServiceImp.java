@@ -50,7 +50,7 @@ public class RoleServiceImp implements RoleService {
             } else {
                 roleDTOList = gson.fromJson(data,new TypeToken<List<RoleDTO>>(){}.getType());
             }
-            LOGGER.info("Read role list successfully");
+            LOGGER.info("Read role list succesFsfully");
             return roleDTOList;
         } catch (Exception e){
             LOGGER.error("Failed to read role list : {}",e.getMessage());

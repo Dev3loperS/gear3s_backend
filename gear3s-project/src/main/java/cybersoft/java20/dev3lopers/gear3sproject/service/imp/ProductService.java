@@ -6,6 +6,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.dto.ProdShortDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.dto.ProductDTO;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.Product;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
+import cybersoft.java20.dev3lopers.gear3sproject.payload.request.QueueRequest;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface ProductService {
 
     List<ProdShortDTO> readAllProdAfterFilter(FilterRequest request);
     List<ProdShortDTO> readAllProdByName(int categoryId, String prodName ) ;
-    boolean confirmOrder(int productId, int requestNum);
+    boolean confirmProdInventory(QueueRequest queueRequest);
     void updateProductView(int productId);
     List<ProdPropDescDTO> readProdPropDescById(int productId);
 

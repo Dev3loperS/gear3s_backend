@@ -2,6 +2,7 @@ package cybersoft.java20.dev3lopers.gear3sproject.service;
 
 import cybersoft.java20.dev3lopers.gear3sproject.dto.*;
 import cybersoft.java20.dev3lopers.gear3sproject.entity.*;
+import cybersoft.java20.dev3lopers.gear3sproject.payload.request.QueueRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.OrderItemRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.OrderRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
@@ -329,7 +330,7 @@ public class OrderItemServiceImp implements OrderItemService {
         OrderItem orderItem = new OrderItem();
         int amount = orderItemDTO.getAmount();
         int productId = orderItemDTO.getProduct().getId();
-        if (productService.confirmOrder(productId,amount) )
+        if (productService.confirmProdInventory(new QueueRequest(productId,amount)))
         {
             orderItem.setAmount(orderItemDTO.getAmount());
             orderItem.setSubtotal(orderItemDTO.getSubtotal());

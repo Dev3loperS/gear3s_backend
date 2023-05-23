@@ -22,6 +22,11 @@ spring:
   redis:
     host: 103.160.2.183
     port: 6377
+  rabbitmq:
+    host: 103.160.2.183
+    port: 5671
+    username: gear
+    password: 3s
 
 #    static-path-pattern: /resources/**, /css/**, /js/**, /vendor/**
 
@@ -51,9 +56,10 @@ paypal:
     id: AZj1hOz7DjomVcIBKZ3TOZY4lJdV2t22fm4FPXB4XMyzGoL4zFu-YlHkIJ0H_SckGITPbUQOdX3z3Fb3
     secret: ECqCLwPii98Xydk8xgFH_K0j9YhAxDeMSsu03x_PFuKOPwochRuDyiGAUg0OL3WLpio-EAOZwPn8cIfM
 
-
-
-
+rabbitmq:
+  queue: gear3s_queue
+  exchange: gear3s_exchange
+  routingKey: gear3s_routing_key
 
 
 

@@ -11,6 +11,7 @@ import cybersoft.java20.dev3lopers.gear3sproject.model.CategoryModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.ImagesModel;
 import cybersoft.java20.dev3lopers.gear3sproject.model.RedisModel;
 import cybersoft.java20.dev3lopers.gear3sproject.payload.request.FilterRequest;
+import cybersoft.java20.dev3lopers.gear3sproject.payload.request.QueueRequest;
 import cybersoft.java20.dev3lopers.gear3sproject.repository.ProductRepository;
 import cybersoft.java20.dev3lopers.gear3sproject.service.imp.ProductService;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class ProductServiceImp implements ProductService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    RabbitMQProducer rabbitMQProducer;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -93,6 +97,7 @@ public class ProductServiceImp implements ProductService {
         try {
             String data = (String) redisTemplate.opsForValue().get(RedisModel.PRODUCTS.getValue());
             if (data == null) {
+                //System.out.println("Redis empty");
                 List<Product> productList = productRepository.findAll();
                 for (Product product : productList) {
                     ProductDTO productDTO = new ProductDTO();
@@ -116,6 +121,7 @@ public class ProductServiceImp implements ProductService {
                 redisTemplate.opsForValue().set(RedisModel.PRODUCTS.getValue(), gson.toJson(productDtoList));
                 redisTemplate.expire(RedisModel.PRODUCTS.getValue(), 30, TimeUnit.MINUTES);
             } else {
+                //System.out.println("Redis exist");
                 productDtoList = gson.fromJson(data, new TypeToken<List<ProductDTO>>() {
                 }.getType());
             }
@@ -357,8 +363,15 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public boolean confirmOrder(int productId, int requestNum) {
-        try {
+    public boolean confirmProdInventory(QueueRequest queueRequest) {
+        boolean result = (boolean) rabbitMQProducer.sendMessage(queueRequest);
+        if(result){
+            LOGGER.info("Product with Id '{}' OK to create order",queueRequest.getProductId());
+        } else {
+            LOGGER.error("Product with Id '{}' NG to create order",queueRequest.getProductId());
+        }
+        return result;
+        /*try {
             Product product = productRepository.findById(productId);
             if (product == null) {
                 LOGGER.error("Product with Id '{}' does not exits", productId);
@@ -378,7 +391,7 @@ public class ProductServiceImp implements ProductService {
         } catch (Exception e) {
             LOGGER.error("Failed to update soldQty of product with Id '{}' : {}", productId, e.getMessage());
             return false;
-        }
+        }*/
     }
 
     @Override
